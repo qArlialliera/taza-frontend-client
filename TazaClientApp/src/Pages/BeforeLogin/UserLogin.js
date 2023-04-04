@@ -16,9 +16,10 @@ export const UserLogin = ({navigation}) => {
             .then(function (response) {
                 storeRefreshToken(response.data.refreshToken)
                 storeAccessToken(response.data.accessToken)
-                // navigation.replace("BottomBar")
+                navigation.navigate("BottomBar")
             })
             .catch(function (error) {
+                alert('Wrong username or password')
                 console.log(error);
             });
             
