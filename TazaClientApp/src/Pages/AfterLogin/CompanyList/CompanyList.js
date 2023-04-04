@@ -4,14 +4,14 @@ import SearchBar from "react-native-dynamic-search-bar";
 import { styles } from '../../../styles/Styles'
 import Modal from "react-native-modal";
 import { instance } from "../../../Api/ApiManager";
-import { getRefreshToken } from '../../../Storage/TokenStorage';
+import { getAccessToken, getRefreshToken } from '../../../Storage/TokenStorage';
 // import { TextInput } from 'react-native-paper';
 
 
 export const CompanyList = ({ navigation }) => {
   const [token, setToken] = useState(readItemFromStorage);
   const readItemFromStorage = async () => {
-    const item = await getRefreshToken();
+    const item = await getAccessToken();
     setToken(item)
   };
 

@@ -1,15 +1,15 @@
 import React, { useState } from 'react'
 import { ImageBackground, View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
-import { styles } from '../../styles/Styles'
+import { styles } from '../../../styles/Styles'
 import SearchBar from "react-native-dynamic-search-bar";
 // import { Card } from 'react-native-paper';
 
 
 const DATA = [
-    { id: 1, name: 'General Cleaning', img: require('../../Assets/images/icon_general.png') },
-    { id: 2, name: 'Wet Cleaning', img: require('../../Assets/images/icon_wet.png') },
-    { id: 3, name: 'Cleaning after repair', img: require('../../Assets/images/icon_repair.png') },
-    { id: 4, name: 'Office Cleaning', img: require('../../Assets/images/icon_office.png') },
+    { id: 1, name: 'General Cleaning', img: require('../../../Assets/images/icon_general.png') },
+    { id: 2, name: 'Wet Cleaning', img: require('../../../Assets/images/icon_wet.png') },
+    { id: 3, name: 'Cleaning after repair', img: require('../../../Assets/images/icon_repair.png') },
+    { id: 4, name: 'Office Cleaning', img: require('../../../Assets/images/icon_office.png') },
 ]
 
 
@@ -21,7 +21,7 @@ export const Home = ({ navigation }) => {
     // const [selectedId, setSelectedId] = useState();
 
     const ReplaceWithAll = () => {
-        // navigation.navigate("all_categories")
+        navigation.navigate("all_categories")
     }
 
 
@@ -34,7 +34,7 @@ export const Home = ({ navigation }) => {
 
     return (
         <ScrollView style={styles.containerwellcome}>
-            <ImageBackground source={require('../../Assets/images/homeBack.png')} style={styles.imagehome}>
+            <ImageBackground source={require('../../../Assets/images/homeBack.png')} style={styles.imagehome}>
                 <View >
                     <SearchBar
                         height={50}

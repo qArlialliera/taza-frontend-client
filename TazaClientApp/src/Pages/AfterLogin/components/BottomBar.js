@@ -4,7 +4,7 @@ import { View, StyleSheet } from 'react-native';
 
 import { AnimatedTabBarNavigator } from "react-native-animated-nav-tab-bar";
 import { Icons } from 'react-native-vector-icons/Feather';
-import { Home } from '../Home';
+import { Home } from '../Home/Home';
 import { Profile } from '../Profile/Profile';
 import { CompanyList } from '../CompanyList/CompanyList';
 import { Messages } from '../Messages/Messages';

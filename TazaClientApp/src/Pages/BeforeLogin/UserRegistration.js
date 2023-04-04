@@ -11,7 +11,7 @@ export const UserRegistration = ({ navigation }) => {
 //   const [loginData, setLoginData] = useState("");
 
   const [username, setUsername] = useState("");
-  const [fullname, setFullname] = useState("");
+  const [fullName, setFullname] = useState("");
   const [password, setPassword] = useState("");
   const [address, setAddress] = useState("");
   const [email, setEmail] = useState("");
@@ -20,7 +20,7 @@ export const UserRegistration = ({ navigation }) => {
 
   const findUser = (e) => {
     e.preventDefault();
-    const user = { username, password, fullname, email, city, address  };
+    const user = { username, password, fullName, email, city, address  };
     console.log(user)
     
     instance.post('/public/auth/register', user)
@@ -56,7 +56,7 @@ export const UserRegistration = ({ navigation }) => {
         <ImageBackground source={require('../../Assets/images/registration.png')} style={styles.image}>
           <View style={styles.container3}>
             <Text style={{marginBottom: 20,color: '#fff',fontFamily: 'Lobster-Regular',fontSize: 35}}>Registration</Text>
-            <TextInput style={styles.input} value={fullname} placeholder={"Full Name"} onChangeText={(text) => setFullname(text)} />
+            <TextInput style={styles.input} value={fullName} placeholder={"Full Name"} onChangeText={(text) => setFullname(text)} />
             <TextInput style={styles.input} value={username} placeholder={"Username"} onChangeText={(text) => setUsername(text)} />
             <TextInput style={styles.input} value={email} placeholder={"Email"} onChangeText={(text) => setEmail(text)} />
             <TextInput style={styles.input} value={address} placeholder={"Address"} onChangeText={(text) => setAddress(text)} />
