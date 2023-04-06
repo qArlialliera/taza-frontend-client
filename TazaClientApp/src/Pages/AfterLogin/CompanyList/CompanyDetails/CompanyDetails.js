@@ -14,6 +14,7 @@ export const CompanyDetails = (props) => {
   // console.info('categories - ', pp.categories)
 
   const changePage = (index) => {
+    console.log(pp)
     setSelectedIndex(index);
     console.log(index)
   }

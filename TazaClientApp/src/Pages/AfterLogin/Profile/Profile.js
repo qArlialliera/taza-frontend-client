@@ -3,11 +3,11 @@ import { View, ImageBackground, StyleSheet, Text, Image, TouchableOpacity } from
 import { styles } from '../../../styles/Styles'
 import { instance } from "../../../Api/ApiManager";
 import { getAccessToken } from '../../../Storage/TokenStorage';
+import {observer} from 'mobx-react-lite'
+import Repetear from '../../../MobX/ProfileMobxRener'
 
 
-
-
-export const Profile = ({ navigation }) => {
+export const Profile = observer( ({ navigation }) => {
   const [data, setData] = useState("");
   const [token, setToken] = useState(readItemFromStorage);
   const readItemFromStorage = async () => {const item = await getAccessToken();setToken(item)};
@@ -25,7 +25,7 @@ export const Profile = ({ navigation }) => {
       .catch(function (error) {
         console.log(error);
       });
-  }, [token])
+  }, [token,Repetear.bool])
  
   const Bdutton = () => {
     navigation.navigate("edit_profile")
@@ -82,7 +82,7 @@ export const Profile = ({ navigation }) => {
 
     </View>
   )
-}
+})
 
 const sStyle = StyleSheet.create({
 

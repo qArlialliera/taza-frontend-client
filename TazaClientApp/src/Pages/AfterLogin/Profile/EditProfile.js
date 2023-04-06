@@ -3,7 +3,7 @@ import { View, ImageBackground, StyleSheet, Text, Image, TouchableOpacity, TextI
 import { styles } from '../../../styles/Styles';
 import { instance } from "../../../Api/ApiManager";
 import { getAccessToken } from '../../../Storage/TokenStorage';
-
+import Repetear from '../../../MobX/ProfileMobxRener'
 
 
 export const EditProfile = ({ navigation }) => {
@@ -17,27 +17,44 @@ export const EditProfile = ({ navigation }) => {
 
     const [myfile, setFile] = useState('');
     const image = new FormData();
-
+    // const pp = JSON.parse(JSON.stringify(props)).route
     const config = {
         headers: {
             'content-type': 'multipart/form-data',
             'Authorization': 'Bearer ' + token
         }
     }
+    const config2 = {headers: {'Authorization': 'Bearer ' + token}}
     useEffect(() => {
         readItemFromStorage();
-        console.log(token)
-    }, []);
+        // console.log(pp)
+        instance.get('private/user/user-details', config2)
+            .then(function (response) {
+                setUsername(response.data.username)
+                setFullname(response.data.fullName)
+                setAddress(response.data.address)
+                setEmail(response.data.email)
+                console.log(response.data)
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+    }, [token]);
     const uploadPhoto = (e) => {
 
     }
 
     const saveProfile = (e) => {
         e.preventDefault();
-        const data = { username:username, fullName:fullName, email:email, address:address };
-        instance.post('private/user/edit/profile', config, data)
+        const data = { username, fullName, email, address };
+        console.log(data)
+        instance.put('private/user/edit/profile',data, config2)
             .then(function (response) {
+                
                 console.log(response.data);
+                Repetear.trigger();
+
             })
             .catch(function (error) {
                 alert('err')
@@ -46,7 +63,7 @@ export const EditProfile = ({ navigation }) => {
 
     }
     const backNav = () => {
-        navigation.replace("BottomBar")
+        navigation.navigate("BottomBar")
     }
 
     return (

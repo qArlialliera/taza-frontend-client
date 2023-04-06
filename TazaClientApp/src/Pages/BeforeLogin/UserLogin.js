@@ -12,10 +12,12 @@ export const UserLogin = ({navigation}) => {
     const findUser = (e) => {
         e.preventDefault();
         const user = { username, password };
+        console.info(user)
         instance.post('public/auth/login', user)
             .then(function (response) {
                 storeRefreshToken(response.data.refreshToken)
                 storeAccessToken(response.data.accessToken)
+                alert('Good job!')
                 navigation.navigate("BottomBar")
             })
             .catch(function (error) {
