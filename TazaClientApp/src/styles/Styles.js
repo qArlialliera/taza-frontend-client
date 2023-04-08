@@ -112,7 +112,7 @@ containerhead:{
   containerButtonBack: {
     position: 'absolute',
     bottom:-50,
-    left: -50
+    left: -70
   },
   container2:{
     flex: 1,
@@ -180,6 +180,20 @@ containerhead:{
     paddingVertical: 20
     
   },
+  dateTimeBtn:{
+    backgroundColor: '#D9D9D9',
+    borderRadius: 10,
+    width: 150,
+    alignItems: 'center',
+    marginVertical: 20,
+    paddingVertical: 20
+    
+  },
+  // datepic:{
+  //   width: '100%',
+  //   height: 260,
+  //   backgroundColor: 'red'
+  // },
 
   card_category_row:{
     backgroundColor: '#D9D9D9',
@@ -410,5 +424,10 @@ containerhead:{
   },
   containerScroll:{
     minHeight: '200%'
+  },
+  btn_position:{
+    position: 'absolute',
+    bottom: 20,
+    // right: 20,
   }
 });

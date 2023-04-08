@@ -11,6 +11,7 @@ import { CompanyList } from "./src/Pages/AfterLogin/CompanyList/CompanyList";
 import { EditProfile } from "./src/Pages/AfterLogin/Profile/EditProfile";
 import { AllCategories } from "./src/Pages/AfterLogin/Home/AllCategories";
 import { CompanyDetails } from "./src/Pages/AfterLogin/CompanyList/CompanyDetails/CompanyDetails";
+import { BookFeatures } from "./src/Pages/AfterLogin/CompanyList/BookFeatures/BookFeatures";
 
 
 const Stack = createNativeStackNavigator();
@@ -31,7 +32,7 @@ export const Navigate = () => {
                     <Stack.Screen name="edit_profile" component={EditProfile}  options={{headerShown: false}} />
                     <Stack.Screen name="all_categories" component={AllCategories}  options={{headerShown: false}} />
                     <Stack.Screen name="CompanyDetails" component={CompanyDetails}  options={{headerShown: false}} />
-                    {/* <Stack.Screen name="BookFeautures" component={BookFeautures}  options={{headerShown: false}} /> */}
+                    <Stack.Screen name="BookFeautures" component={BookFeatures}  options={{headerShown: false}} />
                     {/* <Stack.Screen name="Massages_Chat" component={MassagesChat}  options={{headerShown: false}} /> */}
                     
                 </Stack.Navigator>

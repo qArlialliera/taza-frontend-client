@@ -4,7 +4,8 @@ import { styles } from '../../../styles/Styles';
 import { instance } from "../../../Api/ApiManager";
 import { getAccessToken } from '../../../Storage/TokenStorage';
 import Repetear from '../../../MobX/ProfileMobxRener'
-
+import ImagePicker from 'react-native-image-crop-picker';
+// const FormData = global.FormData = global.originalFormData
 
 export const EditProfile = ({ navigation }) => {
     const [token, setToken] = useState(readItemFromStorage);
@@ -14,44 +15,81 @@ export const EditProfile = ({ navigation }) => {
     const [fullName, setFullname] = useState("");
     const [address, setAddress] = useState("");
     const [email, setEmail] = useState("");
+    const myImage = new FormData();
+    // const [myfile, setFile] = useState('');
 
-    const [myfile, setFile] = useState('');
-    const image = new FormData();
     // const pp = JSON.parse(JSON.stringify(props)).route
     const config = {
         headers: {
             'content-type': 'multipart/form-data',
-            'Authorization': 'Bearer ' + token
-        }
+            'Authorization': 'Bearer ' + token,
+        },
+        transformRequest: (data, headers) => {
+            // !!! override data to return formData
+            // since axios converts that to string
+            return myImage;
+        },
     }
-    const config2 = {headers: {'Authorization': 'Bearer ' + token}}
+    const config2 = { headers: { 'Authorization': 'Bearer ' + token } }
     useEffect(() => {
         readItemFromStorage();
-        // console.log(pp)
         instance.get('private/user/user-details', config2)
             .then(function (response) {
                 setUsername(response.data.username)
                 setFullname(response.data.fullName)
                 setAddress(response.data.address)
                 setEmail(response.data.email)
-                console.log(response.data)
+                // console.log(response.data)
             })
             .catch(function (error) {
                 console.log(error);
             });
 
     }, [token]);
-    const uploadPhoto = (e) => {
+    const imagePicker = () => {
+        ImagePicker.openPicker({
+            width: 300,
+            height: 300,
+            cropping: true
+        }).then(image => {
 
+            console.log(image);
+            savePhoto(image)
+        });
     }
+    const savePhoto = (image) => {
+        console.log(image.path)
+        myImage.append('file', {
+            uri: Platform.OS === "android" ? image.path : image.path.replace("file://", ""),
+            name: 'image.jpg',
+            type: image.mime
+        })
+        instance.post('/public/file/save', myImage, config).then((response) => {
+            alert('saved successfully!')
+            console.log('savephoto - ', response.data)
+            uploadPhoto(response.data)
 
+        }).catch((err) => {
+            console.log(err)
+        })
+    }
+    const uploadPhoto = (uuid) =>{
+        console.log(`/private/user/photo/upload/${uuid}`, config2)
+        instance.put(`/private/user/photo/upload/${uuid}`, config2).then((response)=>{
+            alert('uploadPhoto successfully!')
+            console.log('uploadPhoto - ', response.data)
+        }).catch((err) => {
+            alert('upload err')
+            console.log(err)
+        })
+    }
     const saveProfile = (e) => {
         e.preventDefault();
         const data = { username, fullName, email, address };
         console.log(data)
-        instance.put('private/user/edit/profile',data, config2)
+        instance.put('private/user/edit/profile', data, config2)
             .then(function (response) {
-                
+                alert('Updated successfully!')
                 console.log(response.data);
                 Repetear.trigger();
 
@@ -78,7 +116,7 @@ export const EditProfile = ({ navigation }) => {
                     <TextInput style={styles.input} value={username} placeholder={"Username"} onChangeText={(text) => setUsername(text)} />
                     <TextInput style={styles.input} value={email} placeholder={"Email"} onChangeText={(text) => setEmail(text)} />
                     <TextInput style={styles.input} value={address} placeholder={"Address"} onChangeText={(text) => setAddress(text)} />
-                    <TouchableOpacity onPress={(e) => uploadPhoto(e)} style={styles.profile_info_button_secondary}>
+                    <TouchableOpacity onPress={() => imagePicker()} style={styles.profile_info_button_secondary}>
                         <Image source={require('../../../Assets/images/upload_photo.png')} style={{ width: 40, height: 40 }} />
                         <Text style={sStyle.secondary_button}>Add Profile Photo</Text>
                     </TouchableOpacity>
