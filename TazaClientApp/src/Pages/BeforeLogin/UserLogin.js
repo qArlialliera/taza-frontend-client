@@ -11,26 +11,39 @@ export const UserLogin = ({ navigation }) => {
 
     const findUser = (e) => {
         e.preventDefault();
-        const user = { username, password };
-        console.info(user)
-        instance.post('public/auth/login', user)
-            .then(function (response) {
-                console.log(response.data)
-                if (response.data.roles[0].authority == 'ROLE_USER') {
-                    storeRefreshToken(response.data.refreshToken)
-                    storeAccessToken(response.data.accessToken)
-                    console.log(response.data)
-                    navigation.navigate("BottomBar")
-                }
-                else alert('You are not a user')
+        // const user = { username, password };
+        // console.info(user)
+        // instance.post('public/auth/login', user)
+        //     .then(function (response) {
+        //         console.log(response.data)
 
+        //         if (response.data.roles[0].authority == 'ROLE_USER') {
+        //             storeRefreshToken(response.data.refreshToken)
+        //             storeAccessToken(response.data.accessToken)
+        //             console.log(response.data)
+        //             navigation.navigate("BottomBar")
+        //         }
+        //         else alert('You are not a user')
+
+        //     })
+        //     .catch(function (error) {
+        //         alert('Wrong username or password')
+        //         console.log(error);
+        //     });
+
+        const loguser = {
+            username: username,
+            password: password
+          }
+          instance.post('public/auth/login', loguser)
+            .then(function (response) {
+              storeRefreshToken(response.data.refreshToken)
+              storeAccessToken(response.data.accessToken)
+              navigation.navigate('BottomBar')
             })
             .catch(function (error) {
-                alert('Wrong username or password')
-                console.log(error);
+              console.log(error);
             });
-
-
     }
 
 

@@ -48,7 +48,7 @@ export const AllCategories = ({ navigation }) => {
             data.map((u) => {
               return (
                 <View key={u.id}>
-                  <TouchableOpacity style={styles.card_category_row}>
+                  <TouchableOpacity style={styles.card_category_row} onPress={() => navigation.navigate('FindByCategory', u)}>
                     <Image style={styles.image_card} resizeMode="cover" source={u.img} />
                     <Text style={styles.name}>{u.name}</Text>
                   </TouchableOpacity>

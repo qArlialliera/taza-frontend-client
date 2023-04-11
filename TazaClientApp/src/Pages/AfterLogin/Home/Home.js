@@ -1,15 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { ImageBackground, View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { styles } from '../../../styles/Styles'
 import SearchBar from "react-native-dynamic-search-bar";
-// import { Card } from 'react-native-paper';
 
 
 const DATA = [
     { id: 1, name: 'General Cleaning', img: require('../../../Assets/images/icon_general.png') },
     { id: 2, name: 'Wet Cleaning', img: require('../../../Assets/images/icon_wet.png') },
-    { id: 3, name: 'Cleaning after repair', img: require('../../../Assets/images/icon_repair.png') },
-    { id: 4, name: 'Office Cleaning', img: require('../../../Assets/images/icon_office.png') },
+    { id: 4, name: 'Cleaning after repair', img: require('../../../Assets/images/icon_repair.png') },
+    { id: 3, name: 'Office Cleaning', img: require('../../../Assets/images/icon_office.png') },
 ]
 
 
@@ -18,19 +17,21 @@ const DATA = [
 export const Home = ({ navigation }) => {
     const [searchText, setSearchText] = useState("");
     const [spinnerVisibility, setSpinnerVisibility] = useState(false);
-    // const [selectedId, setSelectedId] = useState();
-
     const ReplaceWithAll = () => {
         navigation.navigate("all_categories")
     }
-
-
-
     const SearchText = (e) => {
-        // setSpinnerVisibility(true);
+        setSpinnerVisibility(true);
         setSearchText(e);
         console.log(searchText)
     }
+
+    useEffect(() => {
+      if(!searchText) setSpinnerVisibility(false)
+        
+      console.log('searchText', searchText)
+    }, [searchText])
+    
 
     return (
         <ScrollView style={styles.containerwellcome}>
@@ -47,8 +48,8 @@ export const Home = ({ navigation }) => {
                         placeholder="Search..."
                         fontFamily="Nunito-Regular"
                         style={styles.searchbar}
-                        // shadowStyle={styles.searchBarShadowStyle}
                         onChangeText={(text) => SearchText(text)}
+                        onClearPress={() => setSearchText("")}
                     />
                 </View>
                 <TouchableOpacity style={styles.divspecial}>

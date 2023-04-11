@@ -64,7 +64,7 @@ export const UserRegistration = ({ navigation }) => {
       .then(function (response) {
         storeRefreshToken(response.data.refreshToken)
         storeAccessToken(response.data.accessToken)
-        alert('log success')
+        navigation.navigate('BottomBar')
       })
       .catch(function (error) {
         console.log(error);

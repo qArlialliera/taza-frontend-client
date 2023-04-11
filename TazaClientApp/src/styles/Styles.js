@@ -27,6 +27,12 @@ containerwellcome:{
     flexDirection: 'column',
 },
 
+contscrollView:{
+  flex: 1,
+  flexDirection: 'column',
+  // backgroundColor: '#EFD3D7'
+},
+
 containerhead:{
     flexDirection:'row',
     margin:50
@@ -163,6 +169,13 @@ containerhead:{
     borderRadius: 20,
     height: 50
   },
+  searchbarWithBack:{
+    backgroundColor: '#D9D9D9',
+    marginHorizontal: 15,
+    width: '80%',
+    borderRadius: 20,
+  },
+
   divspecial:{
     backgroundColor: '#D9D9D9',
     borderRadius: 20,
@@ -238,11 +251,11 @@ containerhead:{
     borderRadius: 20,
   },
   controw:{
-    flex:2,
+    // flex:1,
     flexDirection:'row',
     justifyContent:'space-between',
     marginHorizontal: 20,
-    marginBottom: 50
+    // marginBottom: 50
   },
   buttoncompany:{
     backgroundColor: '#D9D9D9',
@@ -341,12 +354,33 @@ containerhead:{
     borderColor: '#D9D9D9',
     borderWidth:4,
   },
+  company_contsct_btn_secondary:{
+    alignItems:'center',
+    backgroundColor:'#414C60',
+    width: '48%',
+    borderRadius: 17,
+    padding: 15,
+    marginBottom: 20,
+    borderColor: '#8E9AAF',
+    borderWidth:4,
+  },
   msg_img:{
     width: 50,
     height: 50,
     borderRadius: 100,
     marginRight: 30
     // top: 30
+  },
+
+  msgBox:{
+    flexDirection: 'column',
+    backgroundColor: '#D9D9D9', 
+    borderRadius: 17, 
+    paddingVertical: 10,
+    minHeight: 50,
+    width: '100%',
+    paddingHorizontal: 10,
+    marginVertical: 5
   },
   book_bodytext:{
     fontFamily: 'Lobster-Regular', 
@@ -382,6 +416,17 @@ containerhead:{
 
 
   },
+  inputTextWithBorder:{
+    backgroundColor: '#D9D9D9',
+    borderRadius: 20,
+    height: 100,
+    marginVertical: 10,
+    alignItems: 'flex-start',
+    paddingHorizontal:20,
+    borderColor: '#414C60',
+    borderWidth: 2
+  },
+
   secondary_button: {
     
     color: '#D9D9D9',

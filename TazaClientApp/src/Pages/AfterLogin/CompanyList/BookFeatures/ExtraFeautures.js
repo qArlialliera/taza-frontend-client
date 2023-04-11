@@ -7,30 +7,8 @@ import { FlatList, View, TouchableOpacity, Text, Pressable } from 'react-native'
 export const ExtraFeautures = (props, services) => {
     const pp = props.props
     const serv = props.services
-    // console.log('serv---', serv)
 
     const [selectedItems, setSelectedItems] = useState([]);
-    // const handleOnPress = contact => {
-    //     if (selectedItems.length) {
-    //         return selectItems(contact);
-    //     }
-    //     console.log('pressed');
-    // };
-
-    // const getSelected = contact => selectedItems.includes(contact.id);
-
-    // const deSelectItems = () => setSelectedItems([]);
-
-    // const selectItems = item => {
-    //     if (selectedItems.includes(item.id)) {
-    //         const newListItems = selectedItems.filter(
-    //             listItem => listItem !== item.id,
-    //         );
-    //         return setSelectedItems([...newListItems]);
-    //     }
-    //     setSelectedItems([...selectedItems, item.id]);
-    //     console.log(selectItems)
-    // };
 
 
     const renderItem = ({ item }) => {

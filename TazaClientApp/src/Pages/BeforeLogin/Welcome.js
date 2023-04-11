@@ -1,11 +1,21 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, ImageBackground, TouchableOpacity, Image } from "react-native";
 import { styles } from '../../styles/Styles';
+import { getRefreshToken } from "../../Storage/TokenStorage";
 // import { sStyle } from '../styles/sStyle';
 
 
 export const Welcome = ({ navigation }) => {
     const loadScene = () => { navigation.navigate('Welcome2') }
+    const [token, setToken] = useState(readItemFromStorage);
+    const readItemFromStorage = async () => { const item = await getRefreshToken(); setToken(item) };
+    useEffect(() => { 
+        readItemFromStorage() 
+        if(token) navigation.navigate('BottomBar')
+        console.log('token - ', token)
+    }, [token])
+
+
     return (
         <View style={styles.containerwellcome}>
             <ImageBackground source={require('../../Assets/images/welcome.png')} style={styles.image}>

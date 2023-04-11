@@ -2,33 +2,52 @@ import React, { useEffect, useState } from 'react'
 import { View, ImageBackground, StyleSheet, Text, Image, TouchableOpacity } from 'react-native';
 import { styles } from '../../../styles/Styles'
 import { instance } from "../../../Api/ApiManager";
-import { getAccessToken } from '../../../Storage/TokenStorage';
-import {observer} from 'mobx-react-lite'
+import FastImage from 'react-native-fast-image'
+import { getAccessToken, removeAccessToken, removeRefreshToken } from '../../../Storage/TokenStorage';
+import { observer } from 'mobx-react-lite'
 import Repetear from '../../../MobX/ProfileMobxRener'
+import {Buffer} from 'buffer';
+import base64 from 'react-native-base64'
 
 
-export const Profile = observer( ({ navigation }) => {
+export const Profile = observer(({ navigation }) => {
   const [data, setData] = useState("");
   const [token, setToken] = useState(readItemFromStorage);
-  const readItemFromStorage = async () => {const item = await getAccessToken();setToken(item)};
+  const readItemFromStorage = async () => { const item = await getAccessToken(); setToken(item) };
+  const removeRefreshFromStorage = async () => { const item = await removeRefreshToken() };
+  const removeAccessFromStorage = async () => { const item = await removeAccessToken() };
+  const config = { headers: { 'Authorization': 'Bearer ' + token } }
 
-  const config = {headers: {'Authorization': 'Bearer ' + token}}
+  const [imageData, setImageData] = useState(null);
+
+
   useEffect(() => {
     readItemFromStorage()
-    console.log('e == ', token)
+    // console.log('e == ', token)
     instance.get('private/user/user-details', config)
       .then(function (response) {
         setData(response.data)
-
-        console.log(response.data)
+        // const imgdata = Buffer.from(response.data.photo, 'binary').toString('base64');
+        // setImageData(imgdata)
+        const imgdata = base64.encode(response.data.photo);
+        setImageData(imgdata)
+        console.log(imgdata)
       })
       .catch(function (error) {
         console.log(error);
       });
-  }, [token,Repetear.bool])
- 
+
+      // console.log('imageData', imageData)
+  }, [token, Repetear.bool])
+
   const Bdutton = () => {
     navigation.navigate("edit_profile")
+  }
+
+  const LogOut = () => {
+    removeRefreshFromStorage()
+    removeAccessFromStorage()
+    navigation.navigate("Welcome")
   }
   return (
     <View style={styles.containerwellcome}>
@@ -48,7 +67,15 @@ export const Profile = observer( ({ navigation }) => {
             </View>
           </View>
           <View style={styles.alignright}>
-            <Image source={require('../../../Assets/images/profile_ava.png')} />
+            <Image 
+              style={{ width: 100, height: 100 }}
+              source={{
+                uri: 'data:image/jpeg;base64,ZDM5OWM1ZWItZDBkOS00MTkyLWFjZmUtZWI4YmIzNGVmZWI1'
+              }}
+              resizeMode={FastImage.resizeMode.contain}
+  
+            />
+            {console.log(`data:image/jpeg;base64,${imageData}`)}
           </View>
         </View>
         <View style={{ marginHorizontal: 50 }}>
@@ -72,11 +99,22 @@ export const Profile = observer( ({ navigation }) => {
             <Text style={sStyle.secondary_second}>{data.email}</Text>
           </View>
 
-          
 
-          <TouchableOpacity onPress={Bdutton} style={styles.profile_info_button}>
+
+          {/* <TouchableOpacity onPress={Bdutton} style={styles.profile_info_button}>
             <Text style={sStyle.secondary_button}>Edit Profile</Text>
           </TouchableOpacity>
+          <TouchableOpacity onPress={Bdutton} style={styles.profile_info_button}>
+            <Text style={sStyle.secondary_button}>Log Out</Text>
+          </TouchableOpacity> */}
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <TouchableOpacity style={styles.company_contsct_btn} onPress={Bdutton} >
+              <Text style={sStyle.secondary_button}>Edit Profile</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.company_contsct_btn_secondary} onPress={LogOut}>
+              <Text style={sStyle.secondary_button}>Log Out</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </ImageBackground>
 
@@ -87,7 +125,7 @@ export const Profile = observer( ({ navigation }) => {
 const sStyle = StyleSheet.create({
 
   primary: {
-    alignItems:'center',
+    alignItems: 'center',
     top: '45%',
     marginBottom: 20,
     color: '#fff',
@@ -108,7 +146,7 @@ const sStyle = StyleSheet.create({
     left: '30%',
     fontWeight: '900',
     letterSpacing: 0.1
-},
+  },
   secondary_button: {
     color: '#D9D9D9',
     fontFamily: 'Nunito-Black',
