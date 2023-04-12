@@ -6,7 +6,7 @@ import FastImage from 'react-native-fast-image'
 import { getAccessToken, removeAccessToken, removeRefreshToken } from '../../../Storage/TokenStorage';
 import { observer } from 'mobx-react-lite'
 import Repetear from '../../../MobX/ProfileMobxRener'
-import {Buffer} from 'buffer';
+import { Buffer } from 'buffer';
 import base64 from 'react-native-base64'
 
 
@@ -27,23 +27,36 @@ export const Profile = observer(({ navigation }) => {
     instance.get('private/user/user-details', config)
       .then(function (response) {
         setData(response.data)
-        // const imgdata = Buffer.from(response.data.photo, 'binary').toString('base64');
+        // const imgdata = base64.encode(response.data.photo);
         // setImageData(imgdata)
-        const imgdata = base64.encode(response.data.photo);
-        setImageData(imgdata)
-        console.log(imgdata)
+        console.log(response.data)
+        getImage(response.data.photo)
       })
       .catch(function (error) {
         console.log(error);
       });
 
-      // console.log('imageData', imageData)
+    // console.log('imageData', imageData)
   }, [token, Repetear.bool])
 
   const Bdutton = () => {
     navigation.navigate("edit_profile")
   }
+  const getImage = (uuid) => {
+    console.log(uuid)
+    instance.get(`/public/file/photo/get/${uuid}`, { responseType: 'blob' }).then((response) => {
+      // console.log('tt',res.data)
+      // const imgdata = base64.encode(res.data);
+      // setImageData(imgdata)
 
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImageData(reader.result);
+      };
+      reader.readAsDataURL(response.data);
+
+    }).catch(err => console.error(err))
+  }
   const LogOut = () => {
     removeRefreshFromStorage()
     removeAccessFromStorage()
@@ -67,15 +80,9 @@ export const Profile = observer(({ navigation }) => {
             </View>
           </View>
           <View style={styles.alignright}>
-            <Image 
-              style={{ width: 100, height: 100 }}
-              source={{
-                uri: 'data:image/jpeg;base64,ZDM5OWM1ZWItZDBkOS00MTkyLWFjZmUtZWI4YmIzNGVmZWI1'
-              }}
-              resizeMode={FastImage.resizeMode.contain}
-  
-            />
-            {console.log(`data:image/jpeg;base64,${imageData}`)}
+
+            {imageData && <Image source={{ uri: imageData }} style={styles.image_avater} />}
+            {/* {console.log('imageData', imageData)} */}
           </View>
         </View>
         <View style={{ marginHorizontal: 50 }}>
@@ -99,14 +106,6 @@ export const Profile = observer(({ navigation }) => {
             <Text style={sStyle.secondary_second}>{data.email}</Text>
           </View>
 
-
-
-          {/* <TouchableOpacity onPress={Bdutton} style={styles.profile_info_button}>
-            <Text style={sStyle.secondary_button}>Edit Profile</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={Bdutton} style={styles.profile_info_button}>
-            <Text style={sStyle.secondary_button}>Log Out</Text>
-          </TouchableOpacity> */}
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <TouchableOpacity style={styles.company_contsct_btn} onPress={Bdutton} >
               <Text style={sStyle.secondary_button}>Edit Profile</Text>
@@ -152,4 +151,5 @@ const sStyle = StyleSheet.create({
     fontFamily: 'Nunito-Black',
     fontSize: 15,
   },
+
 });

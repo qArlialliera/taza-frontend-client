@@ -15,6 +15,7 @@ import { BookFeatures } from "./src/Pages/AfterLogin/CompanyList/BookFeatures/Bo
 import { FindByCategory } from "./src/Pages/AfterLogin/PageByCategory/FindByCategory";
 import { getRefreshToken } from "./src/Storage/TokenStorage";
 import { StatusBar } from 'react-native'
+import { SpecialOffers } from "./src/Pages/AfterLogin/Home/SpecialOffers";
 
 
 const Stack = createNativeStackNavigator();
@@ -36,6 +37,7 @@ export const Navigate = () => {
                     <Stack.Screen name="CompanyDetails" component={CompanyDetails} options={{ headerShown: false }} />
                     <Stack.Screen name="BookFeautures" component={BookFeatures} options={{ headerShown: false }} />
                     <Stack.Screen name="FindByCategory" component={FindByCategory} options={{ headerShown: false }} />
+                    <Stack.Screen name="SpecialOffers" component={SpecialOffers} options={{ headerShown: false }} />
                     {/* <Stack.Screen name="Massages_Chat" component={MassagesChat}  options={{headerShown: false}} /> */}
 
                 </Stack.Navigator>

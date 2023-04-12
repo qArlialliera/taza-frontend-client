@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react'
-import { View, Text, Image, TouchableOpacity, StyleSheet, TextInput, KeyboardAvoidingView, ScrollView } from 'react-native'
+import { View, Text, Image, TouchableOpacity, TextInput } from 'react-native'
 import { AirbnbRating } from 'react-native-ratings';
 import { styles } from '../../../../styles/Styles';
 import { instance } from '../../../../Api/ApiManager';
@@ -29,13 +29,13 @@ export const CompanyDetails_Comments = (props) => {
         console.log
         instance.get(`/private/review/company/${pp.id}`, config).then((res) => {
             setReview(res.data)
+            // else setReview(res.data)
             setNewRating(res.data.res)
-            // console.log(review)
+            console.log(review)
         }).catch(err => console.log(err))
 
         instance.get('private/user/user-details', config).then((res) => {
             setUser(res.data)
-            // console.log('ge', res.data)
         }).catch(err => console.log(err))
     }, [token])
 
@@ -53,11 +53,11 @@ export const CompanyDetails_Comments = (props) => {
     return (
         <View style={{ width: '100%' }}>
             {
-                Array.isArray(review)
+                // Array.isArray(review)
+                review 
                     ?
                     review.map((r) => {
                         return (
-                            // <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                                 <View key={r.id} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', marginVertical: 10, width: '100%' }}>
                                     <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
                                         <Image style={styles.msg_img} source={require('../../../../Assets/images/profile_ava.png')} />
@@ -78,7 +78,6 @@ export const CompanyDetails_Comments = (props) => {
                                             </View>
                                             <Text style={{ fontFamily: 'Nunito-Regular', fontSize: 15, color: '#000000', marginVertical: 2 }}>{r.comment}</Text>
                                         </View>
-                                        {/* <KeyboardAvoidingView> */}
                                         {
                                             r.user.id === isEditPressed ?
                                                 <View style={styles.msgBox}>
@@ -100,9 +99,8 @@ export const CompanyDetails_Comments = (props) => {
                                                 </View>
                                                 : null
                                         }
-                                        {/* </KeyboardAvoidingView> */}
                                         {
-                                            r.user.id === userData.id && isEditPressed < 0 ?
+                                            r.user.id === userData?.id && isEditPressed < 0 ?
 
                                                 <TouchableOpacity style={styles.profile_info_button} onPress={() => setIsEditPressed(r.user.id)}>
                                                     <Text style={{ color: '#D9D9D9', fontFamily: 'Nunito-SemiBold', fontSize: 15, }}>Edit Review</Text>
@@ -114,7 +112,10 @@ export const CompanyDetails_Comments = (props) => {
 
                         )
                     })
-                    : null
+                    : 
+                    // <Image source={require('../../../../Assets/images/comment_empty.png')}/>
+                    null
+                    
             }
         </View>
     )

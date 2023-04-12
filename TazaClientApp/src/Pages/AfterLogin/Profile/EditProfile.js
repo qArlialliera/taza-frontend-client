@@ -15,20 +15,15 @@ export const EditProfile = ({ navigation }) => {
     const [fullName, setFullname] = useState("");
     const [address, setAddress] = useState("");
     const [email, setEmail] = useState("");
+    const [photoUuid, setPhotoUuid] = useState("");
     const myImage = new FormData();
-    // const [myfile, setFile] = useState('');
 
-    // const pp = JSON.parse(JSON.stringify(props)).route
     const config = {
         headers: {
             'content-type': 'multipart/form-data',
             'Authorization': 'Bearer ' + token,
         },
-        transformRequest: (data, headers) => {
-            // !!! override data to return formData
-            // since axios converts that to string
-            return myImage;
-        },
+        
     }
     const config2 = { headers: { 'Authorization': 'Bearer ' + token } }
     useEffect(() => {
@@ -39,7 +34,6 @@ export const EditProfile = ({ navigation }) => {
                 setFullname(response.data.fullName)
                 setAddress(response.data.address)
                 setEmail(response.data.email)
-                // console.log(response.data)
             })
             .catch(function (error) {
                 console.log(error);
@@ -52,13 +46,10 @@ export const EditProfile = ({ navigation }) => {
             height: 300,
             cropping: true
         }).then(image => {
-
-            console.log(image);
             savePhoto(image)
         });
     }
     const savePhoto = (image) => {
-        console.log(image.path)
         myImage.append('file', {
             uri: Platform.OS === "android" ? image.path : image.path.replace("file://", ""),
             name: 'image.jpg',
@@ -66,22 +57,19 @@ export const EditProfile = ({ navigation }) => {
         })
         instance.post('/public/file/save', myImage, config).then((response) => {
             alert('saved successfully!')
-            console.log('savephoto - ', response.data)
             uploadPhoto(response.data)
-
         }).catch((err) => {
             console.log(err)
         })
     }
-    const uploadPhoto = (uuid) =>{
-        console.log(`/private/user/photo/upload/${uuid}`, config2)
-        instance.put(`/private/user/photo/upload/${uuid}`, config2).then((response)=>{
-            alert('uploadPhoto successfully!')
-            console.log('uploadPhoto - ', response.data)
+    const uploadPhoto = (photoUuid) =>{
+        console.log(`/private/user/photo/upload/${photoUuid}`)
+        instance.put(`/private/user/photo/upload/${photoUuid}`, config2).then((response)=>{
         }).catch((err) => {
             alert('upload err')
             console.log(err)
         })
+        Repetear.trigger();
     }
     const saveProfile = (e) => {
         e.preventDefault();

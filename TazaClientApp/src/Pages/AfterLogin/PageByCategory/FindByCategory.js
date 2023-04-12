@@ -88,18 +88,18 @@ export const FindByCategory = (props) => {
                                                     {      
                                                         Array.isArray(services)
                                                         ?
-                                                        services.map((i, ind)=> i.categories.map((j, index) => 
+                                                        services
+                                                        .filter((company) => company.id === u.id)
+                                                        .slice(0, 6)
+                                                        .map((i, ind)=> i.categories.map((j, index) => 
                                                         {
-                                                            // index = index+1
-                                                            // console.log(`slice - ${ind} `)
-                                                            if(u.id === i.company[0].id){
                                                             return (
                                                                 <View key={j.id} style={{backgroundColor: '#8E9AAF', borderRadius: 5, marginVertical: 4, padding: 5}}>
                                                                     <Text style={{color: '#D9D9D9',fontFamily: 'Nunito-Black',}}>{j.name}</Text>
                                                                 </View>
                                                             )
                                                             
-                                                        } 
+                                                        // } 
                                                         })): null
                                                     }
 

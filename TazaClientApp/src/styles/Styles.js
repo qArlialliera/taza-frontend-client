@@ -382,6 +382,18 @@ containerhead:{
     paddingHorizontal: 10,
     marginVertical: 5
   },
+
+  msgBoxRed:{
+    flexDirection: 'column',
+    backgroundColor: '#EFD3D7', 
+    borderRadius: 17, 
+    paddingVertical: 10,
+    // minHeight: 50,
+    // width: '100%',
+    paddingHorizontal: 10,
+    marginVertical: 5
+  },
+
   book_bodytext:{
     fontFamily: 'Lobster-Regular', 
     fontSize: 22, 
@@ -474,5 +486,14 @@ containerhead:{
     position: 'absolute',
     bottom: 20,
     // right: 20,
+  },
+  image_avater:{
+    width: 120,
+    height: 120,
+    borderRadius:100,
+    borderWidth: 5,
+    borderColor: '#8E9AAF',
+    position:'relative',
+    top: 10
   }
 });

@@ -52,7 +52,7 @@ export const Home = ({ navigation }) => {
                         onClearPress={() => setSearchText("")}
                     />
                 </View>
-                <TouchableOpacity style={styles.divspecial}>
+                <TouchableOpacity style={styles.divspecial} onPress={()=>navigation.navigate('SpecialOffers')}>
                     <Text style={{ alignItems: 'center', top: '45%', marginBottom: 20, color: '#414C60', fontFamily: 'Lobster-Regular', fontSize: 25 }}>Special Offers</Text>
                 </TouchableOpacity>
                 <Text style={{ alignItems: 'center', marginTop: 20, marginBottom: 20, color: '#D9D9D9', fontFamily: 'Nunito-SemiBold', fontSize: 20 }}>Select by category</Text>
