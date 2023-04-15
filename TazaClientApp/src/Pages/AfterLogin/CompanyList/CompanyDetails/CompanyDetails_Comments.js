@@ -7,6 +7,7 @@ import { instance } from '../../../../Api/ApiManager';
 import { getAccessToken } from '../../../../Storage/TokenStorage';
 import { useNavigation } from '@react-navigation/native';
 import Repetear from '../../../../MobX/ProfileMobxRener'
+import { AvatarImage } from './AvatarImage';
 
 export const CompanyDetails_Comments = (props) => {
     const pp = props.props;
@@ -19,6 +20,9 @@ export const CompanyDetails_Comments = (props) => {
     //useStates
     const [review, setReview] = useState()
     const [userData, setUser] = useState()
+    const [userImages, setUserImages] = useState()
+    const [userPhotos, setUserPhotos] = useState([]);
+
     const [newRating, setNewRating] = useState(0)
     const [newComment, setNewComment] = useState()
     const [isEditPressed, setIsEditPressed] = useState(-1)
@@ -29,21 +33,38 @@ export const CompanyDetails_Comments = (props) => {
         console.log
         instance.get(`/private/review/company/${pp.id}`, config).then((res) => {
             setReview(res.data)
-            // else setReview(res.data)
             setNewRating(res.data.res)
-            console.log(review)
+            // getImage(res.data.user.photo)
+            // console.log(res.data.user.photo)
         }).catch(err => console.log(err))
 
         instance.get('private/user/user-details', config).then((res) => {
             setUser(res.data)
         }).catch(err => console.log(err))
-    }, [token])
+    }, [token, Repetear.bool])
+    // useState(() => {
+    //     const photos = review ? review.map(user => user.user.photo):null;
+    //     setUserPhotos(photos);
+    //     console.log(photos)
+    //   }, []);
+
+
+    const getImage = (uuid) => {
+        console.log(uuid)
+        instance.get(`/public/file/photo/get/${uuid}`, { responseType: 'blob' }).then((response) => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            setUserImages([...reader.result]);
+          };
+          reader.readAsDataURL(response.data);
+    
+        }).catch(err => console.error(err))
+      }
+
 
     const putNewReview = (id) => {
         const data = { comment: newComment, rate: newRating }
-        // console.log('data - ', data, '; id - ', id)
         instance.put(`/private/review/${id}`, data, config).then((res) => {
-            // console.log(res.data)
             setIsEditPressed(-1)
             Repetear.trigger();
         }).catch(err => console.log(err))
@@ -53,14 +74,15 @@ export const CompanyDetails_Comments = (props) => {
     return (
         <View style={{ width: '100%' }}>
             {
-                // Array.isArray(review)
                 review 
                     ?
                     review.map((r) => {
+                        // getImage(r.user.photo)
                         return (
                                 <View key={r.id} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', marginVertical: 10, width: '100%' }}>
                                     <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
-                                        <Image style={styles.msg_img} source={require('../../../../Assets/images/profile_ava.png')} />
+                                        {/* <Image style={styles.msg_img} source={require('../../../../Assets/images/profile_ava.png')} /> */}
+                                        <AvatarImage  props={r.user.photo} />
                                         <Text style={{ fontFamily: 'Nunito-Black', color: '#D9D9D9', marginTop: 5 }}>{r.user.fullName}</Text>
                                     </View>
                                     <View style={{ flexDirection: 'column', width: '80%', }}>

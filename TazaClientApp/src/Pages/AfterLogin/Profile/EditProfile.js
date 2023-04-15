@@ -5,7 +5,6 @@ import { instance } from "../../../Api/ApiManager";
 import { getAccessToken } from '../../../Storage/TokenStorage';
 import Repetear from '../../../MobX/ProfileMobxRener'
 import ImagePicker from 'react-native-image-crop-picker';
-// const FormData = global.FormData = global.originalFormData
 
 export const EditProfile = ({ navigation }) => {
     const [token, setToken] = useState(readItemFromStorage);
@@ -56,7 +55,6 @@ export const EditProfile = ({ navigation }) => {
             type: image.mime
         })
         instance.post('/public/file/save', myImage, config).then((response) => {
-            alert('saved successfully!')
             uploadPhoto(response.data)
         }).catch((err) => {
             console.log(err)
@@ -66,7 +64,6 @@ export const EditProfile = ({ navigation }) => {
         console.log(`/private/user/photo/upload/${photoUuid}`)
         instance.put(`/private/user/photo/upload/${photoUuid}`, config2).then((response)=>{
         }).catch((err) => {
-            alert('upload err')
             console.log(err)
         })
         Repetear.trigger();

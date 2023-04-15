@@ -23,20 +23,12 @@ export const Profile = observer(({ navigation }) => {
 
   useEffect(() => {
     readItemFromStorage()
-    // console.log('e == ', token)
-    instance.get('private/user/user-details', config)
-      .then(function (response) {
+    instance.get('private/user/user-details', config).then(function (response) {
         setData(response.data)
-        // const imgdata = base64.encode(response.data.photo);
-        // setImageData(imgdata)
-        console.log(response.data)
         getImage(response.data.photo)
-      })
-      .catch(function (error) {
+      }).catch(function (error) {
         console.log(error);
       });
-
-    // console.log('imageData', imageData)
   }, [token, Repetear.bool])
 
   const Bdutton = () => {
@@ -45,10 +37,6 @@ export const Profile = observer(({ navigation }) => {
   const getImage = (uuid) => {
     console.log(uuid)
     instance.get(`/public/file/photo/get/${uuid}`, { responseType: 'blob' }).then((response) => {
-      // console.log('tt',res.data)
-      // const imgdata = base64.encode(res.data);
-      // setImageData(imgdata)
-
       const reader = new FileReader();
       reader.onloadend = () => {
         setImageData(reader.result);

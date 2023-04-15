@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react'
-import { ImageBackground, View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
+import React from 'react'
+import { ImageBackground, View, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { styles } from '../../../styles/Styles'
-import SearchBar from "react-native-dynamic-search-bar";
+import { Search } from './Search';
+
 
 
 const DATA = [
@@ -15,43 +16,13 @@ const DATA = [
 
 
 export const Home = ({ navigation }) => {
-    const [searchText, setSearchText] = useState("");
-    const [spinnerVisibility, setSpinnerVisibility] = useState(false);
     const ReplaceWithAll = () => {
         navigation.navigate("all_categories")
     }
-    const SearchText = (e) => {
-        setSpinnerVisibility(true);
-        setSearchText(e);
-        console.log(searchText)
-    }
-
-    useEffect(() => {
-      if(!searchText) setSpinnerVisibility(false)
-        
-      console.log('searchText', searchText)
-    }, [searchText])
-    
-
     return (
         <ScrollView style={styles.containerwellcome}>
             <ImageBackground source={require('../../../Assets/images/homeBack.png')} style={styles.imagehome}>
-                <View >
-                    <SearchBar
-                        height={50}
-                        fontSize={18}
-                        fontColor="#fff"
-                        iconColor="#fff"
-                        shadowColor="#282828"
-                        cancelIconColor="#fdfdfd"
-                        spinnerVisibility={spinnerVisibility}
-                        placeholder="Search..."
-                        fontFamily="Nunito-Regular"
-                        style={styles.searchbar}
-                        onChangeText={(text) => SearchText(text)}
-                        onClearPress={() => setSearchText("")}
-                    />
-                </View>
+                <Search onPress={()=>navigation.navigate("CompanyList")}/>
                 <TouchableOpacity style={styles.divspecial} onPress={()=>navigation.navigate('SpecialOffers')}>
                     <Text style={{ alignItems: 'center', top: '45%', marginBottom: 20, color: '#414C60', fontFamily: 'Lobster-Regular', fontSize: 25 }}>Special Offers</Text>
                 </TouchableOpacity>

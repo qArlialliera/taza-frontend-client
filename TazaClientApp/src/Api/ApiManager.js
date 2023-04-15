@@ -3,5 +3,5 @@ import axios from 'axios';
 
 export const instance = axios.create({
     // baseURL: 'http://10.121.219.152:8080',
-    baseURL: 'http://192.168.31.149:8080',
+    baseURL: 'http://192.168.31.150:8080',
 });

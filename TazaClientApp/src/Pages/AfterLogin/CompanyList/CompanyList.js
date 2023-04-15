@@ -5,6 +5,7 @@ import { styles } from '../../../styles/Styles'
 import Modal from "react-native-modal";
 import { instance } from "../../../Api/ApiManager";
 import { getAccessToken, getRefreshToken } from '../../../Storage/TokenStorage';
+import { Search } from '../Home/Search';
 // import { TextInput } from 'react-native-paper';
 
 
@@ -71,25 +72,10 @@ export const CompanyList = ({ navigation }) => {
   return (
     <ScrollView style={styles.contscrollView} contentContainerStyle={{ paddingRight: 0, minHeight: '100%' }}>
       <ImageBackground source={require('../../../Assets/images/profileback.png')} style={styles.imageprofile}>
-        <View >
-          <SearchBar
-            height={50}
-            fontSize={18}
-            fontColor="#fff"
-            iconColor="#fff"
-            shadowColor="#282828"
-            cancelIconColor="#fdfdfd"
-            spinnerVisibility={spinnerVisibility}
-            placeholder="Search..."
-            fontFamily="Nunito-Regular"
-            style={styles.searchbar}
-            // shadowStyle={styles.searchBarShadowStyle}
-            onChangeText={(text) => SearchText(text)}
-          />
-        </View>
+        <Search />
         <View style={styles.controw}>
           <TouchableOpacity style={styles.buttoncompany}>
-            <Text style={{ color: '#212427', fontFamily: 'Nunito-Black', fontSize: 15, top: '25%', fontWeight: '600' }}>Open Map</Text>
+            <Text style={{ color: '#212427', fontFamily: 'Nunito-Black', fontSize: 15, top: '25%', fontWeight: '600' }} onPress={()=>navigation.navigate('OpenMap')}>Open Map</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.buttoncompany} onPress={toggleModal} >
             <Text style={{ color: '#212427', fontFamily: 'Nunito-Black', fontSize: 15, top: '25%', fontWeight: '600' }}>Filter</Text>
