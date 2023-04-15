@@ -15,13 +15,14 @@ import Repetear from '../../../../MobX/ProfileMobxRener'
 export const CompanyDetails = (props) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [currentRating, setCurrentRating] = useState(0);
-
+  const [imageData, setImageData] = useState(null);
 
   const pp = JSON.parse(JSON.stringify(props)).route.params
-
+  console.log(pp)
   const [token, setToken] = useState(readItemFromStorage);
   const readItemFromStorage = async () => { const item = await getAccessToken(); setToken(item) };
   const config = { headers: { 'Authorization': 'Bearer ' + token } }
+
 
 
   const changePage = (index) => {
@@ -36,7 +37,22 @@ export const CompanyDetails = (props) => {
       setCurrentRating(res.data)
     }).catch(err => console.log(err))
 
+    getImage(pp.photo)
+
   }, [token, Repetear.bool])
+
+  const getImage = (uuid) => {
+    console.log(uuid)
+    instance.get(`/public/file/photo/get/${uuid}`, { responseType: 'blob' }).then((response) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImageData(reader.result);
+      };
+      reader.readAsDataURL(response.data);
+
+    }).catch(err => console.error(err))
+  }
+
 
   return (
     // <ScrollView horizontal style={styles.contscrollView} contentContainerStyle={{ paddingRight: 0, minHeight: '100%' }} >
@@ -46,7 +62,8 @@ export const CompanyDetails = (props) => {
         {/* Standart info */}
         {/* <KeyboardAvoidingView behavior="padding"> */}
         <View style={{ alignItems: 'center', marginVertical: 10 }}>
-          <Image source={require('../../../../Assets/images/newimg.png')} style={styles.circleimg} />
+          {/* <Image source={require('../../../../Assets/images/newimg.png')} style={styles.circleimg} /> */}
+          {imageData && <Image source={{ uri: imageData }} style={styles.circleimg} />}
           <Text style={styles.primary}>{pp.name}</Text>
           <StarRating
             rating={currentRating}

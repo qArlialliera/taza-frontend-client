@@ -284,7 +284,10 @@ containerhead:{
   },
   image_company:{
     // top: '5%',
-    // left: -50,
+    left: -10,
+    width:80,
+    height: 80,
+    borderRadius: 10
   },
   back:{
     flex: 1,

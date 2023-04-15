@@ -6,6 +6,7 @@ import Modal from "react-native-modal";
 import { instance } from "../../../Api/ApiManager";
 import { getAccessToken, getRefreshToken } from '../../../Storage/TokenStorage';
 import { Search } from '../Home/Search';
+import { CompanyImages } from './CompanyImages';
 // import { TextInput } from 'react-native-paper';
 
 
@@ -141,9 +142,7 @@ export const CompanyList = ({ navigation }) => {
                     <View key={u.id}>
                       <View style={styles.cont_company}>
                         <TouchableOpacity style={styles.box_company} onPress={() => navigation.navigate('CompanyDetails', u)}>
-                          <View>
-                            <Image style={styles.image_company} source={require('../../../Assets/images/newimg.png')} />
-                          </View>
+                            <CompanyImages props={u.photo} />
                           <View style={{ marginLeft: 30, alignItems: 'flex-start' }}>
                             <Text style={{ color: '#414C60', fontFamily: 'Lobster-Regular', fontSize: 25 }}>{u.name}</Text>
                             {

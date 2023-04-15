@@ -17,6 +17,8 @@ export const BookFeatures = (company) => {
 
     //useStates
     const [isModalVisible, setModalVisible] = useState(false);
+    const [imageData, setImageData] = useState(null);
+
 
     const [area, setArea] = useState(0);
     const [rooms, setRooms] = useState(0);
@@ -49,7 +51,7 @@ export const BookFeatures = (company) => {
             setCurrentRating(res.data)
         }).catch(err => console.log(err))
         // console.log('selectedServices -', selectedServices)
-
+        getImage(comp.pp.photo)
     }, [token, time, date, selectedServices])
 
     //timepicker
@@ -101,8 +103,7 @@ export const BookFeatures = (company) => {
                 id: 1
             }
         }
-        // console.log('data: ', data)
-        // console.log('comp: ', comp)
+
         setModalVisible(true)
         instance.post('/private/orders/add', data, config).then((res) => {
             setModalVisible(true)
@@ -115,7 +116,17 @@ export const BookFeatures = (company) => {
         setModalVisible(false);
     };
 
+    const getImage = (uuid) => {
+        console.log(uuid)
+        instance.get(`/public/file/photo/get/${uuid}`, { responseType: 'blob' }).then((response) => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImageData(reader.result);
+            };
+            reader.readAsDataURL(response.data);
 
+        }).catch(err => console.error(err))
+    }
 
     const WrapperComponent = () => {
         return (
@@ -151,7 +162,8 @@ export const BookFeatures = (company) => {
 
                 {/* Standart info */}
                 <View style={{ alignItems: 'center', marginVertical: 10 }}>
-                    <Image source={require('../../../../Assets/images/newimg.png')} style={styles.circleimg} />
+                    {/* <Image source={require('../../../../Assets/images/newimg.png')} style={styles.circleimg} /> */}
+                    {imageData && <Image source={{ uri: imageData }} style={styles.circleimg} />}
                     <Text style={styles.primary}>
                         {comp.pp.name}
                     </Text>

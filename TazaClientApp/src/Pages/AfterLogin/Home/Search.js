@@ -6,6 +6,7 @@ import { instance } from '../../../Api/ApiManager';
 import { getAccessToken } from '../../../Storage/TokenStorage';
 import FuzzySearch from 'fuzzy-search';
 import { useNavigation } from '@react-navigation/native';
+import { CompanyImages } from '../CompanyList/CompanyImages';
 
 export const Search = () => {
     const [spinnerVisibility, setSpinnerVisibility] = useState(false);
@@ -97,7 +98,8 @@ export const Search = () => {
                           <View style={styles.cont_company}>
                             <TouchableOpacity style={styles.box_company} onPress={() => navigation.navigate('CompanyDetails', u)}>
                               <View>
-                                <Image style={styles.image_company} source={require('../../../Assets/images/newimg.png')} />
+                                {/* <Image style={styles.image_company} source={require('../../../Assets/images/newimg.png')} /> */}
+                                <CompanyImages props={u.photo} />
                               </View>
                               <View style={{ marginLeft: 30, alignItems: 'flex-start' }}>
                                 <Text style={{ color: '#414C60', fontFamily: 'Lobster-Regular', fontSize: 25 }}>{u.name}</Text>

@@ -6,6 +6,7 @@ import { instance } from '../../../../Api/ApiManager';
 import { getAccessToken } from '../../../../Storage/TokenStorage';
 import { Services_Mapping } from './Services_Mapping';
 import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
+import { CompanyImages } from '../CompanyImages';
 
 
 export const CompanyDetails_Services = (props) => {
@@ -75,6 +76,7 @@ export const CompanyDetails_Services = (props) => {
               <TouchableOpacity style={styles.card_category_services} onPress={() => navigation.navigate("BookFeautures", { pp, i, j, services })}>
                 <Text style={styles.name}>{j.name}</Text>
                 <Image style={{ width: 20, height: 20, }} source={require('../../../../Assets/images/ic/ic_arrow.png')} />
+                
               </TouchableOpacity>
             </View>
           )
