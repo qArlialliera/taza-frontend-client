@@ -1,9 +1,11 @@
 import React from 'react'
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native'
 import { styles } from '../../../../styles/Styles';
+import { useNavigation } from '@react-navigation/native';
 
 export const CompanyDetails_Contacts = (props) => {
     // console.log('props', props)
+    const navigation = useNavigation();
     return (
         <View>
             {/* <Text>CompanyDetails_Contacts</Text> */}
@@ -33,7 +35,8 @@ export const CompanyDetails_Contacts = (props) => {
                 <TouchableOpacity style={styles.company_contsct_btn}>
                     <Text style={sStyle.secondary_button}>Call</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.company_contsct_btn}>
+                <TouchableOpacity style={styles.company_contsct_btn}
+                onPress={() => navigation.navigate("Massages_Chat", props.props)}>
                     <Text style={sStyle.secondary_button}>Message</Text>
                 </TouchableOpacity>
             </View>

@@ -12,6 +12,8 @@
   "dependencies": {
     "@flyerhq/react-native-chat-ui": "^1.4.3",
     "@freakycoder/react-native-bounceable": "^1.0.3",
+    "@geoapify/geocoder-autocomplete": "^1.5.1",
+    "@geoapify/react-geocoder-autocomplete": "^1.5.0",
     "@react-native-async-storage/async-storage": "^1.18.1",
     "@react-native-community/datetimepicker": "^7.0.1",
     "@react-navigation/native": "^6.1.6",
@@ -22,6 +24,7 @@
     "fuzzy-search": "^3.2.1",
     "mobx": "^6.9.0",
     "mobx-react-lite": "^3.4.3",
+    "net": "^1.0.2",
     "react": "17.0.2",
     "react-here-autocomplete": "^1.0.2",
     "react-native": "0.67.5",
@@ -46,6 +49,8 @@
     "react-native-svg": "^13.9.0",
     "react-native-swipe-gestures": "^1.0.5",
     "react-native-vector-icons": "^9.2.0",
+    "sockjs-client": "^1.6.1",
+    "stompjs": "^2.3.3",
     "styled-components": "^5.3.9"
   },
   "devDependencies": {

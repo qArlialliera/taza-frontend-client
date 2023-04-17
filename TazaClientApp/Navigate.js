@@ -17,6 +17,7 @@ import { getRefreshToken } from "./src/Storage/TokenStorage";
 import { StatusBar } from 'react-native'
 import { SpecialOffers } from "./src/Pages/AfterLogin/Home/SpecialOffers";
 import { OpenMap } from "./src/Pages/AfterLogin/CompanyList/Map/OpenMap";
+import { MessagesChat } from "./src/Pages/AfterLogin/Messages/MassagesChat";
 
 
 const Stack = createNativeStackNavigator();
@@ -40,7 +41,7 @@ export const Navigate = () => {
                     <Stack.Screen name="FindByCategory" component={FindByCategory} options={{ headerShown: false }} />
                     <Stack.Screen name="SpecialOffers" component={SpecialOffers} options={{ headerShown: false }} />
                     <Stack.Screen name="OpenMap" component={OpenMap} options={{ headerShown: false }} />
-                    {/* <Stack.Screen name="Massages_Chat" component={MassagesChat}  options={{headerShown: false}} /> */}
+                    <Stack.Screen name="Massages_Chat" component={MessagesChat}  options={{headerShown: false}} />
 
                 </Stack.Navigator>
             </NavigationContainer>

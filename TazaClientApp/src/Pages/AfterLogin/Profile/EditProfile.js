@@ -63,6 +63,7 @@ export const EditProfile = ({ navigation }) => {
     const uploadPhoto = (photoUuid) =>{
         console.log(`/private/user/photo/upload/${photoUuid}`)
         instance.put(`/private/user/photo/upload/${photoUuid}`, config2).then((response)=>{
+            alert('succesfully added!', response)
         }).catch((err) => {
             console.log(err)
         })
