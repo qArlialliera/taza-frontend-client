@@ -125,7 +125,27 @@ containerhead:{
     alignItems:'center',
     justifyContent:'center'
   },
-
+  primary: {
+    top: '15%',
+    color: '#fff',
+    fontFamily: 'Lobster-Regular',
+    fontSize: 35
+  },
+  secondary: {
+    color: '#8E9AAF', fontFamily: 'Nunito-Regular', textAlign: 'center', fontSize: 20
+  },
+  primary2: {
+    marginBottom: 20,
+    color: '#EFD3D7',
+    fontFamily: 'Lobster-Regular',
+    fontSize: 35,
+    alignSelf: 'center'
+},
+  secondary2: {
+    color: '#EFD3D7',
+    fontFamily: 'Nunito-Regular',
+    alignSelf: 'center'
+},
   container3:{
     flex: 1,
     alignItems:'center',
@@ -397,6 +417,16 @@ containerhead:{
     marginVertical: 5
   },
 
+  btn_Red:{
+    backgroundColor: '#E4C2C2', 
+    borderRadius: 17, 
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    marginVertical: 5,
+    width: '50%',
+    alignSelf: 'flex-end'
+  },
+
   book_bodytext:{
     fontFamily: 'Lobster-Regular', 
     fontSize: 22, 
@@ -498,5 +528,21 @@ containerhead:{
     borderColor: '#8E9AAF',
     position:'relative',
     top: 10
+  },
+  inputTextSpecial:{
+    backgroundColor: '#8E9AAF',
+    borderRadius: 20,
+    marginVertical: 10,
+    alignItems: 'flex-start',
+    alignSelf: 'flex-start',
+    width: '100%',
+    height: 303,
+    marginTop: 30,
+    color: '#676767',
+    textAlignVertical: 'top',
+    fontFamily: 'Nunito-SemiBold',
+    fontWeight: '600',
+    padding: 20,
+    fontSize: 20
   }
 });

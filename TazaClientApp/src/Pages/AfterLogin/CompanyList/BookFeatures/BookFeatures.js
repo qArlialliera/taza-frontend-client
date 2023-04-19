@@ -6,10 +6,11 @@ import Modal from "react-native-modal";
 import { getAccessToken } from '../../../../Storage/TokenStorage';
 import { instance } from '../../../../Api/ApiManager';
 import StarRating from 'react-native-star-rating-widget';
+import Repetear from '../../../../MobX/ProfileMobxRener'
+
 
 export const BookFeatures = (company) => {
     const comp = JSON.parse(JSON.stringify(company)).route.params
-    console.log('comp', comp)
     //token
     const [token, setToken] = useState(readItemFromStorage);
     const readItemFromStorage = async () => { const item = await getAccessToken(); setToken(item) };
@@ -50,7 +51,6 @@ export const BookFeatures = (company) => {
         instance.get(`/private/review/rating/${comp.pp.id}`, config).then((res) => {
             setCurrentRating(res.data)
         }).catch(err => console.log(err))
-        // console.log('selectedServices -', selectedServices)
         getImage(comp.pp.photo)
     }, [token, time, date, selectedServices])
 
@@ -107,6 +107,7 @@ export const BookFeatures = (company) => {
         setModalVisible(true)
         instance.post('/private/orders/add', data, config).then((res) => {
             setModalVisible(true)
+            Repetear.trigger();
             console.log(res)
         }).catch((error) => console.log(error))
 
@@ -117,7 +118,6 @@ export const BookFeatures = (company) => {
     };
 
     const getImage = (uuid) => {
-        console.log(uuid)
         instance.get(`/public/file/photo/get/${uuid}`, { responseType: 'blob' }).then((response) => {
             const reader = new FileReader();
             reader.onloadend = () => {

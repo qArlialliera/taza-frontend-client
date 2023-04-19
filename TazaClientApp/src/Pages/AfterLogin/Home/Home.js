@@ -15,7 +15,7 @@ const DATA = [
 
 
 
-export const Home = ({ navigation }) => {
+export const Home = ({ navigation }) => { 
     const ReplaceWithAll = () => {
         navigation.navigate("all_categories")
     }

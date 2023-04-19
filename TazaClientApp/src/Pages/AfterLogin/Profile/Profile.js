@@ -2,20 +2,22 @@ import React, { useEffect, useState } from 'react'
 import { View, ImageBackground, StyleSheet, Text, Image, TouchableOpacity } from 'react-native';
 import { styles } from '../../../styles/Styles'
 import { instance } from "../../../Api/ApiManager";
-import FastImage from 'react-native-fast-image'
 import { getAccessToken, removeAccessToken, removeRefreshToken } from '../../../Storage/TokenStorage';
+import {removeRole} from '../../../Storage/RoleStorage'
 import { observer } from 'mobx-react-lite'
 import Repetear from '../../../MobX/ProfileMobxRener'
-import { Buffer } from 'buffer';
-import base64 from 'react-native-base64'
+
 
 
 export const Profile = observer(({ navigation }) => {
   const [data, setData] = useState("");
+  const [orderCount, setOrderCount] = useState('');
+  const [commentCount, setCommentCount] = useState('');
   const [token, setToken] = useState(readItemFromStorage);
   const readItemFromStorage = async () => { const item = await getAccessToken(); setToken(item) };
   const removeRefreshFromStorage = async () => { const item = await removeRefreshToken() };
   const removeAccessFromStorage = async () => { const item = await removeAccessToken() };
+  const removeRoleFromtorage = async () => { const item = await removeRole() };
   const config = { headers: { 'Authorization': 'Bearer ' + token } }
 
   const [imageData, setImageData] = useState(null);
@@ -26,9 +28,17 @@ export const Profile = observer(({ navigation }) => {
     instance.get('private/user/user-details', config).then(function (response) {
         setData(response.data)
         getImage(response.data.photo)
+
+        instance.get(`/private/user/orders/count/${response.data.id}`, config).then(res=>{
+          setOrderCount(res.data)
+          console.log(res.data)
+        }).catch(err => console.error(err))
+        instance.get(`/private/user/reviews/count/${response.data.id}`, config).then(res=>setCommentCount(res.data)).catch(err => console.error(err))
       }).catch(function (error) {
         console.log(error);
       });
+
+    
   }, [token, Repetear.bool])
 
   const Bdutton = () => {
@@ -48,6 +58,7 @@ export const Profile = observer(({ navigation }) => {
   const LogOut = () => {
     removeRefreshFromStorage()
     removeAccessFromStorage()
+    removeRoleFromtorage()
     navigation.navigate("Welcome")
   }
   return (
@@ -59,11 +70,11 @@ export const Profile = observer(({ navigation }) => {
             <View style={{ flexDirection: 'row', marginTop: 20 }}>
               <View style={styles.icons}>
                 <Image source={require('../../../Assets/images/profile_order.png')} style={{ borderColor: '#8E9AAF', borderWidth: 2, borderRadius: 100 }}></Image>
-                <Text style={sStyle.secondary}>5 Order</Text>
+                <Text style={sStyle.secondary}>{orderCount} Order</Text>
               </View>
               <View style={styles.icons}>
                 <Image source={require('../../../Assets/images/profile_comment.png')} style={{ borderColor: '#8E9AAF', borderWidth: 2, borderRadius: 100 }}></Image>
-                <Text style={sStyle.secondary}>5 Comments</Text>
+                <Text style={sStyle.secondary}>{commentCount} Comments</Text>
               </View>
             </View>
           </View>

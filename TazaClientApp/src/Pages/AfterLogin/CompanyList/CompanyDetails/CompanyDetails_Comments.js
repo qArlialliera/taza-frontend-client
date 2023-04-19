@@ -22,6 +22,7 @@ export const CompanyDetails_Comments = (props) => {
     const [userData, setUser] = useState()
     const [userImages, setUserImages] = useState()
     const [userPhotos, setUserPhotos] = useState([]);
+    const [trigger, setTrigger] = useState(false);
 
     const [newRating, setNewRating] = useState(0)
     const [newComment, setNewComment] = useState()
@@ -30,23 +31,19 @@ export const CompanyDetails_Comments = (props) => {
 
     useEffect(() => {
         readItemFromStorage()
-        console.log
+        // console.log
+        
         instance.get(`/private/review/company/${pp.id}`, config).then((res) => {
             setReview(res.data)
             setNewRating(res.data.res)
-            // getImage(res.data.user.photo)
-            // console.log(res.data.user.photo)
+
         }).catch(err => console.log(err))
 
         instance.get('private/user/user-details', config).then((res) => {
             setUser(res.data)
         }).catch(err => console.log(err))
-    }, [token, Repetear.bool])
-    // useState(() => {
-    //     const photos = review ? review.map(user => user.user.photo):null;
-    //     setUserPhotos(photos);
-    //     console.log(photos)
-    //   }, []);
+    }, [token, trigger])
+
 
 
     const getImage = (uuid) => {
@@ -66,6 +63,7 @@ export const CompanyDetails_Comments = (props) => {
         const data = { comment: newComment, rate: newRating }
         instance.put(`/private/review/${id}`, data, config).then((res) => {
             setIsEditPressed(-1)
+            setTrigger(!trigger)
             Repetear.trigger();
         }).catch(err => console.log(err))
         

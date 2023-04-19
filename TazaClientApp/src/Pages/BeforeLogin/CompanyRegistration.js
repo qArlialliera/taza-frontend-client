@@ -1,15 +1,13 @@
-import React, { FC, useEffect, useState } from "react";
+
+import React, { useEffect, useState } from "react";
 import { View, Button, StyleSheet, Text, ImageBackground, TextInput, TouchableOpacity, Image, Keyboard } from "react-native";
 import { styles } from '../../styles/Styles'
 import { instance } from "../../Api/ApiManager";
 import { storeAccessToken, storeRefreshToken } from "../../Storage/TokenStorage";
-// import { useKeyboard } from 'react-native-hooks';
+import { storeRole } from "../../Storage/RoleStorage";
 
-export const UserRegistration = ({ navigation }) => {
+export const CompanyRegistration = ({navigation}) => {
 
-  const loadSceneBack = () => { navigation.navigate('WelcomeChooseRole') }
-
-  //   const [loginData, setLoginData] = useState("");
   const [username, setUsername] = useState("");
   const [fullName, setFullname] = useState("");
   const [password, setPassword] = useState("");
@@ -39,14 +37,13 @@ export const UserRegistration = ({ navigation }) => {
     };
   }, []);
 
-  const findUser = (e) => {
-    e.preventDefault();
+  const registrationCompanyReg = () => {
+    // e.preventDefault();
     const user = { username, password, fullName, email, city, address, phoneNumber };
     console.log(user)
 
-    instance.post('/public/auth/register', user)
+    instance.post('/public/auth/register/company-representative', user)
       .then(function (response) {
-
         loginUser()
         console.log('reg success', response.data);
       })
@@ -65,7 +62,9 @@ export const UserRegistration = ({ navigation }) => {
       .then(function (response) {
         storeRefreshToken(response.data.refreshToken)
         storeAccessToken(response.data.accessToken)
-        navigation.navigate('BottomBar')
+        storeRole(response.data.roles[0].authority)
+        // navigation.navigate('BottomBar')
+        navigation.navigate('CreateCompanyButton')
       })
       .catch(function (error) {
         console.log(error);
@@ -77,7 +76,7 @@ export const UserRegistration = ({ navigation }) => {
       <ImageBackground source={require('../../Assets/images/registration.png')} style={styles.image}>
 
         <View style={styles.container3}>
-          <Text style={{ marginBottom: 20, color: '#fff', fontFamily: 'Lobster-Regular', fontSize: 35 }}>UserRegistration</Text>
+          <Text style={{ marginBottom: 20, color: '#fff', fontFamily: 'Lobster-Regular', fontSize: 30, width: '100%', textAlign: 'center'}}>Company Representative Registration</Text>
           <TextInput style={styles.input} value={fullName} placeholder={"Full Name"} onChangeText={(text) => setFullname(text)} />
           <TextInput style={styles.input} value={username} placeholder={"Username"} onChangeText={(text) => setUsername(text)} />
           <TextInput style={styles.input} value={email} placeholder={"Email"} onChangeText={(text) => setEmail(text)} />
@@ -87,14 +86,14 @@ export const UserRegistration = ({ navigation }) => {
         </View>
         {
           !isKeyboardOpen ?
-            <View style={{width:'100%'}}>
+            <View style={{ width: '100%' }}>
               <View style={styles.containerButtonNext}>
-                <TouchableOpacity style={styles.roundButton2} onPress={(text) => findUser(text)}>
+                <TouchableOpacity style={styles.roundButton2} onPress={registrationCompanyReg}>
                   <Image source={require('../../Assets/images/ic/ic_arrow.png')}></Image>
                 </TouchableOpacity>
               </View>
               <View style={styles.containerButtonBack}>
-                <TouchableOpacity style={styles.roundButton2} onPress={loadSceneBack}>
+                <TouchableOpacity style={styles.roundButton2} onPress={()=>navigation.navigate('WelcomeChooseRole')}>
                   <Image source={require('../../Assets/images/ic/ic_arrow_back.png')}></Image>
                 </TouchableOpacity>
               </View>
@@ -106,5 +105,4 @@ export const UserRegistration = ({ navigation }) => {
 
     </View>
   );
-
-};
+}

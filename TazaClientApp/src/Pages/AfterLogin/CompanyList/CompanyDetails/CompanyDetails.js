@@ -26,9 +26,7 @@ export const CompanyDetails = (props) => {
 
 
   const changePage = (index) => {
-    console.log(pp)
     setSelectedIndex(index);
-    console.log(index)
   }
 
   useEffect(() => {
@@ -55,14 +53,11 @@ export const CompanyDetails = (props) => {
 
 
   return (
-    // <ScrollView horizontal style={styles.contscrollView} contentContainerStyle={{ paddingRight: 0, minHeight: '100%' }} >
     <KeyboardAwareScrollView style={styles.contscrollView} contentContainerStyle={{ paddingRight: 0, minHeight: '100%' }} >
       <ImageBackground source={require('../../../../Assets/images/homeBack.png')} style={styles.back}>
 
         {/* Standart info */}
-        {/* <KeyboardAvoidingView behavior="padding"> */}
         <View style={{ alignItems: 'center', marginVertical: 10 }}>
-          {/* <Image source={require('../../../../Assets/images/newimg.png')} style={styles.circleimg} /> */}
           {imageData && <Image source={{ uri: imageData }} style={styles.circleimg} />}
           <Text style={styles.primary}>{pp.name}</Text>
           <StarRating
@@ -99,8 +94,6 @@ export const CompanyDetails = (props) => {
           </View>
 
         </View>
-        {/* </KeyboardAvoidingView> */}
-
       </ImageBackground>
     </KeyboardAwareScrollView>
 

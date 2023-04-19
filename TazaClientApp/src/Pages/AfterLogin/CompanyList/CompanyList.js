@@ -43,7 +43,7 @@ export const CompanyList = ({ navigation }) => {
   }
   useEffect(() => {
     readItemFromStorage()
-    console.log('company == ', token)
+    // console.log('company == ', token)
     instance.get('private/companies/all', config)
       .then(function (response) {
         setData(response.data)
@@ -53,14 +53,6 @@ export const CompanyList = ({ navigation }) => {
         console.log(error);
       });
 
-    // instance.get('private/categories/all', config)
-    //   .then(function (response) {
-    //     setCategories(response.data)
-    //     console.log(response.data)
-    //   })
-    //   .catch(function (error) {
-    //     console.log(error);
-    //   });
   }, [token])
 
   const getServices = () => {
@@ -145,12 +137,11 @@ export const CompanyList = ({ navigation }) => {
                             <CompanyImages props={u.photo} />
                           <View style={{ marginLeft: 30, alignItems: 'flex-start' }}>
                             <Text style={{ color: '#414C60', fontFamily: 'Lobster-Regular', fontSize: 25 }}>{u.name}</Text>
-                            {
+                            {/* {
 
                               Array.isArray(services)
                                 ?
                                 services.map(i => i.categories.map(j => {
-                                  // console.log(`slice - ${index} `)
                                   if (u.id === i.company[0].id) {
                                     return (
                                       <View key={j.id} style={{ backgroundColor: '#8E9AAF', borderRadius: 5, marginVertical: 4, padding: 5 }}>
@@ -159,8 +150,9 @@ export const CompanyList = ({ navigation }) => {
                                     )
 
                                   }
-                                })) : null
-                            }
+                                })) 
+                                : null
+                            } */}
                           </View>
                         </TouchableOpacity>
                       </View>

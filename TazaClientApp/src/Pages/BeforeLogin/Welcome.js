@@ -2,18 +2,30 @@ import React, { useEffect, useState } from "react";
 import { View, Text, ImageBackground, TouchableOpacity, Image } from "react-native";
 import { styles } from '../../styles/Styles';
 import { getRefreshToken } from "../../Storage/TokenStorage";
+import { getRole } from "../../Storage/RoleStorage";
 // import { sStyle } from '../styles/sStyle';
 
 
 export const Welcome = ({ navigation }) => {
     const loadScene = () => { navigation.navigate('Welcome2') }
+
+    //token
     const [token, setToken] = useState(readItemFromStorage);
     const readItemFromStorage = async () => { const item = await getRefreshToken(); setToken(item) };
+    //roles
+    const [role, setRole] = useState();
+    const readRoleFromStorage = async () => { const item = await getRole(); setRole(item); };
+
     useEffect(() => { 
+        readRoleFromStorage()
         readItemFromStorage() 
-        if(token) navigation.navigate('BottomBar')
+        if(token){
+            if(role==='ROLE_USER') navigation.navigate('BottomBar')
+            else if (role==='ROLE_COMPANY') navigation.navigate('BottomBarCompany')
+            // else navigation.navigate('UserLogin')
+        } 
         console.log('token - ', token)
-    }, [token])
+    }, [token, role])
 
 
     return (

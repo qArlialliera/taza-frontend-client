@@ -21,8 +21,7 @@ export const EditProfile = ({ navigation }) => {
         headers: {
             'content-type': 'multipart/form-data',
             'Authorization': 'Bearer ' + token,
-        },
-        
+        }, 
     }
     const config2 = { headers: { 'Authorization': 'Bearer ' + token } }
     useEffect(() => {
@@ -51,7 +50,7 @@ export const EditProfile = ({ navigation }) => {
     const savePhoto = (image) => {
         myImage.append('file', {
             uri: Platform.OS === "android" ? image.path : image.path.replace("file://", ""),
-            name: 'image.jpg',
+            name: `image${id}.jpg`,
             type: image.mime
         })
         instance.post('/public/file/save', myImage, config).then((response) => {
@@ -93,7 +92,7 @@ export const EditProfile = ({ navigation }) => {
     return (
         <View style={styles.containerwellcome}>
             <ImageBackground source={require('../../../Assets/images/registration.png')} style={styles.back}>
-                <TouchableOpacity onPress={backNav} style={{ marginTop: 20, alignItems: 'flex-start' }}>
+                <TouchableOpacity onPress={backNav} style={{ marginTop: 20, alignItems: 'flex-start' }}> 
                     <Image source={require('../../../Assets/images/ic/ri_menu-4-fill.png')} />
                 </TouchableOpacity>
                 <View style={styles.container2}>

@@ -7,7 +7,7 @@ import { styles } from '../../styles/Styles'
 
 
 export const Welcome2 = ({ navigation }) => {
-    const loadSceneRegistration = () =>{ navigation.navigate('UserRegistration')}
+    const loadSceneRegistration = () =>{ navigation.navigate('WelcomeChooseRole')}
     const loadSceneLogin = () =>{ navigation.navigate('UserLogin')}
         return (
             <View style={styles.containerwellcome}>
