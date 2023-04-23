@@ -7,6 +7,7 @@ import { instance } from "../../../Api/ApiManager";
 import { getAccessToken, getRefreshToken } from '../../../Storage/TokenStorage';
 import { Search } from '../Home/Search';
 import { CompanyImages } from './CompanyImages';
+import { CompanyListServices } from './CompanyListServices';
 // import { TextInput } from 'react-native-paper';
 
 
@@ -66,7 +67,7 @@ export const CompanyList = ({ navigation }) => {
     <ScrollView style={styles.contscrollView} contentContainerStyle={{ paddingRight: 0, minHeight: '100%' }}>
       <ImageBackground source={require('../../../Assets/images/profileback.png')} style={styles.imageprofile}>
         <Search />
-        <View style={styles.controw}>
+        {/* <View style={styles.controw}>
           <TouchableOpacity style={styles.buttoncompany}>
             <Text style={{ color: '#212427', fontFamily: 'Nunito-Black', fontSize: 15, top: '25%', fontWeight: '600' }} onPress={()=>navigation.navigate('OpenMap')}>Open Map</Text>
           </TouchableOpacity>
@@ -122,14 +123,13 @@ export const CompanyList = ({ navigation }) => {
               </View>
             </Modal>
           </View>
-        </View>
+        </View> */}
         <View>
-          <View style={{ marginHorizontal: 20, marginTop: 30 }}>
+          <View style={{ marginHorizontal: 20}}>
             {
               Array.isArray(data)
                 ?
                 data.map(u => {
-                  // getServices(u.id)
                   return (
                     <View key={u.id}>
                       <View style={styles.cont_company}>
@@ -137,22 +137,7 @@ export const CompanyList = ({ navigation }) => {
                             <CompanyImages props={u.photo} />
                           <View style={{ marginLeft: 30, alignItems: 'flex-start' }}>
                             <Text style={{ color: '#414C60', fontFamily: 'Lobster-Regular', fontSize: 25 }}>{u.name}</Text>
-                            {/* {
-
-                              Array.isArray(services)
-                                ?
-                                services.map(i => i.categories.map(j => {
-                                  if (u.id === i.company[0].id) {
-                                    return (
-                                      <View key={j.id} style={{ backgroundColor: '#8E9AAF', borderRadius: 5, marginVertical: 4, padding: 5 }}>
-                                        <Text style={{ color: '#D9D9D9', fontFamily: 'Nunito-Black', }}>{j.name}</Text>
-                                      </View>
-                                    )
-
-                                  }
-                                })) 
-                                : null
-                            } */}
+                            <CompanyListServices props={u.id}/>
                           </View>
                         </TouchableOpacity>
                       </View>

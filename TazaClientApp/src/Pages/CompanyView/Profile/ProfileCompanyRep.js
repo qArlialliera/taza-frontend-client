@@ -10,8 +10,9 @@ import { getAccessToken, getRefreshToken, removeAccessToken, removeRefreshToken 
 import { removeRole } from '../../../Storage/RoleStorage'
 import { instance } from '../../../Api/ApiManager';
 import Repetear from '../../../MobX/ProfileMobxRener'
+import { observer } from 'mobx-react-lite';
 
-export const ProfileCompanyRep = ({ navigation }) => {
+export const ProfileCompanyRep = observer(({ navigation }) => {
 
   const [isHaveCompany, setIsHaveCompany] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -133,4 +134,4 @@ export const ProfileCompanyRep = ({ navigation }) => {
       </ImageBackground>
     </ScrollView>
   )
-}
+})

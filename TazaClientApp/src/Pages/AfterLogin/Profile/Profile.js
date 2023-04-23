@@ -3,7 +3,7 @@ import { View, ImageBackground, StyleSheet, Text, Image, TouchableOpacity } from
 import { styles } from '../../../styles/Styles'
 import { instance } from "../../../Api/ApiManager";
 import { getAccessToken, removeAccessToken, removeRefreshToken } from '../../../Storage/TokenStorage';
-import {removeRole} from '../../../Storage/RoleStorage'
+import { removeRole } from '../../../Storage/RoleStorage'
 import { observer } from 'mobx-react-lite'
 import Repetear from '../../../MobX/ProfileMobxRener'
 
@@ -26,19 +26,19 @@ export const Profile = observer(({ navigation }) => {
   useEffect(() => {
     readItemFromStorage()
     instance.get('private/user/user-details', config).then(function (response) {
-        setData(response.data)
-        getImage(response.data.photo)
+      setData(response.data)
+      getImage(response.data.photo)
 
-        instance.get(`/private/user/orders/count/${response.data.id}`, config).then(res=>{
-          setOrderCount(res.data)
-          console.log(res.data)
-        }).catch(err => console.error(err))
-        instance.get(`/private/user/reviews/count/${response.data.id}`, config).then(res=>setCommentCount(res.data)).catch(err => console.error(err))
-      }).catch(function (error) {
-        console.log(error);
-      });
+      instance.get(`/private/user/orders/count/${response.data.id}`, config).then(res => {
+        setOrderCount(res.data)
+        console.log(res.data)
+      }).catch(err => console.error(err))
+      instance.get(`/private/user/reviews/count/${response.data.id}`, config).then(res => setCommentCount(res.data)).catch(err => console.error(err))
+    }).catch(function (error) {
+      console.log(error);
+    });
 
-    
+
   }, [token, Repetear.bool])
 
   const Bdutton = () => {
@@ -80,7 +80,11 @@ export const Profile = observer(({ navigation }) => {
           </View>
           <View style={styles.alignright}>
 
-            {imageData && <Image source={{ uri: imageData }} style={styles.image_avater} />}
+            {
+              imageData
+                ? <Image source={{ uri: imageData }} style={styles.image_avater} />
+            : <Image source={require('../../../Assets/images/profile_ava.png')} />
+            }
             {/* {console.log('imageData', imageData)} */}
           </View>
         </View>

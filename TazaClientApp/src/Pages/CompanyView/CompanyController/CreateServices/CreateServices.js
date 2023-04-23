@@ -4,7 +4,7 @@ import { styles } from '../../../../styles/Styles'
 import { useNavigation } from '@react-navigation/native'
 import { instance } from '../../../../Api/ApiManager'
 import { getAccessToken } from '../../../../Storage/TokenStorage'
-
+import Repetear from '../../../../MobX/ProfileMobxRener'
 
 export const CreateServices = () => {
     const navigation = useNavigation()

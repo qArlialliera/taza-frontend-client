@@ -5,6 +5,7 @@ import { instance } from '../../../Api/ApiManager'
 import { getAccessToken } from '../../../Storage/TokenStorage'
 import Modal from "react-native-modal";
 import { useNavigation } from '@react-navigation/native'
+import Repetear from '../../../MobX/ProfileMobxRener'
 
 export const CreateSpecialOffers = () => {
     const [text, setText] = useState('')
@@ -35,6 +36,8 @@ export const CreateSpecialOffers = () => {
         instance.post(`/private/offers`, data, config)
         .then(res=>setModalVisible(true))
         .catch(err => console.log(err))
+        Repetear.trigger()
+
     }
 
     const returnToProfile = () =>{

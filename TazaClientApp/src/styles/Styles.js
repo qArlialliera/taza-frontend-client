@@ -544,5 +544,16 @@ containerhead:{
     fontWeight: '600',
     padding: 20,
     fontSize: 20
+  },
+  redDeleteBtn : {
+    backgroundColor: '#EFD3D7', 
+    borderRadius: 12, 
+    borderWidth: 1, 
+    borderColor: '#414C60', 
+    position: 'absolute', 
+    left: '80%', 
+    padding: 10,
+    alignItems: 'center',
+    top: '70%'
   }
 });

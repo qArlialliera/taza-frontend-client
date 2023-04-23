@@ -4,6 +4,8 @@ import { Navigate } from './Navigate';
 
 
 const App = () => {
+  console.disableYellowBox = true;
+  console.disableRedBox = true;
   return(
    <Navigate />
     // <View></View>

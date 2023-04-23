@@ -6,8 +6,9 @@ import { getAccessToken, removeAccessToken, removeRefreshToken } from '../../../
 import {removeRole} from '../../../../Storage/RoleStorage'
 import Repetear from '../../../../MobX/ProfileMobxRener'
 import { instance } from '../../../../Api/ApiManager';
+import { observer } from 'mobx-react-lite';
 
-export const ProfileCompRep_Information = () => {
+export const ProfileCompRep_Information = observer(() => {
   const [token, setToken] = useState(readItemFromStorage);
   const readItemFromStorage = async () => { const item = await getAccessToken(); setToken(item) };
   const removeRefreshFromStorage = async () => { const item = await removeRefreshToken() };
@@ -69,7 +70,7 @@ export const ProfileCompRep_Information = () => {
       </View>
     </View>
   )
-}
+})
 
 const sStyle = StyleSheet.create({
 

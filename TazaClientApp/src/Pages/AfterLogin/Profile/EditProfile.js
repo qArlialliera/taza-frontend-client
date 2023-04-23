@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { View, ImageBackground, StyleSheet, Text, Image, TouchableOpacity, TextInput } from 'react-native';
 import { styles } from '../../../styles/Styles';
 import { instance } from "../../../Api/ApiManager";
-import { getAccessToken } from '../../../Storage/TokenStorage';
+import { getAccessToken, getRefreshToken } from '../../../Storage/TokenStorage';
 import Repetear from '../../../MobX/ProfileMobxRener'
 import ImagePicker from 'react-native-image-crop-picker';
 
@@ -14,20 +14,20 @@ export const EditProfile = ({ navigation }) => {
     const [fullName, setFullname] = useState("");
     const [address, setAddress] = useState("");
     const [email, setEmail] = useState("");
-    const [photoUuid, setPhotoUuid] = useState("");
     const myImage = new FormData();
 
     const config = {
         headers: {
             'content-type': 'multipart/form-data',
             'Authorization': 'Bearer ' + token,
-        }, 
+        },
     }
     const config2 = { headers: { 'Authorization': 'Bearer ' + token } }
     useEffect(() => {
         readItemFromStorage();
-        instance.get('private/user/user-details', config2)
+        instance.get('/private/user/user-details', config2)
             .then(function (response) {
+                console.log(response.data.id)
                 setUsername(response.data.username)
                 setFullname(response.data.fullName)
                 setAddress(response.data.address)
@@ -46,26 +46,43 @@ export const EditProfile = ({ navigation }) => {
         }).then(image => {
             savePhoto(image)
         });
+
     }
     const savePhoto = (image) => {
+
+
+
         myImage.append('file', {
             uri: Platform.OS === "android" ? image.path : image.path.replace("file://", ""),
-            name: `image${id}.jpg`,
+            name: `image${token}.jpg`,
             type: image.mime
         })
         instance.post('/public/file/save', myImage, config).then((response) => {
             uploadPhoto(response.data)
+            console.log('hi', response.data)
+
+
         }).catch((err) => {
             console.log(err)
         })
+
+
     }
-    const uploadPhoto = (photoUuid) =>{
-        console.log(`/private/user/photo/upload/${photoUuid}`)
-        instance.put(`/private/user/photo/upload/${photoUuid}`, config2).then((response)=>{
-            alert('succesfully added!', response)
-        }).catch((err) => {
-            console.log(err)
+    const uploadPhoto = (photoUuid) => {
+
+        fetch(`http://192.168.31.156:8080/private/user/photo/upload/${photoUuid}`, {
+            method: 'PUT',
+            headers: {
+                Authorization: 'Bearer ' + token,
+            }
         })
+            .then((response) => {
+                console.log('successfully added!', response);
+            })
+            .catch((error) => {
+                console.log('err --', error);
+            });
+
         Repetear.trigger();
     }
     const saveProfile = (e) => {
@@ -92,7 +109,7 @@ export const EditProfile = ({ navigation }) => {
     return (
         <View style={styles.containerwellcome}>
             <ImageBackground source={require('../../../Assets/images/registration.png')} style={styles.back}>
-                <TouchableOpacity onPress={backNav} style={{ marginTop: 20, alignItems: 'flex-start' }}> 
+                <TouchableOpacity onPress={backNav} style={{ marginTop: 20, alignItems: 'flex-start' }}>
                     <Image source={require('../../../Assets/images/ic/ri_menu-4-fill.png')} />
                 </TouchableOpacity>
                 <View style={styles.container2}>

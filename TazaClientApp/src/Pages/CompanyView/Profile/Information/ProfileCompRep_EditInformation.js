@@ -66,12 +66,25 @@ export const ProfileCompRep_EditInformation = () => {
     })
   }
   const uploadPhoto = (photoUuid) => {
-    console.log(`/private/companies/photo/upload/${companyId}/${photoUuid}`)
-    instance.put(`/private/companies/photo/upload/${companyId}/${photoUuid}`, config).then((response) => {
-      alert('succesfully added!', response)
-    }).catch((err) => {
-      console.log(err)
-    })
+    // console.log(`/private/companies/photo/upload/${companyId}/${photoUuid}`)
+    // instance.put(`/private/companies/photo/upload/${companyId}/${photoUuid}`, config).then((response) => {
+    //   alert('succesfully added!', response)
+    // }).catch((err) => {
+    //   console.log(err)
+    // })
+
+    fetch(`http://192.168.31.156:8080/private/companies/photo/upload/${companyId}/${photoUuid}`, {
+            method: 'PUT',
+            headers: {
+                Authorization: 'Bearer ' + token,
+            }
+        })
+            .then((response) => {
+                console.log('successfully added!', response);
+            })
+            .catch((error) => {
+                console.log('err --', error);
+            });
     Repetear.trigger();
   }
 

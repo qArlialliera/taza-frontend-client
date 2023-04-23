@@ -5,8 +5,9 @@ import { getAccessToken } from '../../../Storage/TokenStorage'
 import { instance } from '../../../Api/ApiManager'
 import Repetear from '../../../MobX/ProfileMobxRener'
 import { HomeOrders } from './HomeOrders'
+import { observer } from 'mobx-react-lite'
 
-export const CompanyHome = ({ navigation }) => {
+export const CompanyHome = observer(({ navigation }) => {
   const [myOffers, setMyOffers] = useState(null)
   const [company, setCompany] = useState('')
 
@@ -78,4 +79,4 @@ export const CompanyHome = ({ navigation }) => {
       </ImageBackground>
     </ScrollView>
   )
-}
+})

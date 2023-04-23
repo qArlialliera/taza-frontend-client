@@ -15,6 +15,7 @@ export const ProfileCompRep_Services = (props) => {
   const [isServices, setIsServices] = useState(false)
   const [services, setServices] = useState(false)
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isEditActive, setEditActive] = useState(false);
 
   const [token, setToken] = useState(readItemFromStorage);
   const readItemFromStorage = async () => { const item = await getRefreshToken(); setToken(item) };
@@ -31,52 +32,69 @@ export const ProfileCompRep_Services = (props) => {
 
   const ModalEdit = () => {
     return (
-        <View>
-            <Modal isVisible={isModalVisible}>
-                <View style={{ flex: 1 }}>
-                    <TouchableOpacity style={{ alignItems: 'flex-end' }} onPress={()=>setModalVisible(false)}>
-                        <Image source={require('../../../Assets/images/ic/ri_close-circle-line.png')} style={{ zIndex: -1 }} />
-                    </TouchableOpacity>
-                    <View style={{ backgroundColor: '#D9D9D9', borderRadius: 1000, width: '120%', height: 600, alignSelf: 'center', bottom: '-40%', alignItems: 'center' }}>
-                        <View style={{ position: 'relative', marginTop: 150, width: '70%', alignSelf: 'center' }}>
-                            <Text style={{ fontFamily: 'Nunito-Black', fontSize: 25, fontWeight: '600', color: '#414C60', alignSelf: 'center' }}>What do you want?</Text>
-                            <View style={{ top: '50%' }}>
-                                <TouchableOpacity style={styles.profile_info_button} onPress={() => navigation.navigate('CreateServices')}>
-                                    <Text style={{ color: '#D9D9D9', fontFamily: 'Nunito-Black', fontSize: 15, }}>Add new service</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.profile_info_button} onPress={()=>setModalVisible(false)}>
-                                    <Text style={{ color: '#D9D9D9', fontFamily: 'Nunito-Black', fontSize: 15, }}>Edit Service</Text>
-                                </TouchableOpacity>
-                                
-                            </View>
-                        </View>
-                    </View>
+      <View>
+        <Modal isVisible={isModalVisible}>
+          <View style={{ flex: 1 }}>
+            <TouchableOpacity style={{ alignItems: 'flex-end' }} onPress={() => setModalVisible(false)}>
+              <Image source={require('../../../Assets/images/ic/ri_close-circle-line.png')} style={{ zIndex: -1 }} />
+            </TouchableOpacity>
+            <View style={{ backgroundColor: '#D9D9D9', borderRadius: 1000, width: '120%', height: 600, alignSelf: 'center', bottom: '-40%', alignItems: 'center' }}>
+              <View style={{ position: 'relative', marginTop: 150, width: '70%', alignSelf: 'center' }}>
+                <Text style={{ fontFamily: 'Nunito-Black', fontSize: 25, fontWeight: '600', color: '#414C60', alignSelf: 'center' }}>What do you want?</Text>
+                <View style={{ top: '50%' }}>
+                  <TouchableOpacity style={styles.profile_info_button} onPress={() => navigation.navigate('CreateServices')}>
+                    <Text style={{ color: '#D9D9D9', fontFamily: 'Nunito-Black', fontSize: 15, }}>Add new service</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.profile_info_button} onPress={EditQctive}>
+                    <Text style={{ color: '#D9D9D9', fontFamily: 'Nunito-Black', fontSize: 15, }}>Edit Service</Text>
+                  </TouchableOpacity>
+
                 </View>
+              </View>
+            </View>
+          </View>
 
-            </Modal>
-        </View>
+        </Modal>
+      </View>
     );
-}
+  }
 
 
 
+  const EditQctive = () => {
+    setEditActive(!isEditActive)
+    setModalVisible(false)
+  }
+
+  const deleteService = (id) => {
+    console.log(id)
+    // instance.delete(`/private/services/${id}`, config).then(res=>Repetear.trigger()).catch(err=>console.log(err))
+  }
   return (
     <View>
       <ModalEdit />
       {
-        services 
-        ? services.map(i => i.categories.map(j => {
-          return (
-            <View key={i.id}>
-              <TouchableOpacity style={styles.card_category_services}>
-                <Text style={styles.name}>{j.name}</Text>
-                <Image style={{ width: 20, height: 20, }} source={require('../../../Assets/images/ic/ic_arrow.png')} />
+        services
+          ? services.map(i => i.categories.map(j => {
+            return (
+              <View key={i.id}>
+                <TouchableOpacity style={styles.card_category_services}>
+                  <Text style={styles.name}>{j.name}</Text>
+                  {
+                    isEditActive
+                      ?
+                      <TouchableOpacity style={styles.redDeleteBtn} onPress={()=>deleteService(j.id)}>
+                        <Image source={require('../../../Assets/images/ic/ic_outline-delete.png')} />
+                      </TouchableOpacity>
+                      : <Image style={{ width: 20, height: 20, }} source={require('../../../Assets/images/ic/ic_arrow.png')} />
+                  }
 
-              </TouchableOpacity>
-            </View>
-          )
-        })) 
-        : null
+
+                </TouchableOpacity>
+              </View>
+            )
+          }))
+          : null
       }
 
       {
