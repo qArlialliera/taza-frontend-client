@@ -1,14 +1,15 @@
 import React from 'react'
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, Text, Image, TouchableOpacity, StyleSheet, Linking } from 'react-native'
 import { styles } from '../../../../styles/Styles';
 import { useNavigation } from '@react-navigation/native';
 
 export const CompanyDetails_Contacts = (props) => {
-    // console.log('props', props)
     const navigation = useNavigation();
+    const callBtn = () => {
+        Linking.openURL(`tel:${props.props.phoneNumber}`)
+    }
     return (
         <View>
-            {/* <Text>CompanyDetails_Contacts</Text> */}
             <View>
                 <View style={styles.profile_info}>
                     <Image source={require('../../../../Assets/images/ic/icon-park-outline_city.png')} style={{ marginHorizontal: 30 }} />
@@ -32,7 +33,7 @@ export const CompanyDetails_Contacts = (props) => {
             </View>
 
             <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <TouchableOpacity style={styles.company_contsct_btn}>
+                <TouchableOpacity style={styles.company_contsct_btn} onPress={callBtn}>
                     <Text style={sStyle.secondary_button}>Call</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.company_contsct_btn}
