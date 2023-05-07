@@ -1,13 +1,30 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import { View, Text, Image, TouchableOpacity, StyleSheet, Linking } from 'react-native'
 import { styles } from '../../../../styles/Styles';
 import { useNavigation } from '@react-navigation/native';
+import { getAccessToken } from '../../../../Storage/TokenStorage';
+import { instance } from '../../../../Api/ApiManager';
 
 export const CompanyDetails_Contacts = (props) => {
     const navigation = useNavigation();
     const callBtn = () => {
         Linking.openURL(`tel:${props.props.phoneNumber}`)
     }
+    const [token, setToken] = useState(readItemFromStorage);
+    const readItemFromStorage = async () => { const item = await getAccessToken(); setToken(item) };
+    const config = { headers: { 'Authorization': 'Bearer ' + token } }
+    const [userData, setUserData] = useState('');
+
+    useEffect(() => {
+      readItemFromStorage()
+      instance.get('private/user/user-details', config).then(function (response) {
+          setUserData(response.data)
+      }).catch(function (error) {
+          console.log(error);
+      });
+    
+    }, [token])
+
     return (
         <View>
             <View>
@@ -37,7 +54,7 @@ export const CompanyDetails_Contacts = (props) => {
                     <Text style={sStyle.secondary_button}>Call</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.company_contsct_btn}
-                onPress={() => navigation.navigate("Massages_Chat", props.props)}>
+                onPress={() => navigation.navigate("Massages_Chat", {item: props.props, userData: userData})}>
                     <Text style={sStyle.secondary_button}>Message</Text>
                 </TouchableOpacity>
             </View>

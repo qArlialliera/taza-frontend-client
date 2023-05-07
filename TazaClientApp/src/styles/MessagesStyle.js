@@ -35,6 +35,7 @@ export const messagestyle = StyleSheet.create({
         padding: 12,
         marginBottom: 8,
         maxWidth: '80%',
+        alignSelf: 'flex-start'
     },
     chatText: {
         fontSize: 16,
@@ -78,5 +79,14 @@ export const messagestyle = StyleSheet.create({
     row:{
         flexDirection: 'row',
         alignItems: 'center'
+    },
+    timestamp:{
+        alignSelf: 'flex-end',
+        color: '#EFD3D7',
+        fontFamily: 'Nunito-Regular',
+        marginTop: 5
+    },
+    timestampMine:{
+        color: '#414C60'
     }
 });

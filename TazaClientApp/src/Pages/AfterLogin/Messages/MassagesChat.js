@@ -44,17 +44,18 @@ export const MessagesChat = (props) => {
     }, []);
 
     const connect = () => {
-        const socket = new SockJS('http://10.121.218.112:8080/ws');
+        const socket = new SockJS('http://localhost:8080/ws');
+        // const socket = new SockJS('http://192.168.31.156:8080/ws');
         const stompClient = Stomp.over(socket);
         stompClient.connect({}, onConnected, console.error('error'));
     };
     const onConnected = () => {
         console.log("connected");
 
-        stompClient.subscribe(
-            "/user/" + 5 + "/queue/messages",
-            onMessageReceived
-        );
+        // stompClient.subscribe(
+        //     "/user/" + 5 + "/queue/messages",
+        //     onMessageReceived
+        // );
     };
 
 
@@ -81,23 +82,7 @@ export const MessagesChat = (props) => {
     };
 
 
-    // return (
-    //     <View>
-    //         <View>
-    //             {messages.map((message, index) => (
-    //                 <Text key={index}>{message}</Text>
-    //             ))}
-    //         </View>
-    //         <View>
-    //             <TextInput
-    //                 value={inputText}
-    //                 onChangeText={setInputText}
-    //                 placeholder="Type a message..."
-    //             />
-    //             <Button title="Send" onPress={handleSend} />
-    //         </View>
-    //     </View>
-    // )
+
 
     return (
         <View style={messagestyle.container}>

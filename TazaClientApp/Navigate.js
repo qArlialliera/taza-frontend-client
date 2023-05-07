@@ -30,6 +30,7 @@ import { CreateServices } from "./src/Pages/CompanyView/CompanyController/Create
 import { AddPriceToService } from "./src/Pages/CompanyView/CompanyController/CreateServices/AddPriceToService";
 import { ProfileCompRep_EditInformation } from "./src/Pages/CompanyView/Profile/Information/ProfileCompRep_EditInformation";
 import { CheckData } from "./src/Pages/CompanyView/CompanyController/CreateServices/CheckData";
+import { MessagesChatStomp } from "./src/Pages/AfterLogin/Messages/MessagesChatStomp";
 
 
 const Stack = createNativeStackNavigator();
@@ -54,7 +55,7 @@ export const Navigate = () => {
                 <Stack.Screen name="BookFeautures" component={BookFeatures} options={{ headerShown: false }} />
                 <Stack.Screen name="FindByCategory" component={FindByCategory} options={{ headerShown: false }} />
                 <Stack.Screen name="SpecialOffers" component={SpecialOffers} options={{ headerShown: false }} />
-                <Stack.Screen name="Massages_Chat" component={MessagesChat} options={{ headerShown: false }} />
+                <Stack.Screen name="Massages_Chat" component={MessagesChatStomp} options={{ headerShown: false }} />
 
                 <Stack.Screen name="BottomBarCompany" component={BottomBarCompany} options={{ headerShown: false }} />
                 <Stack.Screen name="CreateCompany" component={CreateCompany} options={{ headerShown: false }} />
