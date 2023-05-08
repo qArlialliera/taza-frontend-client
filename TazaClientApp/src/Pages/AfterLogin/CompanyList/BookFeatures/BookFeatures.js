@@ -104,7 +104,7 @@ export const BookFeatures = (company) => {
             }
         }
 
-        setModalVisible(true)
+        console.log(data)
         instance.post('/private/orders/add', data, config).then((res) => {
             setModalVisible(true)
             Repetear.trigger();

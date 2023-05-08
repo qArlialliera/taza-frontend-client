@@ -3,13 +3,18 @@ import { View, Text, TouchableOpacity, Image, ScrollView, ImageBackground } from
 import { styles } from '../../../styles/Styles'
 import { instance } from '../../../Api/ApiManager';
 import { getAccessToken } from '../../../Storage/TokenStorage';
-
+import { t } from 'i18next';
+import { getLanguage } from '../../../Storage/LanguageStorage';
 
 
 
 export const AllCategories = ({ navigation }) => {
   const [token, setToken] = useState();
   const readItemFromStorage = async () => { const item = await getAccessToken(); setToken(item); console.log('item - ', item)};
+
+  const [language, setStorageLanguage] = useState();
+  const readLanguage = async () => { const item = await getLanguage(); setStorageLanguage(item) };
+
   const [data, setData] = useState([]);
   const config = {
     headers: {
@@ -18,6 +23,7 @@ export const AllCategories = ({ navigation }) => {
   }
   useEffect(() => {
     readItemFromStorage()
+    readLanguage()
     console.log('company == ', token)
     instance.get('private/categories/all', config)
       .then(function (response) {
@@ -41,7 +47,7 @@ export const AllCategories = ({ navigation }) => {
           <TouchableOpacity onPress={backNav}>
             <Image source={require('../../../Assets/images/ic/ri_menu-4-fill.png')} />
           </TouchableOpacity>
-          <Text style={{ color: 'white', fontFamily: 'Nunito-Regular', fontSize: 20, left: '50%', width: '100%' }}>All Categories</Text>
+          <Text style={{ color: 'white', fontFamily: 'Nunito-Regular', fontSize: 20, left: '50%', width: '100%' }}>{t('All Categories')}</Text>
         </View>
         <View style={{ marginTop: 50 }}>
           {
@@ -50,7 +56,9 @@ export const AllCategories = ({ navigation }) => {
                 <View key={u.id}>
                   <TouchableOpacity style={styles.card_category_row} onPress={() => navigation.navigate('FindByCategory', u)}>
                     <Image style={styles.image_card} resizeMode="cover" source={u.img} />
-                    <Text style={styles.name}>{u.name}</Text>
+                    { language==='ru' ? <Text style={styles.name}>{u.nameRu}</Text> : null }
+                    { language==='kz' ? <Text style={styles.name}>{u.nameKz}</Text> : null }
+                    { language==='en' ? <Text style={styles.name}>{u.name}</Text> : null }
                   </TouchableOpacity>
                 </View>
               );

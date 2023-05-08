@@ -6,6 +6,7 @@ import { instance } from '../../../Api/ApiManager'
 import Repetear from '../../../MobX/ProfileMobxRener'
 import { HomeOrders } from './HomeOrders'
 import { observer } from 'mobx-react-lite'
+import { t } from 'i18next';
 
 export const CompanyHome = observer(({ navigation }) => {
   const [myOffers, setMyOffers] = useState(null)
@@ -41,11 +42,11 @@ export const CompanyHome = observer(({ navigation }) => {
       <ImageBackground source={require('../../../Assets/images/homeBack.png')} style={styles.imagehome}>
         <View style={{ width: '100%', marginTop: 30, alignItems: 'center' }}>
           <TouchableOpacity style={styles.divspecial} onPress={() => navigation.navigate('CreateSpecialOffers')}>
-            <Text style={{ alignItems: 'center', top: '45%', marginBottom: 20, color: '#414C60', fontFamily: 'Lobster-Regular', fontSize: 25 }}>Create Special Offers</Text>
+            <Text style={{ alignItems: 'center', color: '#414C60', fontFamily: 'Lobster-Regular', fontSize: 25 }}>{t('Create Special Offers')}</Text>
           </TouchableOpacity>
         </View>
         <View style={{ width: '100%', alignItems: 'center' }}>
-          <Text style={{ alignItems: 'center', marginTop: 50, marginBottom: 20, color: '#D9D9D9', fontFamily: 'Lobster-Regular', fontSize: 25 }}>Offres of our company</Text>
+          <Text style={{ alignItems: 'center', marginTop: 50, marginBottom: 20, color: '#D9D9D9', fontFamily: 'Lobster-Regular', fontSize: 25 }}>{t('Offers of your company')}</Text>
           {
             myOffers ?
               Array.isArray(myOffers)
@@ -56,7 +57,7 @@ export const CompanyHome = observer(({ navigation }) => {
                         <View style={styles.msgBox} >
                           <Text style={{ color: '#111111', textAlign: 'center', fontFamily: 'Nunito-Regular', fontSize: 15, marginVertical: 7, fontWeight: '400' }}>{u.offer}</Text>
                           <TouchableOpacity style={styles.btn_Red} onPress={()=>deleteOffer(u.id)}>
-                            <Text style={{ fontFamily: 'Nunito-Black', color: '#414C60', textAlign: 'center' }}>Delete</Text>
+                            <Text style={{ fontFamily: 'Nunito-Black', color: '#414C60', textAlign: 'center' }}>{t('Delete')}</Text>
                           </TouchableOpacity>
                         </View>
                       </View>

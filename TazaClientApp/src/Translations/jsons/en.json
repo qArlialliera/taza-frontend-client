@@ -1,0 +1,56 @@
+{
+    "translation": {
+        "Join_to_us": "Join to us",
+        "Registration": "Registration",
+        "Login": "Login",
+        "Select_Language": "Select Language",
+
+        "Who_are_you?": "Who are you?",
+        "Customer": "Customer",
+        "Company_Representative": "Company Representative",
+
+        "Fullname": "Fullname",
+        "Username": "Username",
+        "Address": "Address",
+        "Phone Numbe":"Phone Number",
+        "Password":"Password",
+
+        "RegistrationRep": "Registration of a company representative", 
+        
+        "Search": "Search",
+        "Special_Offers": "Special Offers", 
+        "Select by category": "Select by category",
+        "All Categories": "All Categories",
+        "General Cleaning": "General Cleaning",
+        "Wet Cleaning": "Wet Cleaning",
+        "Cleaning After Repair": "Cleaning After Repair",
+        "Office Cleaning": "Office Cleaning" ,
+
+        "Messages":"Messages",
+
+        "Order": "Order",
+        "Comments": "Comments",
+        "Edit Profile": "Edit Profile",
+        "Log Out": "Log Out",
+
+        "Edit Profile Page": "Edit Profile",
+        "Add Profile Photo":"Add Profile Photo",
+
+        "Write to admins":"Write to admins",
+        "Change language":"Change language",
+
+        "Services": "Services",
+        "Contacts": "Contacts",
+
+        "Create Special Offers": "Create Special Offers",
+        "Offers of your company" : "Offers of your company",
+        "Delete": "Delete",
+        "Last Orders": "Last Orders",
+
+        "Add new service": "Add new service",
+        "Edit Service": "Edit Service",
+        "Edit Services": "Edit Services",
+        "Add services": "Add services",
+        "What do you want?": "What do you want?"
+    }
+  }

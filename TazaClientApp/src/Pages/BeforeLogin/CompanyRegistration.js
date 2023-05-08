@@ -5,8 +5,13 @@ import { styles } from '../../styles/Styles'
 import { instance } from "../../Api/ApiManager";
 import { storeAccessToken, storeRefreshToken } from "../../Storage/TokenStorage";
 import { storeRole } from "../../Storage/RoleStorage";
+import '../../Translations/i18n'
+import { useTranslation } from 'react-i18next';
+
 
 export const CompanyRegistration = ({navigation}) => {
+
+  const { t } = useTranslation();
 
   const [username, setUsername] = useState("");
   const [fullName, setFullname] = useState("");
@@ -38,7 +43,6 @@ export const CompanyRegistration = ({navigation}) => {
   }, []);
 
   const registrationCompanyReg = () => {
-    // e.preventDefault();
     const user = { username, password, fullName, email, city, address, phoneNumber };
     console.log(user)
 
@@ -76,13 +80,13 @@ export const CompanyRegistration = ({navigation}) => {
       <ImageBackground source={require('../../Assets/images/registration.png')} style={styles.image}>
 
         <View style={styles.container3}>
-          <Text style={{ marginBottom: 20, color: '#fff', fontFamily: 'Lobster-Regular', fontSize: 30, width: '100%', textAlign: 'center'}}>Company Representative Registration</Text>
-          <TextInput style={styles.input} value={fullName} placeholder={"Full Name"} onChangeText={(text) => setFullname(text)} />
-          <TextInput style={styles.input} value={username} placeholder={"Username"} onChangeText={(text) => setUsername(text)} />
+          <Text style={{ marginBottom: 20, color: '#fff', fontFamily: 'Lobster-Regular', fontSize: 30, width: '100%', textAlign: 'center'}}>{t('RegistrationRep')}</Text>
+          <TextInput style={styles.input} value={fullName} placeholder={t('Fullname')} onChangeText={(text) => setFullname(text)} />
+          <TextInput style={styles.input} value={username} placeholder={t("Username")} onChangeText={(text) => setUsername(text)} />
           <TextInput style={styles.input} value={email} placeholder={"Email"} onChangeText={(text) => setEmail(text)} />
-          <TextInput style={styles.input} value={address} placeholder={"Address"} onChangeText={(text) => setAddress(text)} />
-          <TextInput style={styles.input} value={phoneNumber} placeholder={"Phone Number"} onChangeText={(text) => setPhoneNumber(text)} />
-          <TextInput style={styles.input} value={password} placeholder={"Password"} secureTextEntry onChangeText={(text) => setPassword(text)} />
+          <TextInput style={styles.input} value={address} placeholder={t("Address")} onChangeText={(text) => setAddress(text)} />
+          <TextInput style={styles.input} value={phoneNumber} placeholder={t("Phone Numbe")} onChangeText={(text) => setPhoneNumber(text)} />
+          <TextInput style={styles.input} value={password} placeholder={t("Password")} secureTextEntry onChangeText={(text) => setPassword(text)} />
         </View>
         {
           !isKeyboardOpen ?

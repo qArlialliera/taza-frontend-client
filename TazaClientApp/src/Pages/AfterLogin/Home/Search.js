@@ -7,6 +7,8 @@ import { getAccessToken } from '../../../Storage/TokenStorage';
 import FuzzySearch from 'fuzzy-search';
 import { useNavigation } from '@react-navigation/native';
 import { CompanyImages } from '../CompanyList/CompanyImages';
+import '../../../Translations/i18n'
+import { useTranslation } from 'react-i18next';
 
 export const Search = () => {
     const [spinnerVisibility, setSpinnerVisibility] = useState(false);
@@ -19,6 +21,7 @@ export const Search = () => {
 
     const navigation = useNavigation();
 
+    const { t } = useTranslation();
 
     const [token, setToken] = useState(readItemFromStorage);
     const readItemFromStorage = async () => { const item = await getAccessToken(); setToken(item) };
@@ -79,7 +82,7 @@ export const Search = () => {
                 shadowColor="#282828"
                 cancelIconColor="#fdfdfd"
                 spinnerVisibility={spinnerVisibility}
-                placeholder="Search..."
+                placeholder={t('Search')}
                 fontFamily="Nunito-Regular"
                 style={styles.searchbar}
                 onChangeText={(text) => SearchText(text)}

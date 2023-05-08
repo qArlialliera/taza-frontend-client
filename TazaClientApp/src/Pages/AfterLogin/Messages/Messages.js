@@ -3,6 +3,7 @@ import { Text, View, TouchableOpacity, SafeAreaView, FlatList, ImageBackground, 
 import { styles } from '../../../styles/Styles'
 import { getAccessToken } from '../../../Storage/TokenStorage';
 import { instance } from '../../../Api/ApiManager';
+import { t } from 'i18next';
 
 export const Messages = ({ navigation }) => {
 
@@ -50,7 +51,7 @@ export const Messages = ({ navigation }) => {
       <ImageBackground source={require('../../../Assets/images/homeBack.png')} style={styles.back}>
 
         <View style={{ paddingHorizontal: 20, paddingVertical: 10, alignItems: 'center' }}>
-          <Text style={{ color: '#fff', fontFamily: 'Lobster-Regular', fontSize: 30 }}>Messages</Text>
+          <Text style={{ color: '#fff', fontFamily: 'Lobster-Regular', fontSize: 30 }}>{t('Messages')}</Text>
         </View>
         <SafeAreaView style={styles.container_messages}>
 
@@ -83,9 +84,9 @@ export const Messages = ({ navigation }) => {
             <Image source={require('../../../Assets/images/newimg.png')} style={styles.image_card_m} resizeMode="cover" />
             <View style={{ flexDirection: 'column', marginHorizontal: 20, marginVertical: 20, width: '70%' }}>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <Text style={{ color: 'white', fontFamily: 'Nunito-Black', fontSize: 20 }}>Send message to admins</Text>
+                <Text style={{ color: 'white', fontFamily: 'Nunito-Black', fontSize: 20 }}>{t('Write to admins')}</Text>
               </View>
-              <Text style={{ color: '#C414C60', fontFamily: 'Nunito-Regular', fontSize: 15 }}>Nothing sended</Text>
+              {/* <Text style={{ color: '#C414C60', fontFamily: 'Nunito-Regular', fontSize: 15 }}>Nothing sended</Text> */}
             </View>
           </TouchableOpacity>
 

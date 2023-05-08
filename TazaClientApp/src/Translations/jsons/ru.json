@@ -1,0 +1,57 @@
+{
+    "translation": {
+        "Join_to_us": "Присоединяйтесь к нам",
+        "Registration": "Регистрация",
+        "Login": "Вход",
+        "Select_Language": "Выбрать язык",
+        "Who_are_you?": "Кто вы?",
+        "Customer": "Покупатель",
+        "Company_Representative": "Представитель компании",
+
+
+        "Fullname": "Полное имя",
+        "Username": "Никнейм",
+        "Address": "Адрес",
+        "Phone Numbe":"Номер телефона",
+        "Password":"Пароль",
+
+        "RegistrationRep": "Регистрация представителя компании",
+        
+
+        "Search": "Поиск",
+        "Special_Offers": "Специальные предложения", 
+        "Select by category": "Выбрать по категориям",
+        "All Categories": "Все категории",
+        "General Cleaning": "Генеральная уборка",
+        "Wet Cleaning": "Влажная уборка",
+        "Cleaning After Repair": "Уборка после ремонта",
+        "Office Cleaning": "Уборка офиса" ,
+
+        "Messages":"Сообщения",
+
+        "Order": "Заказов",
+        "Comments": "Отзывов",
+        "Edit Profile": "Изменить профиль",
+        "Log Out": "Выйти",
+
+        "Edit Profile Page": "Изменить профиль",
+        "Add Profile Photo":"Добавить фотографию",
+
+        "Write to admins":"Написать в службу поддержки",
+        "Change language":"Изменить язык",
+
+        "Services": "Сервисы",
+        "Contacts": "Контакты",
+
+        "Create Special Offers": "Создать специальные предложения",
+        "Offers of your company": "Предложения вашей компании",
+        "Delete": "Удалить",
+        "Last Orders": "Последние заказы",
+
+        "Add new service": "Добавить новую услугу",
+        "Edit Service": "Редактировать услугу",
+        "Add services": "Добавить услуги",
+        "Edit Services": "Редактировать услуги",
+        "What do you want?": "Что вы хотите?"
+    }
+  }

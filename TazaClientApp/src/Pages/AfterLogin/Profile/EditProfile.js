@@ -5,6 +5,8 @@ import { instance } from "../../../Api/ApiManager";
 import { getAccessToken, getRefreshToken } from '../../../Storage/TokenStorage';
 import Repetear from '../../../MobX/ProfileMobxRener'
 import ImagePicker from 'react-native-image-crop-picker';
+import { t } from 'i18next';
+
 
 export const EditProfile = ({ navigation }) => {
     const [token, setToken] = useState(readItemFromStorage);
@@ -113,21 +115,21 @@ export const EditProfile = ({ navigation }) => {
                     <Image source={require('../../../Assets/images/ic/ri_menu-4-fill.png')} />
                 </TouchableOpacity>
                 <View style={styles.container2}>
-                    <Text style={sStyle.primary}>Edit Profile</Text>
+                    <Text style={sStyle.primary}>{t('Edit Profile Page')}</Text>
                     <TextInput style={styles.input} value={fullName} placeholder={"Full Name"} onChangeText={(text) => setFullname(text)} />
                     <TextInput style={styles.input} value={username} placeholder={"Username"} onChangeText={(text) => setUsername(text)} />
                     <TextInput style={styles.input} value={email} placeholder={"Email"} onChangeText={(text) => setEmail(text)} />
                     <TextInput style={styles.input} value={address} placeholder={"Address"} onChangeText={(text) => setAddress(text)} />
                     <TouchableOpacity onPress={() => imagePicker()} style={styles.profile_info_button_secondary}>
                         <Image source={require('../../../Assets/images/upload_photo.png')} style={{ width: 40, height: 40 }} />
-                        <Text style={sStyle.secondary_button}>Add Profile Photo</Text>
+                        <Text style={sStyle.secondary_button}>{t('Add Profile Photo')}</Text>
                     </TouchableOpacity>
                 </View>
 
 
 
                 <TouchableOpacity onPress={(text) => saveProfile(text)} style={styles.profile_info_button}>
-                    <Text style={sStyle.secondary_button}>Edit Profile</Text>
+                    <Text style={sStyle.secondary_button}>{t('Edit Profile Page')}</Text>
                 </TouchableOpacity>
 
             </ImageBackground>

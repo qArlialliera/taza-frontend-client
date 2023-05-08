@@ -201,7 +201,8 @@ containerhead:{
     borderRadius: 20,
     height: 200,
     width: '90%',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   card_category:{
     backgroundColor: '#D9D9D9',
@@ -376,11 +377,12 @@ containerhead:{
     marginBottom: 20,
     borderColor: '#D9D9D9',
     borderWidth:4,
+    justifyContent:'center'
   },
   company_contsct_btn_secondary:{
     alignItems:'center',
     backgroundColor:'#414C60',
-    width: '48%',
+    width: '100%',
     borderRadius: 17,
     padding: 15,
     marginBottom: 20,

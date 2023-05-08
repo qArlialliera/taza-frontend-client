@@ -1,0 +1,58 @@
+{
+    "translation": {
+        "Join_to_us": "Бізге қосылыңыз",
+        "Registration": "Тіркеу",
+        "Login": "Кіру",
+        "Select_Language": "Тілді таңдаңыз",
+
+        
+        "Who_are_you?": "Сіз кімсіз?",
+        "Customer": "Сатып алушы",
+        "Company_Representative": "Компания өкілі",
+
+        "Fullname": "Толық аты",
+        "Username": "Никнейм",
+        "Address": "Мекенжайы",
+        "Phone Numbe":"Телефон нөмірі",
+        "Password":"Пароль",
+
+        "RegistrationRep": "Компания өкілін тіркеу",
+       
+
+        "Search": "Іздеу",
+        "Special_Offers": "Арнайы ұсыныстар", 
+        "Select by category": "Санат бойынша таңдаңыз",
+        "All Categories": "Барлық санаттар",
+        "General Cleaning": "Жалпы тазалау",
+        "Wet Cleaning": "Ылғалды тазалау",
+        "Cleaning After Repair": "Жөндеуден кейін тазалау",
+        "Office Cleaning": "Офис тазалау",
+
+        "Messages":"Хабарламалар",
+
+        "Order": "Тапсырыс",
+        "Comments": "Комментарий",
+        "Edit Profile": "Профильді өңдеу",
+        "Log Out": "Шығу",
+
+        "Edit Profile Page": "Профильді өңдеу",
+        "Add Profile Photo":"Профиль суретін қосу",
+
+        "Write to admins":"Қолдау қызметіне жазыңыз",
+        "Change language":"Тілді өзгерту" ,
+
+        "Services": "Сервистер",
+        "Contacts": "Байланыс",
+
+        "Create Special Offers": "Арнайы тауарларды жасау",
+        "Offers of your company": "Компанияңыздың ұсыныстары",
+        "Delete": "Жою",
+        "Last Orders": "Соңғы тапсырыстар",
+
+        "Add new service": "Жаңа қызмет қосу",
+        "Edit Service": "Қызметті өңдеу",
+        "Edit Services": "Қызметтерді өңдеу",
+        "Add services": "Қызметтерді қосу",
+        "What do you want?": "Не құрметпен?"
+    }
+  }
