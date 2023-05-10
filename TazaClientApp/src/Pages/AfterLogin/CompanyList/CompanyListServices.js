@@ -6,7 +6,7 @@ import { styles } from '../../../styles/Styles'
 import { getLanguage } from '../../../Storage/LanguageStorage';
 
 export const CompanyListServices = (props) => {
-  console.log(props.props)
+  console.log(props.props) 
   const [token, setToken] = useState(readItemFromStorage);
   const readItemFromStorage = async () => { const item = await getAccessToken(); setToken(item) };
 

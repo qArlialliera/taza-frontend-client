@@ -118,7 +118,7 @@ export const ProfileCompanyRep = observer(({ navigation }) => {
                     <ProfileCompRep_Services props={data.id} />
                   )}
                   {selectedIndex === 1 && (
-                    <ProfileCompRep_Reviews />
+                    <ProfileCompRep_Reviews props={data}/>
                   )}
                   {selectedIndex === 2 && (
                     <ProfileCompRep_Information />

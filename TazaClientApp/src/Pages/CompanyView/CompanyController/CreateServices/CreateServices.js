@@ -11,6 +11,7 @@ export const CreateServices = () => {
     const [token, setToken] = useState();
     const readItemFromStorage = async () => { const item = await getAccessToken(); setToken(item); console.log('item - ', item) };
     const [data, setData] = useState([]);
+    const [isActiveAccount, setActiveAccount] = useState(false);
     const config = { headers: { 'Authorization': 'Bearer ' + token } }
 
     useEffect(() => {
@@ -23,6 +24,10 @@ export const CreateServices = () => {
             .catch(function (error) {
                 console.log(error);
             });
+
+            instance.get('/private/companies/user', config).then(res=>{
+                setActiveAccount(res.data.active)
+            }).catch(err=>console.log(err))
     }, [token])
 
 
@@ -33,7 +38,9 @@ export const CreateServices = () => {
                 <TouchableOpacity onPress={() => navigation.navigate('BottomBarCompany')} style={{ margin: 30 }}>
                     <Image source={require('../../../../Assets/images/ic/material-symbols_arrow-forward-ios-rounded.png')} />
                 </TouchableOpacity>
-                <View style={{ width: '80%', alignItems: 'center', alignSelf: 'center' }}>
+                {
+                    isActiveAccount ? 
+                    <View style={{ width: '80%', alignItems: 'center', alignSelf: 'center' }}>
                     <Text style={{ color: '#EFD3D7', fontFamily: 'Nunito-Regular', textAlign: 'center', fontSize: 20 }}>
                         Attention, add one service at a time.
                         Select the category that your company provides
@@ -54,6 +61,9 @@ export const CreateServices = () => {
                         }
                     </View>
                 </View>
+                : 
+                    <Text style={{color: '#fff',fontFamily: 'Lobster-Regular',fontSize: 30, textAlign: 'center', alignSelf: 'center', marginTop: 30}}>Please, wait until your account passes verification</Text>
+                }
             </ImageBackground>
         </ScrollView>
     )

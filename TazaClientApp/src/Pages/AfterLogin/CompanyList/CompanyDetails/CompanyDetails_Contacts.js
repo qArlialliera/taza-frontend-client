@@ -17,6 +17,7 @@ export const CompanyDetails_Contacts = (props) => {
 
     useEffect(() => {
       readItemFromStorage()
+    //   console.log(props.props.user)
       instance.get('private/user/user-details', config).then(function (response) {
           setUserData(response.data)
       }).catch(function (error) {
@@ -54,7 +55,7 @@ export const CompanyDetails_Contacts = (props) => {
                     <Text style={sStyle.secondary_button}>Call</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.company_contsct_btn}
-                onPress={() => navigation.navigate("Massages_Chat", {item: props.props, userData: userData})}>
+                onPress={() => navigation.navigate("Massages_Chat", {item: props.props.user, userData: userData})}>
                     <Text style={sStyle.secondary_button}>Message</Text>
                 </TouchableOpacity>
             </View>

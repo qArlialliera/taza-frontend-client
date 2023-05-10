@@ -46,6 +46,7 @@ export const MessagesCompRepChat = (props) => {
 
         console.log("connected");
         getMessages()
+        changeStatus(pp.item.id)
         stompClient.subscribe('/chatroom/private', onMessageReceived);
         stompClient.subscribe('/user/' + pp.userData.username + '/private', onPrivateMessage);
     };
@@ -110,11 +111,17 @@ export const MessagesCompRepChat = (props) => {
 
     const sortedData = messagesArray.slice().sort((a, b) => a.id - b.id);
 
+    
+    const changeStatus = (senderId) => {
+        instance.put(`private/messages/change-status/${senderId}`, null, config).then(res=>{
+          console.log('CHANGED! - ', res.data )
+        }).catch(err=>console.log(err))
+      }
 
     return (
         <View style={messagestyle.container}>
             <View style={messagestyle.header}>
-                <TouchableOpacity onPress={() => navigation.navigate('BottomBar')} style={{}}>
+                <TouchableOpacity onPress={() => navigation.navigate('BottomBarCompany')} style={{}}>
                     <Image source={require('../../../Assets/images/ic/material-symbols_arrow-forward-ios-rounded.png')} />
                 </TouchableOpacity>
                 <View style={messagestyle.row}>

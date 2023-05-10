@@ -7,16 +7,12 @@ import { useNavigation } from '@react-navigation/core';
 import moment from 'moment';
 import { instance } from '../../../Api/ApiManager';
 import { getAccessToken } from '../../../Storage/TokenStorage';
-
+import Repeater from '../../../MobX/ProfileMobxRener'
 
 var stompClient = null;
 var SockJS = require('sockjs-client/dist/sockjs.js');
 export const MessagesChatStomp = (props) => {
     const pp = JSON.parse(JSON.stringify(props)).route.params
-
-
-    // const [token, setToken] = useState();
-    // const readItemFromStorage = async () => { const item = await getAccessToken(); setToken(item) };
     const config = { headers: { 'Authorization': 'Bearer ' + pp.token } }
     console.log(config)
 
@@ -34,11 +30,16 @@ export const MessagesChatStomp = (props) => {
     const navigation = useNavigation();
 
 
+
     useEffect(() => {
         connect()
 
     }, []);
 
+    const gotoBack = () => {
+        navigation.navigate('BottomBar')
+        Repeater.trigger()
+    }
 
     const connect = () => {
         var socket = new SockJS("http://192.168.31.156:8080/ws");
@@ -50,6 +51,7 @@ export const MessagesChatStomp = (props) => {
 
         console.log("connected");
         getMessages()
+        changeStatus(pp.item.id)
         stompClient.subscribe('/chatroom/private', onMessageReceived);
         stompClient.subscribe('/user/' + pp.userData.username + '/private', onPrivateMessage);
     };
@@ -73,7 +75,7 @@ export const MessagesChatStomp = (props) => {
                 senderId: pp.userData.id,
                 senderName: pp.userData.username,
                 recipientId: pp.item.id,
-                recipientName: pp.item.name,
+                recipientName: pp.item.username,
                 content: userrData.message,
                 timestamp: currentTimestamp,
             };
@@ -94,6 +96,12 @@ export const MessagesChatStomp = (props) => {
             setMessagesArray(res.data)
         }).catch(err => console.log(err))
     }
+
+    const changeStatus = (senderId) => {
+        instance.put(`private/messages/change-status/${senderId}`, null, config).then(res=>{
+          console.log('CHANGED! - ', res.data )
+        }).catch(err=>console.log(err))
+      }
 
     const renderItem = ({ item }) => {
         const date = new Date(item.timestamp);
@@ -117,31 +125,16 @@ export const MessagesChatStomp = (props) => {
     return (
         <View style={messagestyle.container}>
             <View style={messagestyle.header}>
-                <TouchableOpacity onPress={() => navigation.navigate('BottomBar')} style={{}}>
+                <TouchableOpacity onPress={() => gotoBack()} style={{}}>
                     <Image source={require('../../../Assets/images/ic/material-symbols_arrow-forward-ios-rounded.png')} />
                 </TouchableOpacity>
                 <View style={messagestyle.row}>
-                    <Text style={messagestyle.headerTitle}>{pp.item.name}</Text>
+                    <Text style={messagestyle.headerTitle}>{pp.item.username}</Text>
                     <Image style={styles.msg_img} source={require('../../../Assets/images/profile_ava.png')} />
                 </View>
             </View>
             <View style={messagestyle.chatContainer}>
 
-                {/* {
-                    Array.isArray(messagesArray) && messagesArray.map((msg, index) => {
-                        console.log('msg,', msg, index)
-                        return (
-                            msg.senderId === pp.userData.id ?
-                                <View style={[messagestyle.chatBubble, messagestyle.chatBubbleMine]} key={index}>
-                                    <Text style={[messagestyle.chatText, messagestyle.chatTextMine]}>{msg.content}</Text>
-                                </View>
-                                :
-                                <View style={messagestyle.chatBubble}>
-                                    <Text style={messagestyle.chatText}>{msg.content}</Text>
-                                </View>
-                        )
-                    })
-                } */}
                 <FlatList
                     data={sortedData}
                     renderItem={renderItem}

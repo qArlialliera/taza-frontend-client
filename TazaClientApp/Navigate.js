@@ -31,6 +31,9 @@ import { AddPriceToService } from "./src/Pages/CompanyView/CompanyController/Cre
 import { ProfileCompRep_EditInformation } from "./src/Pages/CompanyView/Profile/Information/ProfileCompRep_EditInformation";
 import { CheckData } from "./src/Pages/CompanyView/CompanyController/CreateServices/CheckData";
 import { MessagesChatStomp } from "./src/Pages/AfterLogin/Messages/MessagesChatStomp";
+import { HomeOrders } from "./src/Pages/CompanyView/Home/HomeOrders";
+import { AllOrderList } from "./src/Pages/CompanyView/Home/AllOrderList";
+import { AllOrderListUser } from "./src/Pages/AfterLogin/Home/AllOrderListUser";
 
 
 const Stack = createNativeStackNavigator();
@@ -56,6 +59,7 @@ export const Navigate = () => {
                 <Stack.Screen name="FindByCategory" component={FindByCategory} options={{ headerShown: false }} />
                 <Stack.Screen name="SpecialOffers" component={SpecialOffers} options={{ headerShown: false }} />
                 <Stack.Screen name="Massages_Chat" component={MessagesChatStomp} options={{ headerShown: false }} />
+                <Stack.Screen name="AllOrderListUser" component={AllOrderListUser} options={{ headerShown: false }} />
 
                 <Stack.Screen name="BottomBarCompany" component={BottomBarCompany} options={{ headerShown: false }} />
                 <Stack.Screen name="CreateCompany" component={CreateCompany} options={{ headerShown: false }} />
@@ -66,6 +70,8 @@ export const Navigate = () => {
                 <Stack.Screen name="AddPriceToService" component={AddPriceToService} options={{ headerShown: false }} />
                 <Stack.Screen name="ProfileCompRep_EditInformation" component={ProfileCompRep_EditInformation} options={{ headerShown: false }} />
                 <Stack.Screen name="CheckData" component={CheckData} options={{ headerShown: false }} />
+                <Stack.Screen name="HomeOrders" component={HomeOrders} options={{ headerShown: false }} />
+                <Stack.Screen name="AllOrderList" component={AllOrderList} options={{ headerShown: false }} />
 
             </Stack.Navigator>
         </NavigationContainer>

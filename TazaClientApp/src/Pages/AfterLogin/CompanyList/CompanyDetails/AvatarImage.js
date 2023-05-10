@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { View, Image } from 'react-native'
 import { instance } from '../../../../Api/ApiManager';
-import { styles } from '../../../../styles/Styles';
+import { styles } from '../../../../styles/Styles'; 
 export const AvatarImage = (props) => {
     const pp = props.props
     const [imageData, setImageData] = useState(null);

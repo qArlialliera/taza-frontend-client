@@ -4,31 +4,41 @@ import { styles } from '../../../styles/Styles'
 import { getAccessToken } from '../../../Storage/TokenStorage';
 import { instance } from '../../../Api/ApiManager';
 import { t } from 'i18next';
+import { AvatarImage } from '../CompanyList/CompanyDetails/AvatarImage';
+import Repeater from '../../../MobX/ProfileMobxRener'
+import { observer } from 'mobx-react-lite';
+import Stomp from 'stompjs'
+import { messagestyle } from '../../../styles/MessagesStyle'
 
-export const Messages = ({ navigation }) => {
+
+var stompClient = null;
+var SockJS = require('sockjs-client/dist/sockjs.js');
+export const Messages = observer(({ navigation }) => {
 
   const [token, setToken] = useState(readItemFromStorage);
   const readItemFromStorage = async () => { const item = await getAccessToken(); setToken(item) };
   const config = { headers: { 'Authorization': 'Bearer ' + token } }
 
-  const DATA = [
-    { id: 1, name: 'Company X', img: require('../../../Assets/images/newimg.png'), last: 'Hello, I wanted to...' },
-    { id: 2, name: 'CompanyPOST', img: require('../../../Assets/images/newimg.png'), last: 'Hello, I your booking...' },
-    { id: 3, name: 'BestPrice', img: require('../../../Assets/images/newimg.png'), last: 'Hello, I wanted to...' }
-  ]
+
+  const [chatList, setChatList] = useState('')
+
+  const getChatList = () => {
+    instance.get('private/messages/chat-rooms', config).then(res => {
+      setChatList(res.data)
+    }).catch(err => console.log(err))
+  }
+
 
   const adminItem = {
-    id: 6,
-    name: "admin",
-    password: "$2a$10$.3Ma5IVgpNj3vCPgjfEqmeXxBgM3WsUiavaqXqmb1RMyIbbYLa0CK",
-    fullName: "admin",
-    email: "admin",
+    id: 1,
+    username: "admin",
+    password: "$2a$10$9XSGvzkg87mvrOhanNH9V.YmOi3i4Khjs98pczfUiwUgUSsyF4ZcO",
+    fullName: "Admin",
+    email: "admin@mail.ru",
     city: "Astana",
-    address: "admin",
-    phoneNumber: null,
-    photo: null,
-    reviews: [],
-    orders: []
+    address: "Mangilik",
+    phoneNumber: "87777777777",
+    photo: null
   }
 
 
@@ -36,13 +46,33 @@ export const Messages = ({ navigation }) => {
 
   useEffect(() => {
     readItemFromStorage()
+    getChatList()
     instance.get('private/user/user-details', config).then(function (response) {
       setUserData(response.data)
     }).catch(function (error) {
       console.log(error);
     });
+    connect()
+  }, [token, Repeater.bool])
 
-  }, [token])
+  const connect = () => {
+    var socket = new SockJS("http://192.168.31.156:8080/ws");
+    stompClient = Stomp.over(socket);
+    stompClient.connect({}, onConnected, console.log("err"));
+  }
+
+  const onConnected = () => {
+    console.log("connected");
+    stompClient.subscribe('/chatroom/private', onMessageReceived);
+  };
+
+
+  const onMessageReceived = (payload) => {
+    Repeater.trigger()
+  }
+
+
+
 
 
 
@@ -57,30 +87,66 @@ export const Messages = ({ navigation }) => {
 
 
           <FlatList
-            data={DATA}
+            data={chatList}
             renderItem={
-              ({ item }) => (
-                <View key={item.id} >
-                  <TouchableOpacity style={{ width: '100%', flexDirection: 'row', height: 90, alignItems: 'center', }}
-                    onPress={() => navigation.navigate("Massages_Chat", { item, userData, token })}>
-                    <Image source={item.img} style={styles.image_card_m} resizeMode="cover" />
-                    <View style={{ flexDirection: 'column', marginHorizontal: 20, marginVertical: 20, width: '70%' }}>
-                      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <Text style={{ color: 'white', fontFamily: 'Nunito-Black', fontSize: 20 }}>{item.name}</Text>
-                        <Text style={{ color: '#A8A8A8', fontFamily: 'Nunito-Regular', fontSize: 15 }}>23:34</Text>
-                      </View>
-                      <Text style={{ color: '#A8A8A8', fontFamily: 'Nunito-Regular', fontSize: 15 }}>{item.last}</Text>
-                    </View>
-                  </TouchableOpacity>
+              ({ item }) => {
+                const date = new Date(item.timestamp);
+                const time = date.toLocaleTimeString('en-GB', { timeZone: 'UTC', hour: '2-digit', minute: '2-digit' });
+                return (
+                  <View key={item.id} >
+                    {
 
-                </View>
-              )
+                      <TouchableOpacity
+                        style={
+                          item.status === 'DELIVERED' && item.senderId !== userData.id
+                            ? { ...messagestyle.chatListItemActive }
+                            : { ...messagestyle.chatListItem }
+                        }
+
+                        onPress={() => navigation.navigate("Massages_Chat", { item, userData, token })}>
+                        <AvatarImage props={item.photo} />
+                        <View style={{ flexDirection: 'column', marginHorizontal: 20, marginVertical: 20, width: '70%' }}>
+                          <View style={messagestyle.alltext}>
+                            <View style={messagestyle.text}>
+                              <Text style={
+                                item.status === 'DELIVERED' && item.senderId !== userData.id
+                                  ? { ...messagestyle.textNameActive }
+                                  : { ...messagestyle.textName }
+                              }>{item.username}</Text>
+                              <Text
+                                style={
+                                  item.status === 'DELIVERED' && item.senderId !== userData.id
+                                    ? { ...messagestyle.bodyNameActive }
+                                    : { ...messagestyle.bodyName }
+                                }
+                              >{item.message}</Text>
+
+                            </View>
+
+                            <View style={messagestyle.textReverse}>
+                              <Text style={messagestyle.timeText}>{time}</Text>
+                              {item.status === 'DELIVERED' && item.senderId !== userData.id ? (
+                                <Text style={messagestyle.circle}>{item.newMessagesCount}</Text>
+                              ) : null}
+                            </View>
+                          </View>
+
+                        </View>
+                      </TouchableOpacity>
+                    }
+
+                  </View>
+                )
+              }
+
             }
           />
 
 
+
+
           <TouchableOpacity style={{ width: '100%', flexDirection: 'row', height: 90, alignItems: 'center', borderColor: '#C414C60', borderWidth: 1, borderRadius: 10, backgroundColor: '#8E9AAF' }}
-            onPress={() => navigation.navigate("Massages_Chat", { item: adminItem, userData, token})}>
+            onPress={() => navigation.navigate("Massages_Chat", { item: adminItem, userData, token })}>
             <Image source={require('../../../Assets/images/newimg.png')} style={styles.image_card_m} resizeMode="cover" />
             <View style={{ flexDirection: 'column', marginHorizontal: 20, marginVertical: 20, width: '70%' }}>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -96,3 +162,4 @@ export const Messages = ({ navigation }) => {
     </View>
   )
 }
+)

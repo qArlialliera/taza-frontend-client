@@ -68,10 +68,7 @@ export const Profile = observer(({ navigation }) => {
       setData(response.data)
       getImage(response.data.photo)
 
-      instance.get(`/private/user/orders/count/${response.data.id}`, config).then(res => {
-        setOrderCount(res.data)
-        console.log(res.data)
-      }).catch(err => console.error(err))
+      instance.get(`/private/user/orders/count/${response.data.id}`, config).then(res => {setOrderCount(res.data)}).catch(err => console.error(err))
       instance.get(`/private/user/reviews/count/${response.data.id}`, config).then(res => setCommentCount(res.data)).catch(err => console.error(err))
     }).catch(function (error) {
       console.log(error);
