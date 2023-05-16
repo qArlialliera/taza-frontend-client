@@ -57,7 +57,7 @@ export const CompanyDetails_Services = (props) => {
   }
 
 
-    const slideX = useRef(new Animated.Value(0)).current;
+  const slideX = useRef(new Animated.Value(0)).current;
 
 
   const slideright = () => {
@@ -77,22 +77,22 @@ export const CompanyDetails_Services = (props) => {
 
   return (
     <View>
-      
+
       {
         Array.isArray(offer)
-         &&  swiped === false
+          && swiped === false
           ?
           offer.map((u, index) => {
             if (pp.id === u.company.id) {
               return (
                 <GestureRecognizer onSwipe={(direction, state) => onSwipe(direction, state)}>
-                  <Animated.View style={ { transform: [{ translateX: slideX }] }} >
-                  <TouchableOpacity key={index} onPress={() => setShowFullText(!showFullText)}>
-                    <View style={styles.msgBoxRed} >
-                      <Text style={{ color: '#414C60', fontFamily: 'Lobster-Regular', fontSize: 20 }}>{u.company.name}</Text>
-                      <Text numberOfLines={showFullText ? 5 : 1} style={{ color: '#111111', fontFamily: 'Nunito-Regular', fontSize: 15, marginVertical: 7 }}>{u.offer}</Text>
-                    </View>
-                  </TouchableOpacity>
+                  <Animated.View style={{ transform: [{ translateX: slideX }] }} >
+                    <TouchableOpacity key={index} onPress={() => setShowFullText(!showFullText)}>
+                      <View style={styles.msgBoxRed} >
+                        <Text style={{ color: '#414C60', fontFamily: 'Lobster-Regular', fontSize: 20 }}>{u.company.name}</Text>
+                        <Text numberOfLines={showFullText ? 5 : 1} style={{ color: '#111111', fontFamily: 'Nunito-Regular', fontSize: 15, marginVertical: 7 }}>{u.offer}</Text>
+                      </View>
+                    </TouchableOpacity>
                   </Animated.View>
                 </GestureRecognizer>
 
@@ -106,11 +106,18 @@ export const CompanyDetails_Services = (props) => {
         services.map(i => i.categories.map(j => {
           return (
             <View key={i.id}>
-              <TouchableOpacity style={styles.card_category_services} onPress={() => navigation.navigate("BookFeautures", { pp, i, j, services })}>
-                <Text style={styles.name}>{j.name}</Text>
-                <Image style={{ width: 20, height: 20, }} source={require('../../../../Assets/images/ic/ic_arrow.png')} />
-
-              </TouchableOpacity>
+              {
+                !i.additionalService ?
+                  <TouchableOpacity style={styles.card_category_services} onPress={() => navigation.navigate("BookFeautures", { pp, i, j, services })}>
+                    <Text style={styles.name}>{j.name}</Text>
+                    <Image style={{ width: 20, height: 20, }} source={require('../../../../Assets/images/ic/ic_arrow.png')} />
+                  </TouchableOpacity>
+                  :
+                  <TouchableOpacity style={styles.card_category_services_disabled}>
+                    <Text style={styles.name}>{j.name}</Text>
+                    <Image style={{ width: 20, height: 20, }} source={require('../../../../Assets/images/ic/ic_arrow.png')} />
+                  </TouchableOpacity>
+              }
             </View>
           )
         }))

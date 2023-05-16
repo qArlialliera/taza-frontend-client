@@ -7,10 +7,12 @@ import { getAccessToken } from '../../../../Storage/TokenStorage';
 import { instance } from '../../../../Api/ApiManager';
 import StarRating from 'react-native-star-rating-widget';
 import Repetear from '../../../../MobX/ProfileMobxRener'
+import { useNavigation } from '@react-navigation/native';
 
 
 export const BookFeatures = (company) => {
     const comp = JSON.parse(JSON.stringify(company)).route.params
+    const navigation = useNavigation()
     //token
     const [token, setToken] = useState(readItemFromStorage);
     const readItemFromStorage = async () => { const item = await getAccessToken(); setToken(item) };
@@ -104,7 +106,7 @@ export const BookFeatures = (company) => {
             }
         }
 
-        setModalVisible(true)
+        console.log(data)
         instance.post('/private/orders/add', data, config).then((res) => {
             setModalVisible(true)
             Repetear.trigger();
@@ -115,6 +117,8 @@ export const BookFeatures = (company) => {
 
     const toggleModal = () => {
         setModalVisible(false);
+
+        navigation.navigate('Massages_Chat', { item: comp.pp.user, userData: userData, token })
     };
 
     const getImage = (uuid) => {
@@ -162,12 +166,10 @@ export const BookFeatures = (company) => {
 
                 {/* Standart info */}
                 <View style={{ alignItems: 'center', marginVertical: 10 }}>
-                    {/* <Image source={require('../../../../Assets/images/newimg.png')} style={styles.circleimg} /> */}
                     {imageData && <Image source={{ uri: imageData }} style={styles.circleimg} />}
                     <Text style={styles.primary}>
                         {comp.pp.name}
                     </Text>
-                    {/* <Image source={require('../../../../Assets/images/raiting.png')} /> */}
                     <StarRating
                         rating={currentRating}
                         color='#EFD3D7'

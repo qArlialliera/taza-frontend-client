@@ -33,8 +33,10 @@ export const CheckData = (props) => {
             company: [{
                 id: companyData.id
             }],
-            price: categoryData.price
+            price: categoryData.price,
+            additionalService: categoryData.isEnabled 
         }
+        console.log('serviceData', serviceData)
         instance.post('/private/services/add', serviceData, config).then((res)=>{
             console.log('data', res.data)
             navigation.navigate('BottomBarCompany')
@@ -63,7 +65,17 @@ export const CheckData = (props) => {
                             <Text style={{ fontFamily: 'Nunito-Black', color: '#414C60', textAlign: 'center' }}>{categoryData.price}</Text>
                         </View>
                     </View>
-
+                    <View style={{ marginTop: 50, alignItems: 'center'}}>
+                        <Text style={styles.secondary}>Is additional Service:  </Text>
+                        <View style={{ backgroundColor: '#C2CFE4', borderRadius: 11, width: '100%', padding: 20, marginVertical: 5,  }}>
+                            {
+                                categoryData.isEnabled 
+                                ?  <Text style={{ fontFamily: 'Nunito-Black', color: '#414C60', textAlign: 'center' }}>True</Text>
+                                :  <Text style={{ fontFamily: 'Nunito-Black', color: '#414C60', textAlign: 'center' }}>False</Text>
+                            }
+                           
+                        </View>
+                    </View>
                     <View style={styles.containerButtonNext}>
                         <TouchableOpacity style={styles.roundButton2} onPress={addService}>
                             <Image source={require('../../../../Assets/images/ic/ic_arrow.png')}></Image>

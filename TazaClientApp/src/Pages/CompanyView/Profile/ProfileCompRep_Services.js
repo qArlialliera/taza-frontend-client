@@ -7,6 +7,8 @@ import { instance } from '../../../Api/ApiManager'
 
 import Modal from "react-native-modal";
 import Repetear from '../../../MobX/ProfileMobxRener'
+import { getLanguage } from '../../../Storage/LanguageStorage'
+import { t } from 'i18next';
 
 
 export const ProfileCompRep_Services = (props) => {
@@ -21,8 +23,12 @@ export const ProfileCompRep_Services = (props) => {
   const readItemFromStorage = async () => { const item = await getRefreshToken(); setToken(item) };
   const config = { headers: { 'Authorization': 'Bearer ' + token } }
 
+  const [language, setStorageLanguage] = useState();
+  const readLanguage = async () => { const item = await getLanguage(); setStorageLanguage(item) };
+
   useEffect(() => {
     readItemFromStorage()
+    readLanguage()
     instance.get(`/private/services/company/${pp}`, config).then((res) => {
       setIsServices(true)
       setServices(res.data)
@@ -40,13 +46,13 @@ export const ProfileCompRep_Services = (props) => {
             </TouchableOpacity>
             <View style={{ backgroundColor: '#D9D9D9', borderRadius: 1000, width: '120%', height: 600, alignSelf: 'center', bottom: '-40%', alignItems: 'center' }}>
               <View style={{ position: 'relative', marginTop: 150, width: '70%', alignSelf: 'center' }}>
-                <Text style={{ fontFamily: 'Nunito-Black', fontSize: 25, fontWeight: '600', color: '#414C60', alignSelf: 'center' }}>What do you want?</Text>
+                <Text style={{ fontFamily: 'Nunito-Black', fontSize: 25, fontWeight: '600', color: '#414C60', alignSelf: 'center' }}>{t('What do you want?')}</Text>
                 <View style={{ top: '50%' }}>
                   <TouchableOpacity style={styles.profile_info_button} onPress={() => navigation.navigate('CreateServices')}>
-                    <Text style={{ color: '#D9D9D9', fontFamily: 'Nunito-Black', fontSize: 15, }}>Add new service</Text>
+                    <Text style={{ color: '#D9D9D9', fontFamily: 'Nunito-Black', fontSize: 15, }}>{t('Add new service')}</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={styles.profile_info_button} onPress={EditQctive}>
-                    <Text style={{ color: '#D9D9D9', fontFamily: 'Nunito-Black', fontSize: 15, }}>Edit Service</Text>
+                    <Text style={{ color: '#D9D9D9', fontFamily: 'Nunito-Black', fontSize: 15, }}>{t('Edit Service')}</Text>
                   </TouchableOpacity>
 
                 </View>
@@ -68,7 +74,6 @@ export const ProfileCompRep_Services = (props) => {
 
   const deleteService = (id) => {
     console.log(id)
-    // instance.delete(`/private/services/${id}`, config).then(res=>Repetear.trigger()).catch(err=>console.log(err))
   }
   return (
     <View>
@@ -79,7 +84,10 @@ export const ProfileCompRep_Services = (props) => {
             return (
               <View key={i.id}>
                 <TouchableOpacity style={styles.card_category_services}>
-                  <Text style={styles.name}>{j.name}</Text>
+                  {/* <Text style={styles.name}>{j.name}</Text> */}
+                  { language === 'ru' ? <Text style={styles.name}>{j.nameRu}</Text> : null}
+                  { language === 'kz' ? <Text style={styles.name}>{j.nameKz}</Text> : null}
+                  { language === 'en' ? <Text style={styles.name}>{j.name}</Text> : null}
                   {
                     isEditActive
                       ?
@@ -100,11 +108,11 @@ export const ProfileCompRep_Services = (props) => {
       {
         isServices ?
           <TouchableOpacity style={styles.profile_info_button} onPress={()=>setModalVisible(true)}>
-            <Text style={sStyle.secondary_button}>Edit services</Text>
+            <Text style={sStyle.secondary_button}>{t('Edit services')}</Text>
           </TouchableOpacity>
           :
           <TouchableOpacity style={styles.profile_info_button} onPress={() => navigation.navigate('CreateServices')}>
-            <Text style={sStyle.secondary_button}>Add services</Text>
+            <Text style={sStyle.secondary_button}>{t('Add services')}</Text>
           </TouchableOpacity>
       }
     </View>

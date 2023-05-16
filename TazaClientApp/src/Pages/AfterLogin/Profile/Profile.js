@@ -1,15 +1,54 @@
 import React, { useEffect, useState } from 'react'
-import { View, ImageBackground, StyleSheet, Text, Image, TouchableOpacity } from 'react-native';
+import { View, ImageBackground, StyleSheet, Text, Image, TouchableOpacity, ScrollView, Pressable } from 'react-native';
 import { styles } from '../../../styles/Styles'
 import { instance } from "../../../Api/ApiManager";
 import { getAccessToken, removeAccessToken, removeRefreshToken } from '../../../Storage/TokenStorage';
 import { removeRole } from '../../../Storage/RoleStorage'
 import { observer } from 'mobx-react-lite'
 import Repetear from '../../../MobX/ProfileMobxRener'
-
+// import { t } from 'i18next';
+import { useTranslation } from 'react-i18next';
+import Modal from "react-native-modal";
+import '../../../Translations/i18n'
+import { getLanguage, storeLanguage } from '../../../Storage/LanguageStorage'
 
 
 export const Profile = observer(({ navigation }) => {
+
+  //language 
+  const { t, i18n } = useTranslation();
+  const [currentLanguage, setLanguage] = useState();
+
+  const [language, setStorageLanguage] = useState();
+  const readLanguage = async () => { const item = await getLanguage(); setStorageLanguage(item) };
+
+  useEffect(() => {
+    readLanguage()
+    console.log(language)
+    changeLanguage(language)
+  }, [language])
+
+  const selectLan = (value) => {
+    toggleModal()
+    storeLanguage(value)
+    changeLanguage(value)
+  }
+
+  const changeLanguage = (value) => {
+    // 
+    i18n
+      .changeLanguage(value)
+      .then(() => setLanguage(value))
+      .catch(err => console.log(err));
+  };
+
+  //modal
+  const [isModalVisible, setModalVisible] = useState(false);
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
+
+
   const [data, setData] = useState("");
   const [orderCount, setOrderCount] = useState('');
   const [commentCount, setCommentCount] = useState('');
@@ -29,10 +68,7 @@ export const Profile = observer(({ navigation }) => {
       setData(response.data)
       getImage(response.data.photo)
 
-      instance.get(`/private/user/orders/count/${response.data.id}`, config).then(res => {
-        setOrderCount(res.data)
-        console.log(res.data)
-      }).catch(err => console.error(err))
+      instance.get(`/private/user/orders/count/${response.data.id}`, config).then(res => {setOrderCount(res.data)}).catch(err => console.error(err))
       instance.get(`/private/user/reviews/count/${response.data.id}`, config).then(res => setCommentCount(res.data)).catch(err => console.error(err))
     }).catch(function (error) {
       console.log(error);
@@ -62,7 +98,7 @@ export const Profile = observer(({ navigation }) => {
     navigation.navigate("Welcome")
   }
   return (
-    <View style={styles.containerwellcome}>
+    <ScrollView style={styles.containerwellcome}>
       <ImageBackground source={require('../../../Assets/images/profileback.png')} style={styles.imageprofile}>
         <View style={styles.containerhead}>
           <View>
@@ -70,11 +106,11 @@ export const Profile = observer(({ navigation }) => {
             <View style={{ flexDirection: 'row', marginTop: 20 }}>
               <View style={styles.icons}>
                 <Image source={require('../../../Assets/images/profile_order.png')} style={{ borderColor: '#8E9AAF', borderWidth: 2, borderRadius: 100 }}></Image>
-                <Text style={sStyle.secondary}>{orderCount} Order</Text>
+                <Text style={sStyle.secondary}>{orderCount} {t('Order')}</Text>
               </View>
               <View style={styles.icons}>
                 <Image source={require('../../../Assets/images/profile_comment.png')} style={{ borderColor: '#8E9AAF', borderWidth: 2, borderRadius: 100 }}></Image>
-                <Text style={sStyle.secondary}>{commentCount} Comments</Text>
+                <Text style={sStyle.secondary}>{commentCount} {t('Comments')}</Text>
               </View>
             </View>
           </View>
@@ -83,7 +119,7 @@ export const Profile = observer(({ navigation }) => {
             {
               imageData
                 ? <Image source={{ uri: imageData }} style={styles.image_avater} />
-            : <Image source={require('../../../Assets/images/profile_ava.png')} />
+                : <Image source={require('../../../Assets/images/profile_ava.png')} />
             }
             {/* {console.log('imageData', imageData)} */}
           </View>
@@ -111,16 +147,48 @@ export const Profile = observer(({ navigation }) => {
 
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <TouchableOpacity style={styles.company_contsct_btn} onPress={Bdutton} >
-              <Text style={sStyle.secondary_button}>Edit Profile</Text>
+              <Text style={sStyle.secondary_button}>{t('Edit Profile')}</Text>
             </TouchableOpacity>
+            <TouchableOpacity style={styles.company_contsct_btn} onPress={toggleModal}>
+              <Text style={sStyle.secondary_button}>{t('Change language')}</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <TouchableOpacity style={styles.company_contsct_btn_secondary} onPress={LogOut}>
-              <Text style={sStyle.secondary_button}>Log Out</Text>
+              <Text style={sStyle.secondary_button}>{t('Log Out')}</Text>
             </TouchableOpacity>
           </View>
         </View>
+
+        <View>
+          <Modal isVisible={isModalVisible}>
+            <View style={{ flex: 1 }}>
+              <TouchableOpacity style={{ alignItems: 'flex-end' }} onPress={toggleModal} >
+                <Image source={require('../../../Assets/images/ic/ri_close-circle-line.png')} style={{ zIndex: -1 }} />
+              </TouchableOpacity>
+              <View style={{ backgroundColor: '#D9D9D9', borderRadius: 1000, width: '120%', height: 600, alignSelf: 'center', bottom: '-40%', alignItems: 'center' }}>
+                <View style={{ position: 'relative', marginTop: 150, width: '70%', alignSelf: 'center' }}>
+                  <Text style={{ fontFamily: 'Nunito-Regular', fontSize: 25, color: 'black', alignSelf: 'center', top: '-20%' }}>{t('Select_Language')}</Text>
+                  <Pressable style={styles.profile_info_button} onPress={() => selectLan('ru')}>
+                    <Text style={{ color: '#D9D9D9', fontFamily: 'Nunito-Black', fontSize: 15, }}>Русский</Text>
+                  </Pressable>
+
+                  <Pressable style={styles.profile_info_button} onPress={() => selectLan('kz')}>
+                    <Text style={{ color: '#D9D9D9', fontFamily: 'Nunito-Black', fontSize: 15, }}>Қазақша</Text>
+                  </Pressable>
+
+                  <Pressable style={styles.profile_info_button} onPress={() => selectLan('en')}>
+                    <Text style={{ color: '#D9D9D9', fontFamily: 'Nunito-Black', fontSize: 15, }}>English</Text>
+                  </Pressable>
+                </View>
+              </View>
+            </View>
+
+          </Modal>
+        </View>
       </ImageBackground>
 
-    </View>
+    </ScrollView>
   )
 })
 

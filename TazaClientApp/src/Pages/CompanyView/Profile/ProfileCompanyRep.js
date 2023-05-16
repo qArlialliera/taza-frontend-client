@@ -12,6 +12,9 @@ import { instance } from '../../../Api/ApiManager';
 import Repetear from '../../../MobX/ProfileMobxRener'
 import { observer } from 'mobx-react-lite';
 
+import { t } from 'i18next';
+
+
 export const ProfileCompanyRep = observer(({ navigation }) => {
 
   const [isHaveCompany, setIsHaveCompany] = useState(false)
@@ -71,6 +74,10 @@ export const ProfileCompanyRep = observer(({ navigation }) => {
     navigation.navigate("Welcome")
   }
 
+  const servicesLabel = t('Services');
+  const commentsLabel = t('Comments');
+  const contactsLabel = t('Contacts');
+
   return (
     <ScrollView style={styles.contscrollView} contentContainerStyle={{ paddingRight: 0, minHeight: '100%' }} >
       <ImageBackground source={require('../../../Assets/images/homeBack.png')} style={styles.back}>
@@ -94,7 +101,9 @@ export const ProfileCompanyRep = observer(({ navigation }) => {
               <View style={{ paddingTop: 30, paddingHorizontal: 20 }}>
 
                 <SegmentedControlTab
-                  values={["Services", "Comments", "Contacts"]}
+                  values={[servicesLabel, commentsLabel, contactsLabel]}
+                  // values={[{ t('Services') }, { t('Comments') }, { t('Contacts') }]}
+                  // values={["Services", "Comments", "Contacts"]}
                   selectedIndex={selectedIndex}
                   onTabPress={changePage}
                   borderRadius={17}
@@ -106,10 +115,10 @@ export const ProfileCompanyRep = observer(({ navigation }) => {
 
                 <View style={{ marginTop: 30 }}>
                   {selectedIndex === 0 && (
-                    <ProfileCompRep_Services props={data.id}/>
+                    <ProfileCompRep_Services props={data.id} />
                   )}
                   {selectedIndex === 1 && (
-                    <ProfileCompRep_Reviews />
+                    <ProfileCompRep_Reviews props={data}/>
                   )}
                   {selectedIndex === 2 && (
                     <ProfileCompRep_Information />

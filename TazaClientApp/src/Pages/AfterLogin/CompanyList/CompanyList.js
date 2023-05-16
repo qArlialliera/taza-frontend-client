@@ -8,34 +8,22 @@ import { getAccessToken, getRefreshToken } from '../../../Storage/TokenStorage';
 import { Search } from '../Home/Search';
 import { CompanyImages } from './CompanyImages';
 import { CompanyListServices } from './CompanyListServices';
-// import { TextInput } from 'react-native-paper';
+
 
 
 export const CompanyList = ({ navigation }) => {
+
+
+
   const [token, setToken] = useState(readItemFromStorage);
   const readItemFromStorage = async () => {
     const item = await getAccessToken();
     setToken(item)
   };
 
-  const [searchText, setSearchText] = useState("");
-  const [spinnerVisibility, setSpinnerVisibility] = useState(false);
   const [data, setData] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [services, setServices] = useState("");
 
-  const SearchText = (e) => {
-    setSearchText(e);
-    console.log(searchText)
-  }
 
-  const [isModalVisible, setModalVisible] = useState(false);
-  const [lowerPrice, setLowerPrice] = useState();
-  const [higherPrice, setHigherPrice] = useState();
-
-  const toggleModal = () => {
-    setModalVisible(!isModalVisible);
-  };
 
   const config = {
     headers: {
@@ -44,7 +32,6 @@ export const CompanyList = ({ navigation }) => {
   }
   useEffect(() => {
     readItemFromStorage()
-    // console.log('company == ', token)
     instance.get('private/companies/all', config)
       .then(function (response) {
         setData(response.data)

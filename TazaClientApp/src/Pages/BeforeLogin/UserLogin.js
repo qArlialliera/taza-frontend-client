@@ -5,10 +5,17 @@ import { instance } from "../../Api/ApiManager";
 import { getRefreshToken, storeAccessToken, storeRefreshToken } from "../../Storage/TokenStorage";
 import { getRole, storeRole } from "../../Storage/RoleStorage";
 
+import '../../Translations/i18n'
+import { useTranslation } from 'react-i18next';
+
+
 export const UserLogin = ({ navigation }) => {
     const [password, setPassword] = useState("");
     const [username, setUsername] = useState("");
     const loadSceneBack = () => { navigation.navigate('Welcome2') }
+
+    //Languages
+    const { t } = useTranslation();
 
     const findUser = (e) => {
         e.preventDefault();
@@ -34,9 +41,9 @@ export const UserLogin = ({ navigation }) => {
         <View style={styles.containerwellcome}>
             <ImageBackground source={require('../../Assets/images/registration.png')} style={styles.image}>
                 <View style={styles.container3}>
-                    <Text style={{ marginBottom: 20, color: '#fff', fontFamily: 'Lobster-Regular', fontSize: 35 }}>Login</Text>
-                    <TextInput style={styles.input} value={username} placeholder={"Username"} onChangeText={(text) => setUsername(text)} />
-                    <TextInput style={styles.input} value={password} placeholder={"Password"} secureTextEntry onChangeText={(text) => setPassword(text)} />
+                    <Text style={{ marginBottom: 20, color: '#fff', fontFamily: 'Lobster-Regular', fontSize: 35 }}>{t('Login')}</Text>
+                    <TextInput style={styles.input} value={username} placeholder={t("Username")} onChangeText={(text) => setUsername(text)} />
+                    <TextInput style={styles.input} value={password} placeholder={t("Password")} secureTextEntry onChangeText={(text) => setPassword(text)} />
 
                 </View>
 

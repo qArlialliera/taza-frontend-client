@@ -1,49 +1,165 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Text, View, TouchableOpacity, SafeAreaView, FlatList, ImageBackground, Image } from 'react-native'
 import { styles } from '../../../styles/Styles'
+import { getAccessToken } from '../../../Storage/TokenStorage';
+import { instance } from '../../../Api/ApiManager';
+import { t } from 'i18next';
+import { AvatarImage } from '../CompanyList/CompanyDetails/AvatarImage';
+import Repeater from '../../../MobX/ProfileMobxRener'
+import { observer } from 'mobx-react-lite';
+import Stomp from 'stompjs'
+import { messagestyle } from '../../../styles/MessagesStyle'
 
 
-export const Messages = ({navigation}) => {
-  const DATA = [
-    { id: 1, name: 'Company X', img: require('../../../Assets/images/newimg.png'), last: 'Hello, I wanted to...' },
-    { id: 2, name: 'CompanyPOST', img: require('../../../Assets/images/newimg.png'), last: 'Hello, I your booking...' },
-    { id: 3, name: 'BestPrice', img: require('../../../Assets/images/newimg.png'), last: 'Hello, I wanted to...' }
-  ]
+var stompClient = null;
+var SockJS = require('sockjs-client/dist/sockjs.js');
+export const Messages = observer(({ navigation }) => {
+
+  const [token, setToken] = useState(readItemFromStorage);
+  const readItemFromStorage = async () => { const item = await getAccessToken(); setToken(item) };
+  const config = { headers: { 'Authorization': 'Bearer ' + token } }
+
+
+  const [chatList, setChatList] = useState('')
+
+  const getChatList = () => {
+    instance.get('private/messages/chat-rooms', config).then(res => {
+      setChatList(res.data)
+    }).catch(err => console.log(err))
+  }
+
+
+  const adminItem = {
+    id: 1,
+    username: "admin",
+    password: "$2a$10$9XSGvzkg87mvrOhanNH9V.YmOi3i4Khjs98pczfUiwUgUSsyF4ZcO",
+    fullName: "Admin",
+    email: "admin@mail.ru",
+    city: "Astana",
+    address: "Mangilik",
+    phoneNumber: "87777777777",
+    photo: null
+  }
+
+
+  const [userData, setUserData] = useState('');
+
+  useEffect(() => {
+    readItemFromStorage()
+    getChatList()
+    instance.get('private/user/user-details', config).then(function (response) {
+      setUserData(response.data)
+    }).catch(function (error) {
+      console.log(error);
+    });
+    connect()
+  }, [token, Repeater.bool])
+
+  const connect = () => {
+    var socket = new SockJS("http://192.168.31.156:8080/ws");
+    stompClient = Stomp.over(socket);
+    stompClient.connect({}, onConnected, console.log("err"));
+  }
+
+  const onConnected = () => {
+    console.log("connected");
+    stompClient.subscribe('/chatroom/private', onMessageReceived);
+  };
+
+
+  const onMessageReceived = (payload) => {
+    Repeater.trigger()
+  }
+
+
+
+
+
+
   return (
     <View style={styles.containerwellcome}>
-    <ImageBackground source={require('../../../Assets/images/homeBack.png')} style={styles.back}>
+      <ImageBackground source={require('../../../Assets/images/homeBack.png')} style={styles.back}>
 
-      <View style={{paddingHorizontal: 20, paddingVertical: 10, alignItems: 'center'}}>
-        <Text style={{color: '#fff', fontFamily: 'Lobster-Regular', fontSize: 30 }}>Messages</Text>
-      </View>
-      <SafeAreaView style={styles.container_messages}>
-  
+        <View style={{ paddingHorizontal: 20, paddingVertical: 10, alignItems: 'center' }}>
+          <Text style={{ color: '#fff', fontFamily: 'Lobster-Regular', fontSize: 30 }}>{t('Messages')}</Text>
+        </View>
+        <SafeAreaView style={styles.container_messages}>
 
-        <FlatList
-          data={DATA}
-          renderItem={
-            ({ item }) => (
-              <View key={item.id} >
-                <TouchableOpacity style={{ width: '100%', flexDirection: 'row', height: 90, alignItems: 'center',  }}
-                  onPress={() => navigation.navigate("Massages_Chat", item)}>
-                  <Image source={item.img} style={styles.image_card_m} resizeMode="cover" />
-                  <View style={{ flexDirection: 'column', marginHorizontal: 20, marginVertical: 20, width: '70%' }}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                      <Text style={{ color: 'white', fontFamily: 'Nunito-Black', fontSize: 20 }}>{item.name}</Text>
-                      <Text style={{ color: '#A8A8A8', fontFamily: 'Nunito-Regular', fontSize: 15 }}>23:34</Text>
-                    </View>
-                    <Text style={{ color: '#A8A8A8', fontFamily: 'Nunito-Regular', fontSize: 15 }}>{item.last}</Text>
+
+          <FlatList
+            data={chatList}
+            renderItem={
+              ({ item }) => {
+                const date = new Date(item.timestamp);
+                const time = date.toLocaleTimeString('en-GB', { timeZone: 'UTC', hour: '2-digit', minute: '2-digit' });
+                return (
+                  <View key={item.id} >
+                    {
+
+                      <TouchableOpacity
+                        style={
+                          item.status === 'DELIVERED' && item.senderId !== userData.id
+                            ? { ...messagestyle.chatListItemActive }
+                            : { ...messagestyle.chatListItem }
+                        }
+
+                        onPress={() => navigation.navigate("Massages_Chat", { item, userData, token })}>
+                        <AvatarImage props={item.photo} />
+                        <View style={{ flexDirection: 'column', marginHorizontal: 20, marginVertical: 20, width: '70%' }}>
+                          <View style={messagestyle.alltext}>
+                            <View style={messagestyle.text}>
+                              <Text style={
+                                item.status === 'DELIVERED' && item.senderId !== userData.id
+                                  ? { ...messagestyle.textNameActive }
+                                  : { ...messagestyle.textName }
+                              }>{item.username}</Text>
+                              <Text
+                                style={
+                                  item.status === 'DELIVERED' && item.senderId !== userData.id
+                                    ? { ...messagestyle.bodyNameActive }
+                                    : { ...messagestyle.bodyName }
+                                }
+                              >{item.message}</Text>
+
+                            </View>
+
+                            <View style={messagestyle.textReverse}>
+                              <Text style={messagestyle.timeText}>{time}</Text>
+                              {item.status === 'DELIVERED' && item.senderId !== userData.id ? (
+                                <Text style={messagestyle.circle}>{item.newMessagesCount}</Text>
+                              ) : null}
+                            </View>
+                          </View>
+
+                        </View>
+                      </TouchableOpacity>
+                    }
+
                   </View>
-                </TouchableOpacity>
+                )
+              }
 
+            }
+          />
+
+
+
+
+          <TouchableOpacity style={{ width: '100%', flexDirection: 'row', height: 90, alignItems: 'center', borderColor: '#C414C60', borderWidth: 1, borderRadius: 10, backgroundColor: '#8E9AAF' }}
+            onPress={() => navigation.navigate("Massages_Chat", { item: adminItem, userData, token })}>
+            <Image source={require('../../../Assets/images/newimg.png')} style={styles.image_card_m} resizeMode="cover" />
+            <View style={{ flexDirection: 'column', marginHorizontal: 20, marginVertical: 20, width: '70%' }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <Text style={{ color: 'white', fontFamily: 'Nunito-Black', fontSize: 20 }}>{t('Write to admins')}</Text>
               </View>
-            )
-          }
-        />
-        
-      </SafeAreaView>
+              {/* <Text style={{ color: '#C414C60', fontFamily: 'Nunito-Regular', fontSize: 15 }}>Nothing sended</Text> */}
+            </View>
+          </TouchableOpacity>
 
-    </ImageBackground>
-  </View>
+        </SafeAreaView>
+
+      </ImageBackground>
+    </View>
   )
 }
+)

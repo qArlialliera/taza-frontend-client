@@ -8,8 +8,10 @@ import { getAccessToken } from '../../../../Storage/TokenStorage';
 import { useNavigation } from '@react-navigation/native';
 import Repetear from '../../../../MobX/ProfileMobxRener'
 import { AvatarImage } from './AvatarImage';
+import { Comments_Array } from './Comments_Array';
+import { observer } from 'mobx-react-lite';
 
-export const CompanyDetails_Comments = (props) => {
+export const CompanyDetails_Comments = observer((props) => {
     const pp = props.props;
     const navigation = useNavigation();
 
@@ -32,7 +34,7 @@ export const CompanyDetails_Comments = (props) => {
     useEffect(() => {
         readItemFromStorage()
         // console.log
-        
+
         instance.get(`/private/review/company/${pp.id}`, config).then((res) => {
             setReview(res.data)
             setNewRating(res.data.res)
@@ -42,21 +44,21 @@ export const CompanyDetails_Comments = (props) => {
         instance.get('private/user/user-details', config).then((res) => {
             setUser(res.data)
         }).catch(err => console.log(err))
-    }, [token, trigger])
+    }, [token, Repetear.bool])
 
 
 
     const getImage = (uuid) => {
         console.log(uuid)
         instance.get(`/public/file/photo/get/${uuid}`, { responseType: 'blob' }).then((response) => {
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            setUserImages([...reader.result]);
-          };
-          reader.readAsDataURL(response.data);
-    
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setUserImages([...reader.result]);
+            };
+            reader.readAsDataURL(response.data);
+
         }).catch(err => console.error(err))
-      }
+    }
 
 
     const putNewReview = (id) => {
@@ -66,77 +68,91 @@ export const CompanyDetails_Comments = (props) => {
             setTrigger(!trigger)
             Repetear.trigger();
         }).catch(err => console.log(err))
-        
+
     }
 
     return (
         <View style={{ width: '100%' }}>
             {
-                review 
+                review
                     ?
                     review.map((r) => {
-                        // getImage(r.user.photo)
                         return (
-                                <View key={r.id} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', marginVertical: 10, width: '100%' }}>
-                                    <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
-                                        {/* <Image style={styles.msg_img} source={require('../../../../Assets/images/profile_ava.png')} /> */}
-                                        <AvatarImage  props={r.user.photo} />
-                                        <Text style={{ fontFamily: 'Nunito-Black', color: '#D9D9D9', marginTop: 5 }}>{r.user.fullName}</Text>
+                            <View key={r.id} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', marginVertical: 10, width: '100%' }}>
+                                <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
+                                    {/* <Image style={styles.msg_img} source={require('../../../../Assets/images/profile_ava.png')} /> */}
+                                    <AvatarImage props={r.user.photo} />
+                                    <Text style={{ fontFamily: 'Nunito-Black', color: '#D9D9D9', marginTop: 5 }}>{r.user.fullName}</Text>
+                                </View>
+                                <View style={{ flexDirection: 'column', width: '80%', }}>
+                                    <View style={styles.msgBox}>
+                                        <View style={{ alignItems: 'flex-end' }}>
+                                            <AirbnbRating
+                                                ratingCount={5}
+                                                defaultRating={r.rate}
+                                                size={15}
+                                                selectedColor='#414C60'
+                                                ratingBackgroundColor='#D9D9D9'
+                                                showRating={false}
+                                                isDisabled={true}
+                                            />
+                                        </View>
+                                        {r.comments[0] ? <Text style={{ fontFamily: 'Nunito-Regular', fontSize: 15, color: '#000000', marginVertical: 2 }}>{r.comments[0].text}</Text> : null}
+                                        {
+                                        r.user.id === userData?.id && isEditPressed < 0 ?
+
+                                            <TouchableOpacity style={{    backgroundColor:'#414C60', borderRadius: 17, padding: 10, alignItems:'center', marginVertical: 10}} onPress={() => setIsEditPressed(r.user.id)}>
+                                                <Text style={{ color: '#D9D9D9', fontFamily: 'Nunito-SemiBold', fontSize: 15, }}>Edit Review</Text>
+                                            </TouchableOpacity> : null
+                                    }
                                     </View>
-                                    <View style={{ flexDirection: 'column', width: '80%', }}>
-                                        <View style={styles.msgBox}>
-                                            <View style={{ alignItems: 'flex-end' }}>
+
+                                    {
+                                        r.user.id === isEditPressed ?
+                                            <View style={styles.msgBox}>
+                                                <Text style={{ fontFamily: 'Nunito-Black', fontSize: 18, alignSelf: 'center', color: '#414C60' }}>Edit review</Text>
                                                 <AirbnbRating
                                                     ratingCount={5}
                                                     defaultRating={r.rate}
-                                                    size={15}
+                                                    size={30}
                                                     selectedColor='#414C60'
                                                     ratingBackgroundColor='#D9D9D9'
                                                     showRating={false}
-                                                    isDisabled={true}
+                                                    onFinishRating={(e) => setNewRating(e)}
                                                 />
+                                                <TextInput style={styles.inputTextWithBorder} placeholder="Your Comments" onChangeText={(text) => setNewComment(text)}></TextInput>
+                                                <TouchableOpacity style={styles.profile_info_button} onPress={() => putNewReview(r.id)}>
+                                                    <Text style={{ color: '#D9D9D9', fontFamily: 'Nunito-SemiBold', fontSize: 15, }}>Edit</Text>
+                                                </TouchableOpacity>
                                             </View>
-                                            <Text style={{ fontFamily: 'Nunito-Regular', fontSize: 15, color: '#000000', marginVertical: 2 }}>{r.comment}</Text>
-                                        </View>
-                                        {
-                                            r.user.id === isEditPressed ?
-                                                <View style={styles.msgBox}>
-                                                    {/* <Text>ogfkrml</Text> */}
-                                                    <Text style={{ fontFamily: 'Nunito-Black', fontSize: 18, alignSelf: 'center', color: '#414C60' }}>Edit review</Text>
-                                                    <AirbnbRating
-                                                        ratingCount={5}
-                                                        defaultRating={r.rate}
-                                                        size={30}
-                                                        selectedColor='#414C60'
-                                                        ratingBackgroundColor='#D9D9D9'
-                                                        showRating={false}
-                                                        onFinishRating={(e) => setNewRating(e)}
-                                                    />
-                                                    <TextInput style={styles.inputTextWithBorder} placeholder="Your Comments" onChangeText={(text) => setNewComment(text)}></TextInput>
-                                                    <TouchableOpacity style={styles.profile_info_button} onPress={()=>putNewReview(r.id)}>
-                                                        <Text style={{ color: '#D9D9D9', fontFamily: 'Nunito-SemiBold', fontSize: 15, }}>Edit</Text>
-                                                    </TouchableOpacity>
-                                                </View>
-                                                : null
-                                        }
-                                        {
-                                            r.user.id === userData?.id && isEditPressed < 0 ?
+                                            : null
+                                    }
 
-                                                <TouchableOpacity style={styles.profile_info_button} onPress={() => setIsEditPressed(r.user.id)}>
-                                                    <Text style={{ color: '#D9D9D9', fontFamily: 'Nunito-SemiBold', fontSize: 15, }}>Edit Review</Text>
-                                                </TouchableOpacity> : null
-                                        }
-                                    </View>
+
+                                    {
+                                        r.comments[1]
+                                            ?
+                                            <View style={{flexDirection: 'row', marginVertical: 10}}>
+                                                <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
+                                                    <AvatarImage props={pp.photo} />
+                                                    <Text style={{ fontFamily: 'Nunito-Black', color: '#D9D9D9', marginTop: 5 }}>{pp.name}</Text>
+                                                </View>
+                                                <View style={styles.msgBox2}>
+                                                    <Text style={{ fontFamily: 'Nunito-Regular', fontSize: 15, color: '#000000', marginVertical: 2 }}>{r.comments[1].text}</Text>
+                                                </View>
+                                            </View>
+                                            : null
+                                    }
                                 </View>
-                            // </ScrollView>
+                            </View>
 
                         )
                     })
-                    : 
-                    // <Image source={require('../../../../Assets/images/comment_empty.png')}/>
+                    :
+
                     null
-                    
+
             }
         </View>
     )
-}
+})

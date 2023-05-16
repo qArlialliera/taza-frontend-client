@@ -7,6 +7,8 @@ import { getAccessToken } from '../../../Storage/TokenStorage';
 import FuzzySearch from 'fuzzy-search';
 import { useNavigation } from '@react-navigation/native';
 import { CompanyImages } from '../CompanyList/CompanyImages';
+import '../../../Translations/i18n'
+import { useTranslation } from 'react-i18next';
 
 export const Search = () => {
     const [spinnerVisibility, setSpinnerVisibility] = useState(false);
@@ -14,30 +16,25 @@ export const Search = () => {
     const [data, setData] = useState("");
     const [services, setServices] = useState("");
 
-    const [searchQuery, setSearchQuery] = useState('');
-    const [searchResults, setSearchResults] = useState([]);
+
 
     const navigation = useNavigation();
 
+    const { t } = useTranslation();
 
     const [token, setToken] = useState(readItemFromStorage);
     const readItemFromStorage = async () => { const item = await getAccessToken(); setToken(item) };
     const config = { headers: { 'Authorization': 'Bearer ' + token } }
 
+
+    const [searchQuery, setSearchQuery] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
+    
     const SearchText = (e) => {
         setSpinnerVisibility(true);
         setSearchQuery(e)
         setIsSearchName(true)
-
     }
-
-    // const searchCategory = (query) => {
-    //     const searcher = new FuzzySearch(data, ['categories.name']);
-    //     const results = searcher.search(query);
-    //     setSearchResults(results);
-    // };
-
-
     const searchByName = (query) => {
         const searcher = new FuzzySearch(data, ['name']);
         const results = searcher.search(query);
@@ -79,7 +76,7 @@ export const Search = () => {
                 shadowColor="#282828"
                 cancelIconColor="#fdfdfd"
                 spinnerVisibility={spinnerVisibility}
-                placeholder="Search..."
+                placeholder={t('Search')}
                 fontFamily="Nunito-Regular"
                 style={styles.searchbar}
                 onChangeText={(text) => SearchText(text)}

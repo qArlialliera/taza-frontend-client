@@ -35,7 +35,7 @@ contscrollView:{
 
 containerhead:{
     flexDirection:'row',
-    margin:50
+    margin:50,
 },
 
   image: {
@@ -80,9 +80,7 @@ containerhead:{
     marginRight: 20,
     alignItems:'center'
   },
-  alignright:{
-    margin:20
-  },
+
 
   roundButton1: {
     width: 230,
@@ -173,6 +171,39 @@ containerhead:{
     borderColor: '#D9D9D9',
     borderWidth:4,
   },
+  button_lightYellow:{
+    alignItems:'center',
+    backgroundColor:'#EDE5B9',
+    width: '100%',
+    borderRadius: 17,
+    padding: 15,
+    marginBottom: 20
+  },
+  button_lightBlue:{
+    alignItems:'center',
+    backgroundColor:'#C2CFE4',
+    width: '100%',
+    borderRadius: 17,
+    padding: 15,
+    marginBottom: 20
+  },
+  button_lightGreen:{
+    alignItems:'center',
+    backgroundColor:'#A6E7A5',
+    width: '100%',
+    borderRadius: 17,
+    padding: 15,
+    marginBottom: 20
+  },
+  button_red:{
+    alignItems:'center',
+    backgroundColor:'#E4C2C2',
+    width: '100%',
+    borderRadius: 17,
+    padding: 15,
+    marginBottom: 20
+  },
+
   profile_info_button_secondary:{
     alignItems:'center',
     // backgroundColor:'#D9D9D9',
@@ -201,7 +232,8 @@ containerhead:{
     borderRadius: 20,
     height: 200,
     width: '90%',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   card_category:{
     backgroundColor: '#D9D9D9',
@@ -219,7 +251,7 @@ containerhead:{
     width: 150,
     alignItems: 'center',
     marginVertical: 20,
-    paddingVertical: 20
+    paddingVertical: 25
     
   },
   // datepic:{
@@ -360,6 +392,17 @@ containerhead:{
     flexDirection: 'row',
     justifyContent: 'space-around'  
   },
+
+  card_category_services_disabled: {
+    backgroundColor: '#9C9C9C',
+    borderRadius: 20,
+    paddingVertical: 30,
+    // paddingHorizontal: 70,
+    alignItems: 'flex-start',
+    marginBottom:10,
+    flexDirection: 'row',
+    justifyContent: 'space-around'  
+  },
   price:{
     fontFamily: 'Nunito-Regular',
     fontWeight: '300',
@@ -376,11 +419,12 @@ containerhead:{
     marginBottom: 20,
     borderColor: '#D9D9D9',
     borderWidth:4,
+    justifyContent:'center'
   },
   company_contsct_btn_secondary:{
     alignItems:'center',
     backgroundColor:'#414C60',
-    width: '48%',
+    width: '100%',
     borderRadius: 17,
     padding: 15,
     marginBottom: 20,
@@ -405,6 +449,18 @@ containerhead:{
     paddingHorizontal: 10,
     marginVertical: 5
   },
+  msgBox2:{
+    flexDirection: 'column',
+    backgroundColor: '#D9D9D9', 
+    borderRadius: 17, 
+    paddingVertical: 10,
+    minHeight: 50,
+    width: '70%',
+    paddingHorizontal: 10,
+    marginVertical: 5,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
 
   msgBoxRed:{
     flexDirection: 'column',
@@ -426,13 +482,20 @@ containerhead:{
     width: '50%',
     alignSelf: 'flex-end'
   },
-
+  btn_RedNew:{
+    backgroundColor: '#E4C2C2', 
+    borderRadius: 17, 
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    width: '50%',
+    alignSelf: 'center'
+  },
   book_bodytext:{
     fontFamily: 'Lobster-Regular', 
     fontSize: 22, 
     color: '#fff', 
     textTransform: 'capitalize',
-    marginTop: 20
+    marginTop: 20,
   },
   num_input:{
     backgroundColor: '#D9D9D9',
@@ -457,8 +520,18 @@ containerhead:{
     height: 100,
     marginVertical: 10,
     alignItems: 'flex-start',
-    paddingHorizontal:20
+    padding:20,
+    // width: '80%'
 
+  },
+  inputText2:{
+    backgroundColor: '#D9D9D9',
+    borderRadius: 20,
+    height: 100,
+    marginVertical: 10,
+    alignItems: 'flex-start',
+    padding:20,
+    width: '80%'
 
   },
   inputTextWithBorder:{
@@ -526,8 +599,6 @@ containerhead:{
     borderRadius:100,
     borderWidth: 5,
     borderColor: '#8E9AAF',
-    position:'relative',
-    top: 10
   },
   inputTextSpecial:{
     backgroundColor: '#8E9AAF',
@@ -555,5 +626,21 @@ containerhead:{
     padding: 10,
     alignItems: 'center',
     top: '70%'
+  },
+  lastOrderYellow:{
+    backgroundColor: '#EDE5B9', 
+    borderRadius: 20, 
+    flexDirection: 'row', 
+    padding: 20, 
+    alignItems: 'center', 
+    marginBottom: 10
+  },
+  lastOrderBlue:{
+    backgroundColor: '#C2CFE4', 
+    borderRadius: 20, 
+    flexDirection: 'row', 
+    padding: 20, 
+    alignItems: 'center', 
+    marginBottom: 10
   }
 });
