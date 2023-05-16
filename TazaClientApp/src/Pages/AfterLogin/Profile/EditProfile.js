@@ -56,7 +56,7 @@ export const EditProfile = ({ navigation }) => {
 
         myImage.append('file', {
             uri: Platform.OS === "android" ? image.path : image.path.replace("file://", ""),
-            name: `image${token}.jpg`,
+            name: `image${response.data.username}.jpg`,
             type: image.mime
         })
         instance.post('/public/file/save', myImage, config).then((response) => {

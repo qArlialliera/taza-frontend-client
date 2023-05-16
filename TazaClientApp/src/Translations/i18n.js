@@ -13,8 +13,9 @@ i18n.use(initReactI18next).init({
     kz: kz
   },
   interpolation: {
-    escapeValue: false // react already safes from xss
+    escapeValue: false 
   }
 });
   
 export default i18n;
+

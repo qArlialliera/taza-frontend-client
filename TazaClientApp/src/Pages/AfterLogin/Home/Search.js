@@ -16,8 +16,7 @@ export const Search = () => {
     const [data, setData] = useState("");
     const [services, setServices] = useState("");
 
-    const [searchQuery, setSearchQuery] = useState('');
-    const [searchResults, setSearchResults] = useState([]);
+
 
     const navigation = useNavigation();
 
@@ -27,20 +26,15 @@ export const Search = () => {
     const readItemFromStorage = async () => { const item = await getAccessToken(); setToken(item) };
     const config = { headers: { 'Authorization': 'Bearer ' + token } }
 
+
+    const [searchQuery, setSearchQuery] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
+    
     const SearchText = (e) => {
         setSpinnerVisibility(true);
         setSearchQuery(e)
         setIsSearchName(true)
-
     }
-
-    // const searchCategory = (query) => {
-    //     const searcher = new FuzzySearch(data, ['categories.name']);
-    //     const results = searcher.search(query);
-    //     setSearchResults(results);
-    // };
-
-
     const searchByName = (query) => {
         const searcher = new FuzzySearch(data, ['name']);
         const results = searcher.search(query);

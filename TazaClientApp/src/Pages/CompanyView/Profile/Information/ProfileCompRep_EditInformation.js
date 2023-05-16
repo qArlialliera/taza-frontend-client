@@ -23,7 +23,7 @@ export const ProfileCompRep_EditInformation = () => {
   const configMedia = {
     headers: {
       'content-type': 'multipart/form-data',
-      'Authorization': 'Bearer ' + token,
+      // 'Authorization': 'Bearer ' + token,
     },
   }
 
@@ -55,7 +55,7 @@ export const ProfileCompRep_EditInformation = () => {
   const savePhoto = (image) => {
     myImage.append('file', {
       uri: Platform.OS === "android" ? image.path : image.path.replace("file://", ""),
-      name: `image${id}.jpg`,
+      name: `image${res.data.name}.jpg`,
       type: image.mime
     })
     instance.post('/public/file/save', myImage, configMedia).then((response) => {

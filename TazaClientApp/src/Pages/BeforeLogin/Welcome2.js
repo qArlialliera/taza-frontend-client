@@ -46,6 +46,9 @@ export const Welcome2 = ({ navigation }) => {
     const toggleModal = () => {
         setModalVisible(!isModalVisible);
     };
+
+
+    
     return (
         <View style={styles.containerwellcome}>
             <ImageBackground source={require('../../Assets/images/welcome2.png')} style={styles.image}>
@@ -82,7 +85,6 @@ export const Welcome2 = ({ navigation }) => {
                                 </View>
                             </View>
                         </View>
-
                     </Modal>
                 </View>
             </ImageBackground>

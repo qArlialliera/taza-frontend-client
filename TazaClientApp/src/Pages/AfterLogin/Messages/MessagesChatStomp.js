@@ -62,7 +62,6 @@ export const MessagesChatStomp = (props) => {
     const onMessageReceived = (payload) => {
         var payloadData = JSON.parse(payload.body);
         setMessagesArray(messagesArray => [...messagesArray, payloadData]);
-        console.log(messagesArray)
     }
     const onPrivateMessage = (payload) => {
         const payloadData = JSON.parse(payload.body);
@@ -105,7 +104,9 @@ export const MessagesChatStomp = (props) => {
 
     const renderItem = ({ item }) => {
         const date = new Date(item.timestamp);
-        const time = date.toLocaleTimeString('en-GB', { timeZone: 'UTC', hour: '2-digit', minute: '2-digit' });
+        // const timme = date.toLocaleTimeString('en-US', { timeZone: 'UTC', hour: '2-digit', minute: '2-digit' });
+        const options = { timeZone: 'UTC', hour: '2-digit', minute: '2-digit' };
+        const time = date.toLocaleTimeString('en-US', options);
         return (
             item.senderId === pp.userData.id ?
                 <View style={[messagestyle.chatBubble, messagestyle.chatBubbleMine]}>
