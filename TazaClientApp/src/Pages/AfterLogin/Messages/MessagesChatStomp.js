@@ -103,8 +103,7 @@ export const MessagesChatStomp = (props) => {
 
     const renderItem = ({ item }) => {
         const date = new Date(item.timestamp);
-        // const timme = date.toLocaleTimeString('en-US', { timeZone: 'UTC', hour: '2-digit', minute: '2-digit' });
-        const options = { timeZone: 'UTC', hour: '2-digit', minute: '2-digit' };
+        const options = { timeZone: 'UTC', hour: '2-digit', minute: '2-digit', hour12: false};
         const time = date.toLocaleTimeString('en-US', options);
         return (
             item.senderId === pp.userData.id ?

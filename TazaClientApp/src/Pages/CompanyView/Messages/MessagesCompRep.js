@@ -65,6 +65,13 @@ export const MessagesCompRep = observer(({ navigation }) => {
     photo: null
   }
 
+  const sortedChatList = chatList && chatList.sort((a, b) => {
+    const timestampA = new Date(a.timestamp).getTime();
+    const timestampB = new Date(b.timestamp).getTime();
+    return timestampB - timestampA; 
+  });
+
+
   return (
     <View style={styles.containerwellcome}>
       <ImageBackground source={require('../../../Assets/images/homeBack.png')} style={styles.back}>
@@ -77,11 +84,11 @@ export const MessagesCompRep = observer(({ navigation }) => {
 
 
           <FlatList
-            data={chatList}
+            data={sortedChatList}
             renderItem={
               ({ item }) => {
                 const date = new Date(item.timestamp);
-                const time = date.toLocaleTimeString('en-GB', { timeZone: 'UTC', hour: '2-digit', minute: '2-digit' });
+                const time = date.toLocaleTimeString('en-GB', { timeZone: 'UTC', hour: '2-digit', minute: '2-digit', hour12: false });
                 return (
                   <View key={item.id} >
                     {

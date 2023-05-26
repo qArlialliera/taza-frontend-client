@@ -21,6 +21,7 @@ export const Messages = observer(({ navigation }) => {
   const getChatList = () => {
     instanceToken.get('/messages/chat-rooms').then(res => {
       setChatList(res.data)
+      console.log('chatList', chatList)
     }).catch(err => console.log(err))
   }
 
@@ -67,7 +68,11 @@ export const Messages = observer(({ navigation }) => {
   }
 
 
-
+  const sortedChatList = chatList && chatList.sort((a, b) => {
+    const timestampA = new Date(a.timestamp).getTime();
+    const timestampB = new Date(b.timestamp).getTime();
+    return timestampB - timestampA; 
+  });
 
 
 
@@ -82,15 +87,14 @@ export const Messages = observer(({ navigation }) => {
 
 
           <FlatList
-            data={chatList}
+            data={sortedChatList}
             renderItem={
               ({ item }) => {
                 const date = new Date(item.timestamp);
-                const time = date.toLocaleTimeString('en-GB', { timeZone: 'UTC', hour: '2-digit', minute: '2-digit' });
+                const time = date.toLocaleTimeString('en-GB', { timeZone: 'UTC', hour: '2-digit', minute: '2-digit', hour12: false});
                 return (
                   <View key={item.id} >
                     {
-
                       <TouchableOpacity
                         style={
                           item.status === 'DELIVERED' && item.senderId !== userData.id

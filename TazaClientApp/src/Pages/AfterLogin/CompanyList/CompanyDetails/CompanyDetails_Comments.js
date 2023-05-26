@@ -27,7 +27,7 @@ export const CompanyDetails_Comments = observer((props) => {
         }).catch(err => console.log(err))
 
         instanceToken.get('/user/user-details').then((res) => {
-            setUser(res.data)
+            setUser(res.data.id)
         }).catch(err => console.log(err))
     }, [Repetear.bool])
 
@@ -79,7 +79,7 @@ export const CompanyDetails_Comments = observer((props) => {
                                                 : null
                                         }
                                         {
-                                            isEditPressed < 0 ?
+                                            isEditPressed < 0 && r.user.id === userData ?
 
                                                 <TouchableOpacity style={{ backgroundColor: '#414C60', borderRadius: 17, padding: 10, alignItems: 'center', marginVertical: 10 }} onPress={() => setIsEditPressed(r.id)}>
                                                     <Text style={{ color: '#D9D9D9', fontFamily: 'Nunito-SemiBold', fontSize: 15, }}>Edit Review</Text>

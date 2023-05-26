@@ -94,7 +94,7 @@ export const MessagesCompRepChat = (props) => {
 
     const renderItem = ({ item }) => {
         const date = new Date(item.timestamp);
-        const time = date.toLocaleTimeString('en-GB', { timeZone: 'UTC', hour: '2-digit', minute: '2-digit' });
+        const time = date.toLocaleTimeString('en-GB', { timeZone: 'UTC', hour: '2-digit', minute: '2-digit', hour12: false });
         return (
             item.senderId === pp.userData.id ?
                 <View style={[messagestyle.chatBubble, messagestyle.chatBubbleMine]}>

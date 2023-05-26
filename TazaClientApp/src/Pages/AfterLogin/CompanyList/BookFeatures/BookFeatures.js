@@ -113,7 +113,7 @@ export const BookFeatures = (company) => {
     const toggleModal = () => {
         setModalVisible(false);
 
-        navigation.navigate('Massages_Chat', { item: comp.pp.user, userData: userData, token })
+        navigation.navigate('Massages_Chat', { item: comp.pp.user, userData: userData })
     };
 
     const getImage = (uuid) => {
