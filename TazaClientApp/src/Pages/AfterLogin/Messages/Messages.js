@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Text, View, TouchableOpacity, SafeAreaView, FlatList, ImageBackground, Image } from 'react-native'
 import { styles } from '../../../styles/Styles'
-import { getAccessToken } from '../../../Storage/TokenStorage';
-import { instance } from '../../../Api/ApiManager';
+import instanceToken from '../../../Api/ApiManager';
 import { t } from 'i18next';
 import { AvatarImage } from '../CompanyList/CompanyDetails/AvatarImage';
 import Repeater from '../../../MobX/ProfileMobxRener'
@@ -15,16 +14,14 @@ var stompClient = null;
 var SockJS = require('sockjs-client/dist/sockjs.js');
 export const Messages = observer(({ navigation }) => {
 
-  const [token, setToken] = useState(readItemFromStorage);
-  const readItemFromStorage = async () => { const item = await getAccessToken(); setToken(item) };
-  const config = { headers: { 'Authorization': 'Bearer ' + token } }
 
 
   const [chatList, setChatList] = useState('')
 
   const getChatList = () => {
-    instance.get('private/messages/chat-rooms', config).then(res => {
+    instanceToken.get('/messages/chat-rooms').then(res => {
       setChatList(res.data)
+      console.log('chatList', chatList)
     }).catch(err => console.log(err))
   }
 
@@ -45,18 +42,17 @@ export const Messages = observer(({ navigation }) => {
   const [userData, setUserData] = useState('');
 
   useEffect(() => {
-    readItemFromStorage()
     getChatList()
-    instance.get('private/user/user-details', config).then(function (response) {
+    instanceToken.get('/user/user-details').then(function (response) {
       setUserData(response.data)
     }).catch(function (error) {
       console.log(error);
     });
     connect()
-  }, [token, Repeater.bool])
+  }, [ Repeater.bool])
 
   const connect = () => {
-    var socket = new SockJS("http://192.168.31.156:8080/ws");
+    var socket = new SockJS("http://192.168.31.151:8080/ws");
     stompClient = Stomp.over(socket);
     stompClient.connect({}, onConnected, console.log("err"));
   }
@@ -72,7 +68,11 @@ export const Messages = observer(({ navigation }) => {
   }
 
 
-
+  const sortedChatList = chatList && chatList.sort((a, b) => {
+    const timestampA = new Date(a.timestamp).getTime();
+    const timestampB = new Date(b.timestamp).getTime();
+    return timestampB - timestampA; 
+  });
 
 
 
@@ -87,15 +87,14 @@ export const Messages = observer(({ navigation }) => {
 
 
           <FlatList
-            data={chatList}
+            data={sortedChatList}
             renderItem={
               ({ item }) => {
                 const date = new Date(item.timestamp);
-                const time = date.toLocaleTimeString('en-GB', { timeZone: 'UTC', hour: '2-digit', minute: '2-digit' });
+                const time = date.toLocaleTimeString('en-GB', { timeZone: 'UTC', hour: '2-digit', minute: '2-digit', hour12: false});
                 return (
                   <View key={item.id} >
                     {
-
                       <TouchableOpacity
                         style={
                           item.status === 'DELIVERED' && item.senderId !== userData.id
@@ -103,7 +102,7 @@ export const Messages = observer(({ navigation }) => {
                             : { ...messagestyle.chatListItem }
                         }
 
-                        onPress={() => navigation.navigate("Massages_Chat", { item, userData, token })}>
+                        onPress={() => navigation.navigate("Massages_Chat", { item, userData })}>
                         <AvatarImage props={item.photo} />
                         <View style={{ flexDirection: 'column', marginHorizontal: 20, marginVertical: 20, width: '70%' }}>
                           <View style={messagestyle.alltext}>
@@ -146,7 +145,7 @@ export const Messages = observer(({ navigation }) => {
 
 
           <TouchableOpacity style={{ width: '100%', flexDirection: 'row', height: 90, alignItems: 'center', borderColor: '#C414C60', borderWidth: 1, borderRadius: 10, backgroundColor: '#8E9AAF' }}
-            onPress={() => navigation.navigate("Massages_Chat", { item: adminItem, userData, token })}>
+            onPress={() => navigation.navigate("Massages_Chat", { item: adminItem, userData })}>
             <Image source={require('../../../Assets/images/newimg.png')} style={styles.image_card_m} resizeMode="cover" />
             <View style={{ flexDirection: 'column', marginHorizontal: 20, marginVertical: 20, width: '70%' }}>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>

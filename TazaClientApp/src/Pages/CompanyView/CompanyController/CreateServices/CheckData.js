@@ -3,27 +3,21 @@ import { Text, View, ImageBackground, TextInput, TouchableOpacity, Image } from 
 import { styles } from '../../../../styles/Styles'
 import { useNavigation } from '@react-navigation/native';
 import { getAccessToken } from '../../../../Storage/TokenStorage';
-import { instance } from '../../../../Api/ApiManager';
+import instanceToken, { instance } from '../../../../Api/ApiManager';
 import Repetear from '../../../../MobX/ProfileMobxRener'
 
 export const CheckData = (props) => {
     const categoryData = JSON.parse(JSON.stringify(props)).route.params
-    console.log(categoryData)
 
     const navigation = useNavigation()
-
-    const [token, setToken] = useState(readItemFromStorage);
-    const readItemFromStorage = async () => { const item = await getAccessToken(); setToken(item) };
-    const config = { headers: { 'Authorization': 'Bearer ' + token } }
-
     const [companyData, setCompanyData] = useState('')
+    
     useEffect(() => {
-        readItemFromStorage()
-        instance.get('/private/companies/user', config).then((res) => {
+        instanceToken.get('/companies/user').then((res) => {
             setCompanyData(res.data)
 
           }).catch(err => console.log(err))
-    }, [token])
+    }, [])
     
     const addService = () => {
         const serviceData = {
@@ -37,7 +31,7 @@ export const CheckData = (props) => {
             additionalService: categoryData.isEnabled 
         }
         console.log('serviceData', serviceData)
-        instance.post('/private/services/add', serviceData, config).then((res)=>{
+        instanceToken.post('/services/add', serviceData).then((res)=>{
             console.log('data', res.data)
             navigation.navigate('BottomBarCompany')
             Repetear.trigger()

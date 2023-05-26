@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { View, ImageBackground, Text, TouchableOpacity, Image, ScrollView } from 'react-native'
 import { styles } from '../../../styles/Styles'
 import SearchBar from "react-native-dynamic-search-bar";
-import { instance } from '../../../Api/ApiManager';
+import instanceToken, { instance } from '../../../Api/ApiManager';
 import { getAccessToken } from '../../../Storage/TokenStorage';
 import { useNavigation } from '@react-navigation/native';
 import { CompanyImages } from '../CompanyList/CompanyImages';
@@ -11,14 +11,8 @@ import { Search } from '../Home/Search';
 export const FindByCategory = (props) => {
     const pp = JSON.parse(JSON.stringify(props)).route.params
     const navigation = useNavigation();
-
-    const [token, setToken] = useState(readItemFromStorage);
-    const readItemFromStorage = async () => { const item = await getAccessToken(); setToken(item) };
-    const config = { headers: { 'Authorization': 'Bearer ' + token } }
-
     const [searchText, setSearchText] = useState("");
     const [spinnerVisibility, setSpinnerVisibility] = useState(false);
-
     const [company, setCompany] = useState("");
     const [services, setServices] = useState("");
 
@@ -30,16 +24,15 @@ export const FindByCategory = (props) => {
     }
 
     useEffect(() => {
-        readItemFromStorage()
-        instance.get(`/private/companies/category/${pp.id}`, config).then((response) => {
+        instanceToken.get(`/companies/category/${pp.id}`).then((response) => {
             setCompany(response.data)
             getServices()
         }).catch((err) => console.error(err))
 
-    }, [token])
+    }, [])
 
     const getServices = () => {
-        instance.get(`/private/services/all`, config).then((response) => {
+        instanceToken.get(`/services/all`).then((response) => {
 
             setServices(response.data)
         }).catch((err) => console.error(err))

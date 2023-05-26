@@ -6,8 +6,7 @@ import '../../../Translations/i18n'
 import { useTranslation } from 'react-i18next';
 import { getLanguage } from '../../../Storage/LanguageStorage';
 import { getRole } from '../../../Storage/RoleStorage';
-import { instance } from '../../../Api/ApiManager';
-import { getAccessToken } from '../../../Storage/TokenStorage';
+import instanceToken from '../../../Api/ApiManager';
 import { AvatarImage } from '../CompanyList/CompanyDetails/AvatarImage';
 
 
@@ -24,11 +23,6 @@ const DATA = [
 export const Home = ({ navigation }) => {
 
 
-    //token
-    const [token, setToken] = useState(readItemFromStorage);
-    const readItemFromStorage = async () => { const item = await getAccessToken(); setToken(item) };
-    const config = { headers: { 'Authorization': 'Bearer ' + token } }
-
     //language
     const { t, i18n } = useTranslation();
     const [language, setStorageLanguage] = useState();
@@ -41,29 +35,27 @@ export const Home = ({ navigation }) => {
     const readRoleFromStorage = async () => { const item = await getRole(); setRole(item); };
 
     //other
-    const [isOrderInProccess, setOrderInProccess] = useState(false);
     const [orderData, setOrderData] = useState()
 
     useEffect(() => {
         readLanguage()
         readRoleFromStorage()
-        readItemFromStorage()
         if (role === 'ROLE_COMPANY') navigation.navigate('BottomBarCompany')
 
 
         console.log(language)
         changeLanguage(language)
         getUserData()
-    }, [language, token])
+    }, [language, role])
 
     const getUserData = () => {
-        instance.get('/private/user/user-details', config).then((res) => {
+        instanceToken.get('/user/user-details').then((res) => {
             getOrders(res.data.id)
         }).catch(err => console.log(err))
     }
 
     const getOrders = (userId) => {
-        instance.get(`/private/orders/user/${userId}`, config).then(res => {
+        instanceToken.get(`/orders/user/${userId}`).then(res => {
             setOrderData(res.data)
             console.log(res.data)
         }).catch(err => console.log(err))
@@ -83,9 +75,6 @@ export const Home = ({ navigation }) => {
     return (
         <ScrollView style={styles.containerwellcome}>
             <ImageBackground source={require('../../../Assets/images/homeBack.png')} style={styles.imagehome}>
-
-
-
                 <Search onPress={() => navigation.navigate("CompanyList")} />
                 <TouchableOpacity style={styles.divspecial} onPress={() => navigation.navigate('SpecialOffers')}>
                     <Text style={{ alignItems: 'center', color: '#414C60', fontFamily: 'Lobster-Regular', fontSize: 25 }}>{t('Special_Offers')}</Text>

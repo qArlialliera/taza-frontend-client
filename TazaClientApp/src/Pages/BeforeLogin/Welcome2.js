@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, ImageBackground, Text, StyleSheet, Pressable, TouchableOpacity, Image } from 'react-native';
+import { View, ImageBackground, Text, Pressable, TouchableOpacity, Image } from 'react-native';
 import { styles } from '../../styles/Styles'
 
 import { useTranslation } from 'react-i18next';
@@ -16,7 +16,7 @@ export const Welcome2 = ({ navigation }) => {
 
     //language
     const { t, i18n } = useTranslation();
-    const [currentLanguage, setLanguage] = useState();
+    // const [currentLanguage, setLanguage] = useState();
 
     const [language, setStorageLanguage] = useState();
     const readLanguage = async () => { const item = await getLanguage(); setStorageLanguage(item) };

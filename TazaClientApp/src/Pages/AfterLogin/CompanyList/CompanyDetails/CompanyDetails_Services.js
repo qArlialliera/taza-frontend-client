@@ -2,18 +2,14 @@ import React, { useState, useEffect, useRef } from 'react'
 import { View, Text, TouchableOpacity, Image, Animated } from 'react-native'
 import { styles } from '../../../../styles/Styles';
 import { useNavigation } from '@react-navigation/native';
-import { instance } from '../../../../Api/ApiManager';
-import { getAccessToken } from '../../../../Storage/TokenStorage';
+import instanceToken from '../../../../Api/ApiManager';
+// import { getAccessToken } from '../../../../Storage/TokenStorage';
 import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
 
 
 export const CompanyDetails_Services = (props) => {
   const pp = props.props;
   const navigation = useNavigation();
-  //token
-  const [token, setToken] = useState(readItemFromStorage);
-  const readItemFromStorage = async () => { const item = await getAccessToken(); setToken(item) };
-  const config = { headers: { 'Authorization': 'Bearer ' + token } }
   //useStates
   const [services, setServices] = useState([]);
   const [offer, setOffer] = useState()
@@ -21,29 +17,24 @@ export const CompanyDetails_Services = (props) => {
   const [swiped, setSwiped] = useState(false);
 
 
-  const onSwipeLeft = (gestureState) => {
-    setSwiped(true)
-  }
-
   useEffect(() => {
-    readItemFromStorage()
-    instance.get(`/private/services/company/${pp.id}`, config).then((response) => {
+    instanceToken.get(`/services/company/${pp.id}`).then((response) => {
       setServices(response.data)
     }).catch((err) => {
       console.error(err)
     })
 
 
-    instance.get('/private/offers', config).then((res) => {
+    instanceToken.get('/offers').then((res) => {
       console.log(res.data)
       setOffer(res.data)
     }).catch(err => console.log(err))
 
     console.log(swiped)
-  }, [token, swiped])
+  }, [swiped])
 
-  function onSwipe(gestureName, gestureState) {
-    const { SWIPE_UP, SWIPE_DOWN, SWIPE_LEFT, SWIPE_RIGHT } = swipeDirections;
+  function onSwipe(gestureName) {
+    const { SWIPE_LEFT, SWIPE_RIGHT } = swipeDirections;
     switch (gestureName) {
       case SWIPE_LEFT:
         slideleft()

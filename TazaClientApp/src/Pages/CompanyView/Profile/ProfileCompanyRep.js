@@ -8,11 +8,12 @@ import { ProfileCompRep_Information } from './Information/ProfileCompRep_Informa
 import StarRating from 'react-native-star-rating-widget';
 import { getAccessToken, getRefreshToken, removeAccessToken, removeRefreshToken } from '../../../Storage/TokenStorage';
 import { removeRole } from '../../../Storage/RoleStorage'
-import { instance } from '../../../Api/ApiManager';
+import { instance } from '../../../Api/ApiManagerPublic';
 import Repetear from '../../../MobX/ProfileMobxRener'
 import { observer } from 'mobx-react-lite';
 
 import { t } from 'i18next';
+import instanceToken from '../../../Api/ApiManager';
 
 
 export const ProfileCompanyRep = observer(({ navigation }) => {
@@ -24,30 +25,26 @@ export const ProfileCompanyRep = observer(({ navigation }) => {
   const [imageData, setImageData] = useState(null);
 
   //token
-  const [token, setToken] = useState(readItemFromStorage);
-  const readItemFromStorage = async () => { const item = await getRefreshToken(); setToken(item) };
-  const config = { headers: { 'Authorization': 'Bearer ' + token } }
   const removeRefreshFromStorage = async () => { const item = await removeRefreshToken() };
   const removeAccessFromStorage = async () => { const item = await removeAccessToken() };
   const removeRoleFromtorage = async () => { const item = await removeRole() };
 
 
   useEffect(() => {
-    readItemFromStorage()
-    instance.get('/private/companies/exist-for-user', config).then(res => {
+    instanceToken.get('/companies/exist-for-user').then(res => {
       setIsHaveCompany(res.data)
     }).catch(err => console.log(err))
 
-    instance.get('/private/companies/user', config).then((res) => {
+    instanceToken.get('/companies/user').then((res) => {
       setData(res.data)
       getCurrentRating(res.data.id)
       getImage(res.data.photo)
     }).catch(err => console.log(err))
-  }, [token, Repetear.bool])
+  }, [Repetear.bool])
 
   const getImage = (uuid) => {
     console.log(uuid)
-    instance.get(`/public/file/photo/get/${uuid}`, { responseType: 'blob' }).then((response) => {
+    instance.get(`/file/photo/get/${uuid}`, { responseType: 'blob' }).then((response) => {
       const reader = new FileReader();
       reader.onloadend = () => {
         setImageData(reader.result);
@@ -58,7 +55,7 @@ export const ProfileCompanyRep = observer(({ navigation }) => {
   }
 
   const getCurrentRating = (id) => {
-    instance.get(`/private/review/rating/${id}`, config).then((res) => {
+    instanceToken.get(`/review/rating/${id}`).then((res) => {
       setCurrentRating(res.data)
 
     }).catch(err => console.log(err))

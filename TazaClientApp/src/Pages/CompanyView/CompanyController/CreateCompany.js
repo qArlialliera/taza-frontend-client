@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { View, ScrollView, ImageBackground, Text, TextInput, TouchableOpacity, Image, StyleSheet, Keyboard } from 'react-native'
 import { styles } from '../../../styles/Styles'
-import { instance } from '../../../Api/ApiManager';
+import instanceToken from '../../../Api/ApiManager';
 import { getAccessToken } from '../../../Storage/TokenStorage';
 import Modal from "react-native-modal";
 import Repetear from '../../../MobX/ProfileMobxRener'
@@ -12,19 +12,11 @@ export const CreateCompany = ({ navigation }) => {
     const [address, setAddress] = useState("");
     const [email, setEmail] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
-
     const [isModalVisible, setModalVisible] = useState(false);
     const [isModalErrorVisible, setModalErrorVisible] = useState(false);
-
-
-    const [token, setToken] = useState(readItemFromStorage);
-    const readItemFromStorage = async () => { const item = await getAccessToken(); setToken(item) };
-    const config = { headers: { 'Authorization': 'Bearer ' + token } }
-
-
     const [isKeyboardOpen, setKeyboardVisible] = useState(false);
+
     useEffect(() => {
-        readItemFromStorage()
         const keyboardDidShowListener = Keyboard.addListener(
             'keyboardDidShow',
             () => {
@@ -42,11 +34,11 @@ export const CreateCompany = ({ navigation }) => {
             keyboardDidHideListener.remove();
             keyboardDidShowListener.remove();
         };
-    }, [token]);
+    }, []);
 
     const createCompany = () => {
         const company = { name, email, phoneNumber, address }
-        instance.post('/private/companies/add', company, config).then((res) => {
+        instanceToken.post('/companies/add', company).then((res) => {
             setModalVisible(true)
             Repetear.trigger();
         }).catch(err => {

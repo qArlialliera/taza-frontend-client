@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, ImageBackground, TextInput, TouchableOpacity, Image } from "react-native";
 import { styles } from '../../styles/Styles'
-import { instance } from "../../Api/ApiManager";
+import { instance } from "../../Api/ApiManagerPublic";
 import { getRefreshToken, storeAccessToken, storeRefreshToken } from "../../Storage/TokenStorage";
 import { getRole, storeRole } from "../../Storage/RoleStorage";
 
@@ -23,7 +23,7 @@ export const UserLogin = ({ navigation }) => {
             username: username,
             password: password
         }
-        instance.post('public/auth/login', loguser)
+        instance.post('/auth/login', loguser)
             .then(function (response) {
                 storeRole(response.data.roles[0].authority)
                 storeRefreshToken(response.data.refreshToken)

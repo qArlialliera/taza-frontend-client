@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import { View, ImageBackground, Text, Image, ScrollView, KeyboardAvoidingView } from 'react-native';
+import { View, ImageBackground, Text, Image } from 'react-native';
 import StarRating from 'react-native-star-rating-widget';
 import { styles } from '../../../../styles/Styles';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
 import { CompanyDetails_Services } from './CompanyDetails_Services';
 import { CompanyDetails_Contacts } from './CompanyDetails_Contacts';
 import { CompanyDetails_Comments } from './CompanyDetails_Comments';
-import { instance } from '../../../../Api/ApiManager';
-import { getAccessToken } from '../../../../Storage/TokenStorage';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Repetear from '../../../../MobX/ProfileMobxRener'
+import { instance } from '../../../../Api/ApiManagerPublic';
+import instanceToken from '../../../../Api/ApiManager';
 
 
 export const CompanyDetails = (props) => {
@@ -19,29 +19,23 @@ export const CompanyDetails = (props) => {
 
   const pp = JSON.parse(JSON.stringify(props)).route.params
   console.log(pp)
-  const [token, setToken] = useState(readItemFromStorage);
-  const readItemFromStorage = async () => { const item = await getAccessToken(); setToken(item) };
-  const config = { headers: { 'Authorization': 'Bearer ' + token } }
-
-
 
   const changePage = (index) => {
     setSelectedIndex(index);
   }
 
   useEffect(() => {
-    readItemFromStorage()
-    instance.get(`/private/review/rating/${pp.id}`, config).then((res) => {
+    instanceToken.get(`/review/rating/${pp.id}`).then((res) => {
       setCurrentRating(res.data)
     }).catch(err => console.log(err))
 
     getImage(pp.photo)
 
-  }, [token, Repetear.bool])
+  }, [Repetear.bool])
 
   const getImage = (uuid) => {
     console.log(uuid)
-    instance.get(`/public/file/photo/get/${uuid}`, { responseType: 'blob' }).then((response) => {
+    instance.get(`/file/photo/get/${uuid}`, { responseType: 'blob' }).then((response) => {
       const reader = new FileReader();
       reader.onloadend = () => {
         setImageData(reader.result);

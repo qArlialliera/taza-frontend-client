@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react'
 import { View, ImageBackground, StyleSheet, Text, Image, TouchableOpacity, TextInput } from 'react-native';
 import { styles } from '../../../../styles/Styles';
 import { useNavigation } from '@react-navigation/native';
+import { instance } from '../../../../Api/ApiManagerPublic';
 import ImagePicker from 'react-native-image-crop-picker';
-import { instance } from '../../../../Api/ApiManager';
-import { getAccessToken } from '../../../../Storage/TokenStorage';
+import Modal from 'react-native-modal';
 import Repetear from '../../../../MobX/ProfileMobxRener'
+import instanceToken from '../../../../Api/ApiManager';
 
 export const ProfileCompRep_EditInformation = () => {
   const [name, setName] = useState("");
@@ -14,25 +15,20 @@ export const ProfileCompRep_EditInformation = () => {
   const [email, setEmail] = useState("");
   const myImage = new FormData();
 
+  const [isModalVisiblePhoto, setModalVisiblePhoto] = useState(false)
+  const [isModalVisibleData, setModalVisibleData] = useState(false)
   const navigation = useNavigation()
-
-  const [token, setToken] = useState(readItemFromStorage);
-  const readItemFromStorage = async () => { const item = await getAccessToken(); setToken(item) };
-  const config = { headers: { 'Authorization': 'Bearer ' + token } }
 
   const configMedia = {
     headers: {
       'content-type': 'multipart/form-data',
-      // 'Authorization': 'Bearer ' + token,
     },
   }
 
   const [companyId, setCompanyId] = useState(0);
 
   useEffect(() => {
-    readItemFromStorage();
-    instance.get('/private/companies/user', config).then((res) => {
-      // setData(res.data)
+    instanceToken.get('/companies/user').then((res) => {
       setName(res.data.name)
       setPhoneNumber(res.data.phoneNumber)
       setAddress(res.data.address)
@@ -41,7 +37,7 @@ export const ProfileCompRep_EditInformation = () => {
       console.log(res.data)
     }).catch(err => console.log(err))
 
-  }, [token]);
+  }, []);
 
   const imagePicker = () => {
     ImagePicker.openPicker({
@@ -55,10 +51,10 @@ export const ProfileCompRep_EditInformation = () => {
   const savePhoto = (image) => {
     myImage.append('file', {
       uri: Platform.OS === "android" ? image.path : image.path.replace("file://", ""),
-      name: `image${res.data.name}.jpg`,
+      name: `image${name}.jpg`,
       type: image.mime
     })
-    instance.post('/public/file/save', myImage, configMedia).then((response) => {
+    instance.post('/file/save', myImage, configMedia).then((response) => {
       console.log('succesfully saved!', response.data)
       uploadPhoto(response.data)
     }).catch((err) => {
@@ -66,37 +62,20 @@ export const ProfileCompRep_EditInformation = () => {
     })
   }
   const uploadPhoto = (photoUuid) => {
-    // console.log(`/private/companies/photo/upload/${companyId}/${photoUuid}`)
-    // instance.put(`/private/companies/photo/upload/${companyId}/${photoUuid}`, config).then((response) => {
-    //   alert('succesfully added!', response)
-    // }).catch((err) => {
-    //   console.log(err)
-    // })
-
-    fetch(`http://192.168.31.156:8080/private/companies/photo/upload/${companyId}/${photoUuid}`, {
-            method: 'PUT',
-            headers: {
-                Authorization: 'Bearer ' + token,
-            }
-        })
-            .then((response) => {
-                console.log('successfully added!', response);
-            })
-            .catch((error) => {
-                console.log('err --', error);
-            });
-    Repetear.trigger();
+    instanceToken.put(`/companies/photo/upload/${companyId}/${photoUuid}`, null).then((res => {
+      console.log('successfully added!', res.data)
+      setModalVisiblePhoto(true)
+      Repetear.trigger();
+    })).catch(err => console.log('uploadPhoto err', err))
   }
 
   const saveProfile = () => {
     const company = { name, phoneNumber, email, address };
-    // console.log(data.id)
-    instance.put(`/private/companies/${companyId}`, company, config)
+    instanceToken.put(`/companies/${companyId}`, company)
       .then(function (response) {
-        alert('Updated successfully!')
         console.log(response.data);
         Repetear.trigger();
-
+        setModalVisibleData(true)
       })
       .catch(function (error) {
         alert('err')
@@ -105,9 +84,60 @@ export const ProfileCompRep_EditInformation = () => {
 
   }
 
+  const WrapperComponentPhoto = () => {
+    return (
+        <View>
+            <Modal isVisible={isModalVisiblePhoto}>
+                <View style={{ flex: 1 }}>
+                    <TouchableOpacity style={{ alignItems: 'flex-end' }} onPress={()=>setModalVisiblePhoto(false)}>
+                        <Image source={require('../../../../Assets/images/ic/ri_close-circle-line.png')} style={{ zIndex: -1 }} />
+                    </TouchableOpacity>
+                    <View style={{ backgroundColor: '#D9D9D9', borderRadius: 1000, width: '120%', height: 600, alignSelf: 'center', bottom: '-40%', alignItems: 'center' }}>
+                        <View style={{ position: 'relative', marginTop: 150, width: '70%', alignSelf: 'center' }}>
+                            <Text style={{ fontFamily: 'Nunito-Black', fontSize: 25, fontWeight: '600', color: '#414C60', alignSelf: 'center' }}>Photo Added!</Text>
+                            <View style={{ top: '50%' }}>
+                                <TouchableOpacity style={styles.profile_info_button} onPress={()=>setModalVisiblePhoto(false)}>
+                                    <Text style={{ color: '#D9D9D9', fontFamily: 'Nunito-Black', fontSize: 15, }}>Ok</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                </View>
+
+            </Modal>
+        </View>
+    );
+}
+
+const WrapperComponentData = () => {
+  return (
+      <View>
+          <Modal isVisible={isModalVisibleData}>
+              <View style={{ flex: 1 }}>
+                  <TouchableOpacity style={{ alignItems: 'flex-end' }} onPress={()=>setModalVisibleData(false)}>
+                      <Image source={require('../../../../Assets/images/ic/ri_close-circle-line.png')} style={{ zIndex: -1 }} />
+                  </TouchableOpacity>
+                  <View style={{ backgroundColor: '#D9D9D9', borderRadius: 1000, width: '120%', height: 600, alignSelf: 'center', bottom: '-40%', alignItems: 'center' }}>
+                      <View style={{ position: 'relative', marginTop: 150, width: '70%', alignSelf: 'center' }}>
+                          <Text style={{ fontFamily: 'Nunito-Black', fontSize: 25, fontWeight: '600', color: '#414C60', alignSelf: 'center' }}>Information Updated successfully!</Text>
+                          <View style={{ top: '50%' }}>
+                              <TouchableOpacity style={styles.profile_info_button} onPress={()=>setModalVisibleData(false)}>
+                                  <Text style={{ color: '#D9D9D9', fontFamily: 'Nunito-Black', fontSize: 15, }}>Ok</Text>
+                              </TouchableOpacity>
+                          </View>
+                      </View>
+                  </View>
+              </View>
+
+          </Modal>
+      </View>
+  );
+}
 
   return (
     <View style={styles.containerwellcome}>
+      <WrapperComponentPhoto />
+      <WrapperComponentData />
       <ImageBackground source={require('../../../../Assets/images/registration.png')} style={styles.back}>
         <TouchableOpacity onPress={() => navigation.navigate('BottomBarCompany')} style={{ marginTop: 20, alignItems: 'flex-start' }}>
           <Image source={require('../../../../Assets/images/ic/ri_menu-4-fill.png')} />

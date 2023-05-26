@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { ImageBackground, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { styles } from '../../../styles/Styles'
-import { instance } from '../../../Api/ApiManager';
-import { getAccessToken } from '../../../Storage/TokenStorage';
+import instanceToken from '../../../Api/ApiManager';
 import { AvatarImage } from '../CompanyList/CompanyDetails/AvatarImage';
 import { t } from 'i18next';
 import { useNavigation } from '@react-navigation/native';
@@ -10,23 +9,18 @@ import { useNavigation } from '@react-navigation/native';
 export const AllOrderListUser = () => {
 
     const navigation = useNavigation()
-        //token
-        const [token, setToken] = useState(readItemFromStorage);
-        const readItemFromStorage = async () => { const item = await getAccessToken(); setToken(item) };
-        const config = { headers: { 'Authorization': 'Bearer ' + token } }
         useEffect(() => {
-            readItemFromStorage()
             getUserData()
-        }, [token])
+        }, [])
     
         const getUserData = () => {
-            instance.get('/private/user/user-details', config).then((res) => {
+            instanceToken.get('/user/user-details').then((res) => {
                 getOrders(res.data.id)
             }).catch(err => console.log(err))
         }
         const [orderData, setOrderData] = useState()
         const getOrders = (userId) => {
-            instance.get(`/private/orders/user/${userId}`, config).then(res => {
+            instanceToken.get(`/orders/user/${userId}`).then(res => {
                 setOrderData(res.data)
                 console.log(res.data)
             }).catch(err => console.log(err))

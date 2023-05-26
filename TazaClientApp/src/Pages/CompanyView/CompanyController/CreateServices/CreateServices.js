@@ -2,21 +2,17 @@ import React, { useEffect, useState } from 'react'
 import { View, TouchableOpacity, Text, ScrollView, ImageBackground, Image } from 'react-native'
 import { styles } from '../../../../styles/Styles'
 import { useNavigation } from '@react-navigation/native'
-import { instance } from '../../../../Api/ApiManager'
+import instanceToken from '../../../../Api/ApiManager'
 import { getAccessToken } from '../../../../Storage/TokenStorage'
 import Repetear from '../../../../MobX/ProfileMobxRener'
 
 export const CreateServices = () => {
     const navigation = useNavigation()
-    const [token, setToken] = useState();
-    const readItemFromStorage = async () => { const item = await getAccessToken(); setToken(item); console.log('item - ', item) };
     const [data, setData] = useState([]);
     const [isActiveAccount, setActiveAccount] = useState(false);
-    const config = { headers: { 'Authorization': 'Bearer ' + token } }
 
     useEffect(() => {
-        readItemFromStorage()
-        instance.get('private/categories/all', config)
+        instanceToken.get('/categories/all')
             .then(function (response) {
                 setData(response.data)
                 console.log(response.data)
@@ -25,10 +21,10 @@ export const CreateServices = () => {
                 console.log(error);
             });
 
-            instance.get('/private/companies/user', config).then(res=>{
+            instanceToken.get('/companies/user').then(res=>{
                 setActiveAccount(res.data.active)
             }).catch(err=>console.log(err))
-    }, [token])
+    }, [])
 
 
 

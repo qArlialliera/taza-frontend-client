@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import { View, ImageBackground, StyleSheet, Text, Image, TouchableOpacity, TextInput } from 'react-native';
 import { styles } from '../../../styles/Styles';
-import { instance } from "../../../Api/ApiManager";
-import { getAccessToken, getRefreshToken } from '../../../Storage/TokenStorage';
+import { instance } from "../../../Api/ApiManagerPublic";
+import { t } from 'i18next';
 import Repetear from '../../../MobX/ProfileMobxRener'
 import ImagePicker from 'react-native-image-crop-picker';
-import { t } from 'i18next';
+import Modal from 'react-native-modal';
+import instanceToken from '../../../Api/ApiManager';
 
 
 export const EditProfile = ({ navigation }) => {
-    const [token, setToken] = useState(readItemFromStorage);
-    const readItemFromStorage = async () => { const item = await getAccessToken(); setToken(item) };
+
 
     const [username, setUsername] = useState("");
     const [fullName, setFullname] = useState("");
@@ -18,28 +18,29 @@ export const EditProfile = ({ navigation }) => {
     const [email, setEmail] = useState("");
     const myImage = new FormData();
 
+    const [isModalVisiblePhoto, setModalVisiblePhoto] = useState(false)
+    const [isModalVisibleData, setModalVisibleData] = useState(false)
+
+
     const config = {
         headers: {
             'content-type': 'multipart/form-data',
-            'Authorization': 'Bearer ' + token,
         },
     }
-    const config2 = { headers: { 'Authorization': 'Bearer ' + token } }
     useEffect(() => {
-        readItemFromStorage();
-        instance.get('/private/user/user-details', config2)
+        instanceToken.get('/user/user-details')
             .then(function (response) {
-                console.log(response.data.id)
+                // console.log(response.data.id)
                 setUsername(response.data.username)
                 setFullname(response.data.fullName)
                 setAddress(response.data.address)
                 setEmail(response.data.email)
             })
             .catch(function (error) {
-                console.log(error);
+                console.log('useEffect', error);
             });
 
-    }, [token]);
+    }, []);
     const imagePicker = () => {
         ImagePicker.openPicker({
             width: 300,
@@ -51,56 +52,39 @@ export const EditProfile = ({ navigation }) => {
 
     }
     const savePhoto = (image) => {
-
-
-
+        console.log('start save image')
         myImage.append('file', {
             uri: Platform.OS === "android" ? image.path : image.path.replace("file://", ""),
-            name: `image${response.data.username}.jpg`,
+            name: `image_${username}.jpg`,
             type: image.mime
         })
-        instance.post('/public/file/save', myImage, config).then((response) => {
+        instance.post('/file/save', myImage, config).then((response) => {
             uploadPhoto(response.data)
-            console.log('hi', response.data)
-
-
+            console.log('save photo success - ', response.data )
         }).catch((err) => {
-            console.log(err)
+            console.log('save photo err - ', err)
         })
-
-
     }
+
     const uploadPhoto = (photoUuid) => {
-
-        fetch(`http://192.168.31.156:8080/private/user/photo/upload/${photoUuid}`, {
-            method: 'PUT',
-            headers: {
-                Authorization: 'Bearer ' + token,
-            }
-        })
-            .then((response) => {
-                console.log('successfully added!', response);
-            })
-            .catch((error) => {
-                console.log('err --', error);
-            });
-
-        Repetear.trigger();
+        instanceToken.put(`/user/photo/upload/${photoUuid}`, null).then((res => {
+            console.log('successfully added!', res.data)
+            setModalVisiblePhoto(true)
+            Repetear.trigger();
+        })).catch(err => console.log('uploadPhoto err', err)) 
     }
     const saveProfile = (e) => {
         e.preventDefault();
         const data = { username, fullName, email, address };
-        console.log(data)
-        instance.put('private/user/edit/profile', data, config2)
+        instanceToken.put('/user/edit/profile', data)
             .then(function (response) {
-                alert('Updated successfully!')
-                console.log(response.data);
+                setModalVisibleData(true)
+                console.log('saveProfile', response.data);
                 Repetear.trigger();
-
             })
             .catch(function (error) {
                 alert('err')
-                console.log(error);
+                console.log('saveProfile', error);
             });
 
     }
@@ -108,9 +92,62 @@ export const EditProfile = ({ navigation }) => {
         navigation.navigate("BottomBar")
     }
 
+    const WrapperComponentPhoto = () => {
+        return (
+            <View>
+                <Modal isVisible={isModalVisiblePhoto}>
+                    <View style={{ flex: 1 }}>
+                        <TouchableOpacity style={{ alignItems: 'flex-end' }} onPress={()=>setModalVisiblePhoto(false)}>
+                            <Image source={require('../../../Assets/images/ic/ri_close-circle-line.png')} style={{ zIndex: -1 }} />
+                        </TouchableOpacity>
+                        <View style={{ backgroundColor: '#D9D9D9', borderRadius: 1000, width: '120%', height: 600, alignSelf: 'center', bottom: '-40%', alignItems: 'center' }}>
+                            <View style={{ position: 'relative', marginTop: 150, width: '70%', alignSelf: 'center' }}>
+                                <Text style={{ fontFamily: 'Nunito-Black', fontSize: 25, fontWeight: '600', color: '#414C60', alignSelf: 'center' }}>Photo Added!</Text>
+                                <View style={{ top: '50%' }}>
+                                    <TouchableOpacity style={styles.profile_info_button} onPress={()=>setModalVisiblePhoto(false)}>
+                                        <Text style={{ color: '#D9D9D9', fontFamily: 'Nunito-Black', fontSize: 15, }}>Ok</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </View>
+                    </View>
+    
+                </Modal>
+            </View>
+        );
+    }
+    
+    const WrapperComponentData = () => {
+      return (
+          <View>
+              <Modal isVisible={isModalVisibleData}>
+                  <View style={{ flex: 1 }}>
+                      <TouchableOpacity style={{ alignItems: 'flex-end' }} onPress={()=>setModalVisibleData(false)}>
+                          <Image source={require('../../../Assets/images/ic/ri_close-circle-line.png')} style={{ zIndex: -1 }} />
+                      </TouchableOpacity>
+                      <View style={{ backgroundColor: '#D9D9D9', borderRadius: 1000, width: '120%', height: 600, alignSelf: 'center', bottom: '-40%', alignItems: 'center' }}>
+                          <View style={{ position: 'relative', marginTop: 150, width: '70%', alignSelf: 'center' }}>
+                              <Text style={{ fontFamily: 'Nunito-Black', fontSize: 25, fontWeight: '600', color: '#414C60', alignSelf: 'center' }}>Information Updated successfully!</Text>
+                              <View style={{ top: '50%' }}>
+                                  <TouchableOpacity style={styles.profile_info_button} onPress={()=>setModalVisibleData(false)}>
+                                      <Text style={{ color: '#D9D9D9', fontFamily: 'Nunito-Black', fontSize: 15, }}>Ok</Text>
+                                  </TouchableOpacity>
+                              </View>
+                          </View>
+                      </View>
+                  </View>
+    
+              </Modal>
+          </View>
+      );
+    }
+
+
     return (
         <View style={styles.containerwellcome}>
             <ImageBackground source={require('../../../Assets/images/registration.png')} style={styles.back}>
+                <WrapperComponentData />
+                <WrapperComponentPhoto />
                 <TouchableOpacity onPress={backNav} style={{ marginTop: 20, alignItems: 'flex-start' }}>
                     <Image source={require('../../../Assets/images/ic/ri_menu-4-fill.png')} />
                 </TouchableOpacity>

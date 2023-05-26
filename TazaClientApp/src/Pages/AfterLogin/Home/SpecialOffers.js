@@ -1,22 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { Text, View, ScrollView, ImageBackground, TouchableOpacity } from 'react-native'
 import { styles } from '../../../styles/Styles'
-import { getAccessToken } from '../../../Storage/TokenStorage';
-import { instance } from '../../../Api/ApiManager';
+import instanceToken from '../../../Api/ApiManager';
 
 
 
 export const SpecialOffers = ({navigation}) => {
-    const [token, setToken] = useState(readItemFromStorage);
-    const readItemFromStorage = async () => { const item = await getAccessToken(); setToken(item) };
-    const config = { headers: { 'Authorization': 'Bearer ' + token } }
-
     const [data, setData] = useState()
     const [reload, setReload] = useState(false)
 
     useEffect(() => {
-        readItemFromStorage()   
-        instance.get('/private/offers', config).then((res) => {
+        instanceToken.get('/offers').then((res) => {
             console.log(res.data)
             setData(res.data)
         }).catch((err) => {

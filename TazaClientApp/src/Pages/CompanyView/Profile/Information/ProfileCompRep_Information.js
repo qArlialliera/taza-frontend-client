@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native'
 import { getAccessToken, removeAccessToken, removeRefreshToken } from '../../../../Storage/TokenStorage';
 import { removeRole } from '../../../../Storage/RoleStorage'
 import Repetear from '../../../../MobX/ProfileMobxRener'
-import { instance } from '../../../../Api/ApiManager';
+import instanceToken, { instance } from '../../../../Api/ApiManager';
 import { observer } from 'mobx-react-lite';
 import { getLanguage, storeLanguage } from '../../../../Storage/LanguageStorage';
 import { useTranslation } from 'react-i18next';
@@ -14,25 +14,24 @@ import '../../../../Translations/i18n'
 
 
 export const ProfileCompRep_Information = observer(() => {
-  const [token, setToken] = useState(readItemFromStorage);
-  const readItemFromStorage = async () => { const item = await getAccessToken(); setToken(item) };
+
+
   const removeRefreshFromStorage = async () => { const item = await removeRefreshToken() };
   const removeAccessFromStorage = async () => { const item = await removeAccessToken() };
   const removeRoleFromtorage = async () => { const item = await removeRole() };
-  const config = { headers: { 'Authorization': 'Bearer ' + token } }
+
 
   const [data, setData] = useState('');
 
   useEffect(() => {
-    readItemFromStorage()
     readLanguage()
     changeLanguage()
-    instance.get('/private/companies/user', config).then((res) => {
+    instanceToken.get('/companies/user').then((res) => {
       setData(res.data)
       console.log(res.data)
     }).catch(err => console.log(err))
 
-  }, [token, Repetear.bool])
+  }, [ Repetear.bool])
 
   const navigation = useNavigation()
 
@@ -43,12 +42,6 @@ export const ProfileCompRep_Information = observer(() => {
   const [language, setStorageLanguage] = useState();
   const readLanguage = async () => { const item = await getLanguage(); setStorageLanguage(item) };
 
-  // useEffect(() => {
-  //   readLanguage()
-  //   console.log(language)
-  //   changeLanguage(language)
-  // }, [language])
-
   const selectLan = (value) => {
     toggleModal()
     storeLanguage(value)
@@ -56,7 +49,6 @@ export const ProfileCompRep_Information = observer(() => {
   }
 
   const changeLanguage = (value) => {
-    // 
     i18n
       .changeLanguage(value)
       .then(() => setLanguage(value))

@@ -1,31 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import { View, Text, TouchableOpacity, Image, ScrollView, ImageBackground } from 'react-native'
 import { styles } from '../../../styles/Styles'
-import { instance } from '../../../Api/ApiManager';
-import { getAccessToken } from '../../../Storage/TokenStorage';
+import instanceToken from '../../../Api/ApiManager';
 import { t } from 'i18next';
 import { getLanguage } from '../../../Storage/LanguageStorage';
 
 
 
 export const AllCategories = ({ navigation }) => {
-  const [token, setToken] = useState();
-  const readItemFromStorage = async () => { const item = await getAccessToken(); setToken(item); console.log('item - ', item)};
 
   const [language, setStorageLanguage] = useState();
   const readLanguage = async () => { const item = await getLanguage(); setStorageLanguage(item) };
 
   const [data, setData] = useState([]);
-  const config = {
-    headers: {
-      'Authorization': 'Bearer ' + token
-    }
-  }
   useEffect(() => {
-    readItemFromStorage()
+
     readLanguage()
-    console.log('company == ', token)
-    instance.get('private/categories/all', config)
+    instanceToken.get('/categories/all')
       .then(function (response) {
         setData(response.data)
         console.log(response.data)
@@ -33,7 +24,7 @@ export const AllCategories = ({ navigation }) => {
       .catch(function (error) {
         console.log(error);
       });
-  }, [token])
+  }, [])
 
   const backNav = () => {
     navigation.replace("BottomBar")
