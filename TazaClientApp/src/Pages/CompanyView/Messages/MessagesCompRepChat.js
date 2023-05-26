@@ -4,6 +4,7 @@ import { styles } from '../../../styles/Styles'
 import { getAccessToken } from '../../../Storage/TokenStorage';
 import { useNavigation } from '@react-navigation/native';
 import { messagestyle } from '../../../styles/MessagesStyle'
+import instanceToken from '../../../Api/ApiManager';
 
 
 var stompClient = null;
@@ -14,8 +15,7 @@ export const MessagesCompRepChat = (props) => {
 
 
     // console.log(pp)
-    const config = { headers: { 'Authorization': 'Bearer ' + pp.token } }
-    console.log(config)
+
 
     const [messagesArray, setMessagesArray] = useState([]);
     const currentTimestamp = moment().format('yyyy-MM-DD[T]HH:mm:ss.SSS');
@@ -37,7 +37,7 @@ export const MessagesCompRepChat = (props) => {
     }, []);
 
     const connect = () => {
-        var socket = new SockJS("http://192.168.31.156:8080/ws");
+        var socket = new SockJS("http://192.168.31.151:8080/ws");
         stompClient = Stomp.over(socket);
         stompClient.connect({}, onConnected, onError);
     }
@@ -86,7 +86,7 @@ export const MessagesCompRepChat = (props) => {
 
 
     const getMessages = () => {
-        instance.get(`/private/messages/${pp.item.id}`, config).then(res => {
+        instanceToken.get(`/messages/${pp.item.id}`).then(res => {
             console.log('getMessages -', res.data)
             setMessagesArray(res.data)
         }).catch(err => console.log(err))
@@ -113,7 +113,7 @@ export const MessagesCompRepChat = (props) => {
 
     
     const changeStatus = (senderId) => {
-        instance.put(`private/messages/change-status/${senderId}`, null, config).then(res=>{
+        instanceToken.put(`/messages/change-status/${senderId}`, null).then(res=>{
           console.log('CHANGED! - ', res.data )
         }).catch(err=>console.log(err))
       }

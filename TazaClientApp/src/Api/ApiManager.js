@@ -1,7 +1,28 @@
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-export const instance = axios.create({
-    // baseURL: 'http://10.0.2.2:8080/',
-    baseURL: 'http://192.168.31.156:8080',
-});
+const getAccessToken = async () => {
+    try {
+      return await AsyncStorage.getItem('accessToken');
+    } catch (e) {
+      console.log('Error:', e);
+    }
+  };
+  
+  const instanceToken = axios.create({
+    baseURL: 'http://192.168.31.151:8080/private',
+  });
+  
+  instanceToken.interceptors.request.use(async function (config) {
+    try {
+      const value = await getAccessToken();
+      config.headers['Authorization'] = `Bearer ${value}`;
+      return config;
+    } catch (error) {
+      console.log('Error:', error);
+      return config;
+    }
+  });
+  
+  export default instanceToken;

@@ -3,23 +3,19 @@
 import React, { useEffect, useState } from 'react'
 import { Image, ImageBackground, ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View, TextInput } from 'react-native'
 import { styles } from '../../../styles/Styles'
-import { instance } from '../../../Api/ApiManager'
+import { instance } from '../../../Api/ApiManagerPublic'
 import { t } from 'i18next';
 import { getAccessToken } from '../../../Storage/TokenStorage';
 import { getRole } from '../../../Storage/RoleStorage';
 import Modal from "react-native-modal";
 import Repetear from '../../../MobX/ProfileMobxRener'
 import { AirbnbRating } from 'react-native-ratings';
+import instanceToken from '../../../Api/ApiManager';
 
 
 export const HomeOrders = (props) => {
     const pp = JSON.parse(JSON.stringify(props)).route.params
     const [imageData, setImageData] = useState(null);
-
-    //token
-    const [token, setToken] = useState(readItemFromStorage);
-    const readItemFromStorage = async () => { const item = await getAccessToken(); setToken(item) };
-    const config = { headers: { 'Authorization': 'Bearer ' + token } }
 
     //role
     const [role, setRole] = useState();
@@ -34,13 +30,11 @@ export const HomeOrders = (props) => {
     const [isModalVisible, setModalVisible] = useState(false);
     const [isModalVisible2, setModalVisible2] = useState(false);
     const [newRating, setNewRating] = useState(0)
-    // const [isUser, setIsUser] = useState(false);
     const [comments, setOtherComments] = useState();
     useEffect(() => {
         console.log(pp)
-        readItemFromStorage()
         readRoleFromStorage()
-        instance.get(`/public/file/photo/get/${pp.item.user.id}`, { responseType: 'blob' }).then((response) => {
+        instance.get(`/file/photo/get/${pp.item.user.id}`, { responseType: 'blob' }).then((response) => {
             const reader = new FileReader();
             reader.onloadend = () => {
                 setImageData(reader.result);
@@ -49,11 +43,11 @@ export const HomeOrders = (props) => {
 
         }).catch(err => console.error(err))
 
-    }, [token])
+    }, [])
 
     const ChangeOrder = (myId) => {
         const data = { id: myId }
-        instance.put(`/private/orders/change-status/${pp.item.id}`, data, config).then(res => {
+        instanceToken.put(`/orders/change-status/${pp.item.id}`, data).then(res => {
             console.log(res)
             Repetear.trigger()
             setModalVisible(true)
@@ -72,7 +66,7 @@ export const HomeOrders = (props) => {
             text: comments
         }
         // console.log(data)
-        instance.post(`/private/review/add`, data, config).then(res=>{
+        instanceToken.post(`/review/add`, data).then(res=>{
             console.log('SENDED')
             setModalVisible2(true)
             setOtherComments('')

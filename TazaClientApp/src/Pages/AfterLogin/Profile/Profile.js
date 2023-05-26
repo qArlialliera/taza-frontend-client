@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { View, ImageBackground, StyleSheet, Text, Image, TouchableOpacity, ScrollView, Pressable } from 'react-native';
 import { styles } from '../../../styles/Styles'
-import { instance } from "../../../Api/ApiManager";
+import { instance } from "../../../Api/ApiManagerPublic";
 import { getAccessToken, removeAccessToken, removeRefreshToken } from '../../../Storage/TokenStorage';
 import { removeRole } from '../../../Storage/RoleStorage'
 import { observer } from 'mobx-react-lite'
@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 import Modal from "react-native-modal";
 import '../../../Translations/i18n'
 import { getLanguage, storeLanguage } from '../../../Storage/LanguageStorage'
+import instanceToken from '../../../Api/ApiManager';
 
 
 export const Profile = observer(({ navigation }) => {
@@ -52,37 +53,33 @@ export const Profile = observer(({ navigation }) => {
   const [data, setData] = useState("");
   const [orderCount, setOrderCount] = useState('');
   const [commentCount, setCommentCount] = useState('');
-  const [token, setToken] = useState(readItemFromStorage);
-  const readItemFromStorage = async () => { const item = await getAccessToken(); setToken(item) };
   const removeRefreshFromStorage = async () => { const item = await removeRefreshToken() };
   const removeAccessFromStorage = async () => { const item = await removeAccessToken() };
   const removeRoleFromtorage = async () => { const item = await removeRole() };
-  const config = { headers: { 'Authorization': 'Bearer ' + token } }
 
   const [imageData, setImageData] = useState(null);
 
 
   useEffect(() => {
-    readItemFromStorage()
-    instance.get('private/user/user-details', config).then(function (response) {
+    instanceToken.get('/user/user-details').then(function (response) {
       setData(response.data)
       getImage(response.data.photo)
 
-      instance.get(`/private/user/orders/count/${response.data.id}`, config).then(res => {setOrderCount(res.data)}).catch(err => console.error(err))
-      instance.get(`/private/user/reviews/count/${response.data.id}`, config).then(res => setCommentCount(res.data)).catch(err => console.error(err))
+      instanceToken.get(`/user/orders/count/${response.data.id}`).then(res => {setOrderCount(res.data)}).catch(err => console.error(err))
+      instanceToken.get(`/user/reviews/count/${response.data.id}`).then(res => setCommentCount(res.data)).catch(err => console.error(err))
     }).catch(function (error) {
       console.log(error);
     });
 
 
-  }, [token, Repetear.bool])
+  }, [Repetear.bool])
 
   const Bdutton = () => {
     navigation.navigate("edit_profile")
   }
   const getImage = (uuid) => {
     console.log(uuid)
-    instance.get(`/public/file/photo/get/${uuid}`, { responseType: 'blob' }).then((response) => {
+    instance.get(`/file/photo/get/${uuid}`, { responseType: 'blob' }).then((response) => {
       const reader = new FileReader();
       reader.onloadend = () => {
         setImageData(reader.result);

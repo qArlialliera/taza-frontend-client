@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { View, ScrollView, ImageBackground, Text, TouchableOpacity } from 'react-native'
 import { styles } from '../../../styles/Styles'
-import { getAccessToken } from '../../../Storage/TokenStorage'
-import { instance } from '../../../Api/ApiManager'
+import instanceToken from '../../../Api/ApiManager'
 import Repetear from '../../../MobX/ProfileMobxRener'
 import { observer } from 'mobx-react-lite'
 import { t } from 'i18next';
@@ -14,34 +13,30 @@ export const CompanyHome = observer(({ navigation }) => {
   const [company, setCompany] = useState('')
   const [orderData, setOrderData] = useState()
 
-  const [token, setToken] = useState(readItemFromStorage);
-  const readItemFromStorage = async () => { const item = await getAccessToken(); setToken(item) };
-  const config = { headers: { 'Authorization': 'Bearer ' + token } }
 
   useEffect(() => {
-    readItemFromStorage()
-    instance.get('/private/companies/user', config).then((res) => {
+    instanceToken.get('/companies/user').then((res) => {
       setCompany(res.data)
       getOrders(res.data.id)
       getOffers()
     }).catch(err => console.log(err))
 
-  }, [token, Repetear.bool])
+  }, [Repetear.bool])
 
   const getOffers = () => {
-    instance.get(`/private/offers`, config).then((res) => {
+    instanceToken.get(`/offers`).then((res) => {
       setMyOffers(res.data)
     }).catch(err => console.log(err))
   }
 
   const deleteOffer = (id) => {
-    instance.delete(`/private/offers/${id}`, config).then((res) => {
+    instanceToken.delete(`/offers/${id}`).then((res) => {
       getOffers()
     }).catch(err => console.log(err))
   }
 
   const getOrders = (companyId) => {
-    instance.get(`/private/orders/company/${companyId}`, config).then(res => {
+    instanceToken.get(`/orders/company/${companyId}`).then(res => {
       setOrderData(res.data)
     }).catch(err => console.log(err))
   }
@@ -81,7 +76,6 @@ export const CompanyHome = observer(({ navigation }) => {
               </TouchableOpacity>
           }
 
-          {/* <HomeOrders props={company}/> */}
 
           <View style={{ width: '100%', alignItems: 'center' }}>
             <Text style={{ alignItems: 'center', marginTop: 50, marginBottom: 20, color: '#D9D9D9', fontFamily: 'Lobster-Regular', fontSize: 25 }}>{t('Last Orders')}</Text>
@@ -93,7 +87,6 @@ export const CompanyHome = observer(({ navigation }) => {
                 if (item.status.id === 1 || item.status.id === 2) {
                   return (
                     <TouchableOpacity
-                      // style={{ backgroundColor: '#D9D9D9', borderRadius: 20, flexDirection: 'row', padding: 20, alignItems: 'center', marginBottom: 10 }}
                       style={
                         item.status.id === 1
                           ? { ...styles.lastOrderYellow }

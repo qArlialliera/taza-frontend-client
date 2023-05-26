@@ -3,28 +3,24 @@ import { View, Text, Image, TouchableOpacity, StyleSheet, Linking } from 'react-
 import { styles } from '../../../../styles/Styles';
 import { useNavigation } from '@react-navigation/native';
 import { getAccessToken } from '../../../../Storage/TokenStorage';
-import { instance } from '../../../../Api/ApiManager';
+import instanceToken from '../../../../Api/ApiManager';
 
 export const CompanyDetails_Contacts = (props) => {
     const navigation = useNavigation();
     const callBtn = () => {
         Linking.openURL(`tel:${props.props.phoneNumber}`)
     }
-    const [token, setToken] = useState(readItemFromStorage);
-    const readItemFromStorage = async () => { const item = await getAccessToken(); setToken(item) };
-    const config = { headers: { 'Authorization': 'Bearer ' + token } }
     const [userData, setUserData] = useState('');
 
     useEffect(() => {
-      readItemFromStorage()
-    //   console.log(props.props.user)
-      instance.get('private/user/user-details', config).then(function (response) {
+
+      instanceToken.get('/user/user-details').then(function (response) {
           setUserData(response.data)
       }).catch(function (error) {
           console.log(error);
       });
     
-    }, [token])
+    }, [])
 
     return (
         <View>

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Button, StyleSheet, Text, ImageBackground, TextInput, TouchableOpacity, Image, Keyboard } from "react-native";
 import { styles } from '../../styles/Styles'
-import { instance } from "../../Api/ApiManager";
+import { instance } from "../../Api/ApiManagerPublic";
 import { storeAccessToken, storeRefreshToken } from "../../Storage/TokenStorage";
 import { storeRole } from "../../Storage/RoleStorage";
 import '../../Translations/i18n'
@@ -46,7 +46,7 @@ export const CompanyRegistration = ({navigation}) => {
     const user = { username, password, fullName, email, city, address, phoneNumber };
     console.log(user)
 
-    instance.post('/public/auth/register/company-representative', user)
+    instance.post('/auth/register/company-representative', user)
       .then(function (response) {
         loginUser()
         console.log('reg success', response.data);
@@ -62,12 +62,11 @@ export const CompanyRegistration = ({navigation}) => {
       username: username,
       password: password
     }
-    instance.post('public/auth/login', loguser)
+    instance.post('/auth/login', loguser)
       .then(function (response) {
         storeRefreshToken(response.data.refreshToken)
         storeAccessToken(response.data.accessToken)
         storeRole(response.data.roles[0].authority)
-        // navigation.navigate('BottomBar')
         navigation.navigate('CreateCompanyButton')
       })
       .catch(function (error) {

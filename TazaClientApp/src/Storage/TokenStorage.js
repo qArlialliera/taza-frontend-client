@@ -24,7 +24,7 @@ export const getAccessToken = async () => {
     try {
         return await AsyncStorage.getItem('accessToken')
       } catch(e) {
-        console.log(e)
+        console.log('e', e)
       }
   }
 

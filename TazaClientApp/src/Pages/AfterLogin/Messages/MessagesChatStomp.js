@@ -5,16 +5,14 @@ import { messagestyle } from '../../../styles/MessagesStyle'
 import Stomp, { over } from 'stompjs'
 import { useNavigation } from '@react-navigation/core';
 import moment from 'moment';
-import { instance } from '../../../Api/ApiManager';
-import { getAccessToken } from '../../../Storage/TokenStorage';
+import instanceToken from '../../../Api/ApiManager';
 import Repeater from '../../../MobX/ProfileMobxRener'
 
 var stompClient = null;
 var SockJS = require('sockjs-client/dist/sockjs.js');
 export const MessagesChatStomp = (props) => {
     const pp = JSON.parse(JSON.stringify(props)).route.params
-    const config = { headers: { 'Authorization': 'Bearer ' + pp.token } }
-    console.log(config)
+
 
     const [messagesArray, setMessagesArray] = useState([]);
     const currentTimestamp = moment().format('yyyy-MM-DD[T]HH:mm:ss.SSS');
@@ -42,7 +40,7 @@ export const MessagesChatStomp = (props) => {
     }
 
     const connect = () => {
-        var socket = new SockJS("http://192.168.31.156:8080/ws");
+        var socket = new SockJS("http://192.168.31.151:8080/ws");
         stompClient = Stomp.over(socket);
         stompClient.connect({}, onConnected, onError);
     }
@@ -90,15 +88,16 @@ export const MessagesChatStomp = (props) => {
 
 
     const getMessages = () => {
-        instance.get(`/private/messages/${pp.item.id}`, config).then(res => {
+        instanceToken.get(`/messages/${pp.item.id}`).then(res => {
             console.log('getMessages -', res.data)
             setMessagesArray(res.data)
         }).catch(err => console.log(err))
     }
 
     const changeStatus = (senderId) => {
-        instance.put(`private/messages/change-status/${senderId}`, null, config).then(res=>{
+        instanceToken.put(`/messages/change-status/${senderId}`, null).then(res=>{
           console.log('CHANGED! - ', res.data )
+          Repeater.trigger()
         }).catch(err=>console.log(err))
       }
 

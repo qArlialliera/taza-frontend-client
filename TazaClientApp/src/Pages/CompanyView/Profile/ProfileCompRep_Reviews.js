@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, Image, TouchableOpacity, TextInput } from 'react-native'
+import { View, Text, TouchableOpacity, TextInput } from 'react-native'
 import { AirbnbRating } from 'react-native-ratings';
 import { styles } from '../../../styles/Styles'
-import { useNavigation } from '@react-navigation/native';
-import { getAccessToken } from '../../../Storage/TokenStorage';
-import { instance } from '../../../Api/ApiManager';
+import instanceToken from '../../../Api/ApiManager';
 import { AvatarImage } from '../../AfterLogin/CompanyList/CompanyDetails/AvatarImage';
 import { t } from 'i18next';
 import Repeater from '../../../MobX/ProfileMobxRener'
@@ -13,11 +11,6 @@ import { observer } from 'mobx-react-lite';
 
 export const ProfileCompRep_Reviews = observer((props) => {
   const pp = props.props;
-  const navigation = useNavigation();
-
-  const [token, setToken] = useState(readItemFromStorage);
-  const readItemFromStorage = async () => { const item = await getAccessToken(); setToken(item) };
-  const config = { headers: { 'Authorization': 'Bearer ' + token } };
 
   //useStates
   const [review, setReview] = useState()
@@ -28,19 +21,18 @@ export const ProfileCompRep_Reviews = observer((props) => {
 
 
   useEffect(() => {
-    readItemFromStorage()
     console.log(review)
 
-    instance.get(`/private/review/company/${pp.id}`, config).then((res) => {
+    instanceToken.get(`/review/company/${pp.id}`).then((res) => {
       setReview(res.data)
       setNewRating(res.data.res)
 
     }).catch(err => console.log(err))
 
-    instance.get('private/user/user-details', config).then((res) => {
+    instanceToken.get('/user/user-details').then((res) => {
       setMyData(res.data)
     }).catch(err => console.log(err))
-  }, [token, Repeater.bool])
+  }, [Repeater.bool])
 
   const AddComment = (parentId) => {
     const data = {
@@ -55,7 +47,7 @@ export const ProfileCompRep_Reviews = observer((props) => {
       }
     }
 
-    instance.post(`/private/comments/add`, data, config).then(res => {
+    instanceToken.post(`/comments/add`, data).then(res => {
       Repeater.trigger()
       setIsAnswer(-1)
     }).catch(err => console.log(err))
@@ -70,7 +62,6 @@ export const ProfileCompRep_Reviews = observer((props) => {
             return (
               <View key={r.id} style={{ flexDirection: 'row', marginVertical: 10, width: '100%' }}>
                 <View style={{ flexDirection: 'column', justifyContent: 'flex-start' }}>
-                  {/* <Image style={styles.msg_img} source={require('../../../../Assets/images/profile_ava.png')} /> */}
                   <AvatarImage props={r.user.photo} />
                   <Text style={{ fontFamily: 'Nunito-Black', color: '#D9D9D9', marginTop: 5 }}>{r.user.fullName}</Text>
                 </View>

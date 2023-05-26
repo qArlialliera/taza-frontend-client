@@ -3,9 +3,10 @@ import { View, ImageBackground, StyleSheet, Text, Image, TouchableOpacity, TextI
 import { styles } from '../../../../styles/Styles';
 import { useNavigation } from '@react-navigation/native';
 import ImagePicker from 'react-native-image-crop-picker';
-import { instance } from '../../../../Api/ApiManager';
+import { instance } from '../../../../Api/ApiManagerPublic';
 import { getAccessToken } from '../../../../Storage/TokenStorage';
 import Repetear from '../../../../MobX/ProfileMobxRener'
+import instanceToken from '../../../../Api/ApiManager';
 
 export const ProfileCompRep_EditInformation = () => {
   const [name, setName] = useState("");
@@ -16,23 +17,16 @@ export const ProfileCompRep_EditInformation = () => {
 
   const navigation = useNavigation()
 
-  const [token, setToken] = useState(readItemFromStorage);
-  const readItemFromStorage = async () => { const item = await getAccessToken(); setToken(item) };
-  const config = { headers: { 'Authorization': 'Bearer ' + token } }
-
   const configMedia = {
     headers: {
       'content-type': 'multipart/form-data',
-      // 'Authorization': 'Bearer ' + token,
     },
   }
 
   const [companyId, setCompanyId] = useState(0);
 
   useEffect(() => {
-    readItemFromStorage();
-    instance.get('/private/companies/user', config).then((res) => {
-      // setData(res.data)
+    instanceToken.get('/companies/user').then((res) => {
       setName(res.data.name)
       setPhoneNumber(res.data.phoneNumber)
       setAddress(res.data.address)
@@ -41,7 +35,7 @@ export const ProfileCompRep_EditInformation = () => {
       console.log(res.data)
     }).catch(err => console.log(err))
 
-  }, [token]);
+  }, []);
 
   const imagePicker = () => {
     ImagePicker.openPicker({
@@ -58,7 +52,7 @@ export const ProfileCompRep_EditInformation = () => {
       name: `image${res.data.name}.jpg`,
       type: image.mime
     })
-    instance.post('/public/file/save', myImage, configMedia).then((response) => {
+    instance.post('/file/save', myImage, configMedia).then((response) => {
       console.log('succesfully saved!', response.data)
       uploadPhoto(response.data)
     }).catch((err) => {
@@ -66,14 +60,7 @@ export const ProfileCompRep_EditInformation = () => {
     })
   }
   const uploadPhoto = (photoUuid) => {
-    // console.log(`/private/companies/photo/upload/${companyId}/${photoUuid}`)
-    // instance.put(`/private/companies/photo/upload/${companyId}/${photoUuid}`, config).then((response) => {
-    //   alert('succesfully added!', response)
-    // }).catch((err) => {
-    //   console.log(err)
-    // })
-
-    fetch(`http://192.168.31.156:8080/private/companies/photo/upload/${companyId}/${photoUuid}`, {
+    fetch(`http://192.168.31.151:8080/private/companies/photo/upload/${companyId}/${photoUuid}`, {
             method: 'PUT',
             headers: {
                 Authorization: 'Bearer ' + token,
@@ -90,8 +77,7 @@ export const ProfileCompRep_EditInformation = () => {
 
   const saveProfile = () => {
     const company = { name, phoneNumber, email, address };
-    // console.log(data.id)
-    instance.put(`/private/companies/${companyId}`, company, config)
+    instanceToken.put(`/companies/${companyId}`, company)
       .then(function (response) {
         alert('Updated successfully!')
         console.log(response.data);

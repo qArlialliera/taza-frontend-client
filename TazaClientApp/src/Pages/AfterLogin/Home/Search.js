@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { ImageBackground, View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { styles } from '../../../styles/Styles'
 import SearchBar from 'react-native-dynamic-search-bar';
-import { instance } from '../../../Api/ApiManager';
+import instanceToken from '../../../Api/ApiManager';
 import { getAccessToken } from '../../../Storage/TokenStorage';
 import FuzzySearch from 'fuzzy-search';
 import { useNavigation } from '@react-navigation/native';
@@ -15,20 +15,13 @@ export const Search = () => {
     const [isSearchName, setIsSearchName] = useState(false);
     const [data, setData] = useState("");
     const [services, setServices] = useState("");
-
-
-
-    const navigation = useNavigation();
-
-    const { t } = useTranslation();
-
-    const [token, setToken] = useState(readItemFromStorage);
-    const readItemFromStorage = async () => { const item = await getAccessToken(); setToken(item) };
-    const config = { headers: { 'Authorization': 'Bearer ' + token } }
-
-
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
+
+    const navigation = useNavigation();
+    const { t } = useTranslation();
+
+
     
     const SearchText = (e) => {
         setSpinnerVisibility(true);
@@ -42,7 +35,6 @@ export const Search = () => {
     };
 
     useEffect(() => {
-        readItemFromStorage()
         if (!searchQuery) {
             setSpinnerVisibility(false)
             setIsSearchName(false)
@@ -50,17 +42,16 @@ export const Search = () => {
 
         console.log('searchResults', searchResults)
 
-        instance.get('/private/companies/all', config).then((res) => {
+        instanceToken.get('/companies/all').then((res) => {
             setData(res.data)
             getServices()
             searchByName(searchQuery);
         }).catch(err => console.error('err', err))
 
-    }, [searchQuery, token])
+    }, [searchQuery])
 
     const getServices = () => {
-        instance.get(`/private/services/all`, config).then((response) => {
-            
+        instanceToken.get(`/services/all`).then((response) => {
             setServices(response.data)
         }).catch((err) => console.error(err))
     }

@@ -3,7 +3,7 @@ import { View, TouchableOpacity, Text, StyleSheet, Image } from 'react-native'
 import { styles } from '../../../styles/Styles'
 import { useNavigation } from '@react-navigation/native'
 import { getAccessToken, getRefreshToken } from '../../../Storage/TokenStorage'
-import { instance } from '../../../Api/ApiManager'
+import instanceToken, { instance } from '../../../Api/ApiManager'
 
 import Modal from "react-native-modal";
 import Repetear from '../../../MobX/ProfileMobxRener'
@@ -18,22 +18,16 @@ export const ProfileCompRep_Services = (props) => {
   const [services, setServices] = useState(false)
   const [isModalVisible, setModalVisible] = useState(false);
   const [isEditActive, setEditActive] = useState(false);
-
-  const [token, setToken] = useState(readItemFromStorage);
-  const readItemFromStorage = async () => { const item = await getRefreshToken(); setToken(item) };
-  const config = { headers: { 'Authorization': 'Bearer ' + token } }
-
   const [language, setStorageLanguage] = useState();
   const readLanguage = async () => { const item = await getLanguage(); setStorageLanguage(item) };
 
   useEffect(() => {
-    readItemFromStorage()
     readLanguage()
-    instance.get(`/private/services/company/${pp}`, config).then((res) => {
+    instanceToken.get(`/services/company/${pp}`).then((res) => {
       setIsServices(true)
       setServices(res.data)
     }).catch(err => console.error(err))
-  }, [token, Repetear.bool])
+  }, [Repetear.bool])
 
 
   const ModalEdit = () => {

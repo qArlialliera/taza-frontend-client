@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { View, Text, ImageBackground, TextInput, TouchableOpacity, Image } from 'react-native'
 import { styles } from '../../../styles/Styles'
-import { instance } from '../../../Api/ApiManager'
+import instanceToken, { instance } from '../../../Api/ApiManager'
 import { getAccessToken } from '../../../Storage/TokenStorage'
 import Modal from "react-native-modal";
 import { useNavigation } from '@react-navigation/native'
@@ -9,22 +9,16 @@ import Repetear from '../../../MobX/ProfileMobxRener'
 
 export const CreateSpecialOffers = () => {
     const [text, setText] = useState('')
-    // const [id, setId] = useState('')
     const [company, setCompany] = useState('')
 
     const [isModalVisible, setModalVisible] = useState(false)
-    
-    const [token, setToken] = useState(readItemFromStorage);
-    const readItemFromStorage = async () => { const item = await getAccessToken(); setToken(item) };
-    const config = { headers: { 'Authorization': 'Bearer ' + token } }
   
     const navigation = useNavigation()
 
   
     useEffect(() => {
-      readItemFromStorage()
-      instance.get('/private/companies/user', config).then(res=> setCompany(res.data)).catch(err => console.log(err))
-    }, [token])
+      instanceToken.get('/companies/user').then(res=> setCompany(res.data)).catch(err => console.log(err))
+    }, [])
 
 
     const createSpecialOffer = () =>{
@@ -33,7 +27,7 @@ export const CreateSpecialOffers = () => {
             company: company
         }
         console.log(data)
-        instance.post(`/private/offers`, data, config)
+        instanceToken.post(`/offers`, data)
         .then(res=>setModalVisible(true))
         .catch(err => console.log(err))
         Repetear.trigger()

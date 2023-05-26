@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { View, Button, StyleSheet, Text, ImageBackground, TextInput, TouchableOpacity, Image, Keyboard } from "react-native";
 import { styles } from '../../styles/Styles'
-import { instance } from "../../Api/ApiManager";
+import { instance } from "../../Api/ApiManagerPublic";
 import { storeAccessToken, storeRefreshToken } from "../../Storage/TokenStorage";
-// import { useKeyboard } from 'react-native-hooks';
 import '../../Translations/i18n'
 import { useTranslation } from 'react-i18next';
 
@@ -50,7 +49,7 @@ export const UserRegistration = ({ navigation }) => {
     const user = { username, password, fullName, email, city, address, phoneNumber };
     console.log(user)
 
-    instance.post('/public/auth/register', user)
+    instance.post('/auth/register', user)
       .then(function (response) {
 
         loginUser()
@@ -67,7 +66,7 @@ export const UserRegistration = ({ navigation }) => {
       username: username,
       password: password
     }
-    instance.post('public/auth/login', loguser)
+    instance.post('/auth/login', loguser)
       .then(function (response) {
         storeRefreshToken(response.data.refreshToken)
         storeAccessToken(response.data.accessToken)

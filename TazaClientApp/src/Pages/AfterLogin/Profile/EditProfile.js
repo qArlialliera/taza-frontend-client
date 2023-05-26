@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { View, ImageBackground, StyleSheet, Text, Image, TouchableOpacity, TextInput } from 'react-native';
 import { styles } from '../../../styles/Styles';
-import { instance } from "../../../Api/ApiManager";
+import { instance } from "../../../Api/ApiManagerPublic";
 import { getAccessToken, getRefreshToken } from '../../../Storage/TokenStorage';
 import Repetear from '../../../MobX/ProfileMobxRener'
 import ImagePicker from 'react-native-image-crop-picker';
 import { t } from 'i18next';
+import instanceToken from '../../../Api/ApiManager';
 
 
 export const EditProfile = ({ navigation }) => {
@@ -25,9 +26,10 @@ export const EditProfile = ({ navigation }) => {
         },
     }
     const config2 = { headers: { 'Authorization': 'Bearer ' + token } }
+
     useEffect(() => {
         readItemFromStorage();
-        instance.get('/private/user/user-details', config2)
+        instanceToken.get('/user/user-details', config2)
             .then(function (response) {
                 console.log(response.data.id)
                 setUsername(response.data.username)
@@ -51,28 +53,20 @@ export const EditProfile = ({ navigation }) => {
 
     }
     const savePhoto = (image) => {
-
-
-
         myImage.append('file', {
             uri: Platform.OS === "android" ? image.path : image.path.replace("file://", ""),
             name: `image${response.data.username}.jpg`,
             type: image.mime
         })
-        instance.post('/public/file/save', myImage, config).then((response) => {
+        instance.post('/file/save', myImage, config).then((response) => {
             uploadPhoto(response.data)
-            console.log('hi', response.data)
-
-
         }).catch((err) => {
             console.log(err)
         })
-
-
     }
     const uploadPhoto = (photoUuid) => {
 
-        fetch(`http://192.168.31.156:8080/private/user/photo/upload/${photoUuid}`, {
+        fetch(`http://192.168.31.151:8080/private/user/photo/upload/${photoUuid}`, {
             method: 'PUT',
             headers: {
                 Authorization: 'Bearer ' + token,
@@ -91,7 +85,7 @@ export const EditProfile = ({ navigation }) => {
         e.preventDefault();
         const data = { username, fullName, email, address };
         console.log(data)
-        instance.put('private/user/edit/profile', data, config2)
+        instanceToken.put('/user/edit/profile', data, config2)
             .then(function (response) {
                 alert('Updated successfully!')
                 console.log(response.data);

@@ -3,7 +3,6 @@ import { View, Text, ImageBackground, TouchableOpacity, Image } from "react-nati
 import { styles } from '../../styles/Styles';
 import { getRefreshToken } from "../../Storage/TokenStorage";
 import { getRole } from "../../Storage/RoleStorage";
-// import { sStyle } from '../styles/sStyle';
 
 
 export const Welcome = ({ navigation }) => {
@@ -22,7 +21,6 @@ export const Welcome = ({ navigation }) => {
         if(token){
             if(role==='ROLE_USER') navigation.navigate('BottomBar')
             else if (role==='ROLE_COMPANY') navigation.navigate('BottomBarCompany')
-            // else navigation.navigate('UserLogin')
         } 
         console.log('token - ', token)
     }, [token, role])

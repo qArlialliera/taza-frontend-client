@@ -3,20 +3,17 @@ import { Text, View, ImageBackground, Image, TextInput, Switch, ScrollView, Touc
 import DatePicker, { getFormatedDate } from 'react-native-modern-datepicker';
 import { styles } from '../../../../styles/Styles';
 import Modal from "react-native-modal";
-import { getAccessToken } from '../../../../Storage/TokenStorage';
-import { instance } from '../../../../Api/ApiManager';
 import StarRating from 'react-native-star-rating-widget';
 import Repetear from '../../../../MobX/ProfileMobxRener'
 import { useNavigation } from '@react-navigation/native';
+import { instance } from '../../../../Api/ApiManagerPublic';
+import instanceToken from '../../../../Api/ApiManager';
 
 
 export const BookFeatures = (company) => {
     const comp = JSON.parse(JSON.stringify(company)).route.params
     const navigation = useNavigation()
-    //token
-    const [token, setToken] = useState(readItemFromStorage);
-    const readItemFromStorage = async () => { const item = await getAccessToken(); setToken(item) };
-    const config = { headers: { 'Authorization': 'Bearer ' + token } }
+
 
     //useStates
     const [isModalVisible, setModalVisible] = useState(false);
@@ -42,19 +39,17 @@ export const BookFeatures = (company) => {
     const [currentRating, setCurrentRating] = useState(0);
 
     useEffect(() => {
-        readItemFromStorage()
 
-
-        instance.get('private/user/user-details', config).then(function (response) {
+        instanceToken.get('/user/user-details').then(function (response) {
             setUserData(response.data)
         }).catch(function (error) {
             console.log(error);
         });
-        instance.get(`/private/review/rating/${comp.pp.id}`, config).then((res) => {
+        instanceToken.get(`/review/rating/${comp.pp.id}`).then((res) => {
             setCurrentRating(res.data)
         }).catch(err => console.log(err))
         getImage(comp.pp.photo)
-    }, [token, time, date, selectedServices])
+    }, [time, date, selectedServices])
 
     //timepicker
     function showDatePicker() { setDatePicker(true); };
@@ -107,7 +102,7 @@ export const BookFeatures = (company) => {
         }
 
         console.log(data)
-        instance.post('/private/orders/add', data, config).then((res) => {
+        instanceToken.post('/orders/add', data).then((res) => {
             setModalVisible(true)
             Repetear.trigger();
             console.log(res)
@@ -122,7 +117,7 @@ export const BookFeatures = (company) => {
     };
 
     const getImage = (uuid) => {
-        instance.get(`/public/file/photo/get/${uuid}`, { responseType: 'blob' }).then((response) => {
+        instance.get(`/file/photo/get/${uuid}`, { responseType: 'blob' }).then((response) => {
             const reader = new FileReader();
             reader.onloadend = () => {
                 setImageData(reader.result);

@@ -1,7 +1,6 @@
 import React from 'react'
 import { View, ImageBackground, Text, StyleSheet, Pressable } from 'react-native';
 import { styles } from '../../styles/Styles'
-import { storeRole } from '../../Storage/RoleStorage';
 
 import '../../Translations/i18n'
 import { useTranslation } from 'react-i18next';
