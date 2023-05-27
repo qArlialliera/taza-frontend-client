@@ -10,12 +10,28 @@ import Repeater from '../../../MobX/ProfileMobxRener'
 
 var stompClient = null;
 var SockJS = require('sockjs-client/dist/sockjs.js');
+
+
+
 export const MessagesChatStomp = (props) => {
     const pp = JSON.parse(JSON.stringify(props)).route.params
 
+    // function adjustForTimezone(date) {
+    //     const timeOffsetInMS = date.getTimezoneOffset() * 60000;
+    //     date.setTime(date.getTime() + timeOffsetInMS);
+    //     return date;
+    // }
+    
+    // function decrementTimezone(date) {
+    //     const timeOffsetInMS = date.getTimezoneOffset() * 60000;
+    //     date.setTime(date.getTime() - timeOffsetInMS);
+    //     return date;
+    // }
+
 
     const [messagesArray, setMessagesArray] = useState([]);
-    const currentTimestamp = moment().format('yyyy-MM-DD[T]HH:mm:ss.SSS');
+    // const currentTimestamp = moment().format('yyyy-MM-DD[T]HH:mm:ss.SSS');
+    const currentTimestamp = new Date().toISOString();
 
     const [userrData, setUserrData] = useState({
         username: '',

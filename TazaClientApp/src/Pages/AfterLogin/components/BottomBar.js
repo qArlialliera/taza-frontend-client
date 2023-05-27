@@ -4,7 +4,6 @@ import { Home } from '../Home/Home';
 import { Profile } from '../Profile/Profile';
 import { CompanyList } from '../CompanyList/CompanyList';
 import { Messages } from '../Messages/Messages';
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 
 import { AnimatedTabBarNavigator } from "react-native-animated-nav-tab-bar";
 import Icon from 'react-native-vector-icons/Feather';
@@ -25,7 +24,6 @@ export const BottomBar = () => {
                         height: -13,
                     },
                     shadowColor: '#000000',
-
                 },
                 labelStyle: { color: '#D9D9D9', }
             }} >

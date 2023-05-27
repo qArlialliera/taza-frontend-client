@@ -3,7 +3,6 @@ import { View, Text, TouchableOpacity, Image, Animated } from 'react-native'
 import { styles } from '../../../../styles/Styles';
 import { useNavigation } from '@react-navigation/native';
 import instanceToken from '../../../../Api/ApiManager';
-// import { getAccessToken } from '../../../../Storage/TokenStorage';
 import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
 
 

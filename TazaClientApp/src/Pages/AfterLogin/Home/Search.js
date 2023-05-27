@@ -86,7 +86,6 @@ export const Search = () => {
                           <View style={styles.cont_company}>
                             <TouchableOpacity style={styles.box_company} onPress={() => navigation.navigate('CompanyDetails', u)}>
                               <View>
-                                {/* <Image style={styles.image_company} source={require('../../../Assets/images/newimg.png')} /> */}
                                 <CompanyImages props={u.photo} />
                               </View>
                               <View style={{ marginLeft: 30, alignItems: 'flex-start' }}>

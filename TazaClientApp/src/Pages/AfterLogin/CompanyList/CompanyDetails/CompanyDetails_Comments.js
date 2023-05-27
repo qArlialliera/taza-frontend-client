@@ -53,7 +53,6 @@ export const CompanyDetails_Comments = observer((props) => {
                 review
                     ?
                     review.map((r) => {
-                        // console.log(r)
                         return (
                             <View key={r.id} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', marginVertical: 10, width: '100%' }}>
                                 <View style={{ flexDirection: 'column', justifyContent: 'center' }}>

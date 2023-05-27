@@ -3,7 +3,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export const storeRole = async (value) => {
     try {
         await AsyncStorage.setItem('role', value)
-        // console.log('accessToken', value)
     } catch (e) {
         console.log(error)
     }
