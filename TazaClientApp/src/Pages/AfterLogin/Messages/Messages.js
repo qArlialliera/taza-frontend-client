@@ -52,7 +52,7 @@ export const Messages = observer(({ navigation }) => {
   }, [ Repeater.bool])
 
   const connect = () => {
-    var socket = new SockJS("http://192.168.31.151:8080/ws");
+    var socket = new SockJS("https://concerned-growth-production.up.railway.app/ws");
     stompClient = Stomp.over(socket);
     stompClient.connect({}, onConnected, console.log("err"));
   }

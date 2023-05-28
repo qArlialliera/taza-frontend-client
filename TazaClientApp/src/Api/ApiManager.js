@@ -3,14 +3,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAccessToken, getRefreshToken } from '../Storage/TokenStorage';
 
 const instanceToken = axios.create({
-  baseURL: 'http://192.168.31.151:8080/private',
+  baseURL: 'https://concerned-growth-production.up.railway.app/private',
 });
 
 const refreshAccessToken = async () => {
   try {
     const value = await getRefreshToken();
     const response = await axios.get(
-      'http://192.168.31.151:8080/public/auth/token/refresh', 
+      'https://concerned-growth-production.up.railway.app/public/auth/token/refresh', 
       {
         headers: {
           'Authorization': 'Bearer ' + value

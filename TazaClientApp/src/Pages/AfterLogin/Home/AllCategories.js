@@ -32,7 +32,7 @@ export const AllCategories = ({ navigation }) => {
 
 
   return (
-    <ScrollView style={styles.containerwellcome}>
+    <ScrollView style={styles.contscrollView} contentContainerStyle={{ paddingRight: 0, minHeight: '100%' }}>
       <ImageBackground source={require('../../../Assets/images/homeBack.png')} style={styles.back}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <TouchableOpacity onPress={backNav}>
